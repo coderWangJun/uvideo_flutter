@@ -1,0 +1,11 @@
+{
+  "id": "e79d533e-8905-4248-b72c-167aae6ee3a6",
+  "phonenumber": "13888888888",
+  "typeId": 0,
+  "typeName": "",
+  "tXIMUser": "$account_tencent_model",
+  "ucoinAmount": 0.01,
+  "token": "Login:e79d533e-8905-4248-b72c-167aae6ee3a6",
+  "userData": "$account_person_model",
+  "companyData": "$account_company_model"
+}

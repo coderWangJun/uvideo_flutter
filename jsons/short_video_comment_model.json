@@ -1,0 +1,26 @@
+{
+  "createdBy": "",
+  "createdTime": "2020-06-15 14:53:39",
+  "updatedBy": "",
+  "updatedTime": "",
+  "id": 2,
+  "worksId": 1,
+  "replyTo": 0,
+  "belongTo": 0,
+  "bUserid": "469b4c8d-67d6-4183-8d34-77d4daa78b24",
+  "replyName": "田女士",
+  "headPortrait": "http://mingyankeji.oss-cn-chengdu.aliyuncs.com/head-portrait/%E6%B5%8B%E8%AF%95%E5%A4%B4%E5%83%8F.jpg1592881060375?Expires=3169681060&OSSAccessKeyId=LTAI4GDRbwvuszWXHCNebT2j&Signature=JgJxAWb4ZK0zRNaxzGXr70ph9EA%3D",
+  "name": "西西个人",
+  "userid": "469b4c8d-67d6-4183-8d34-77d4daa78b23",
+  "type": 1,
+  "content": "来了老铁",
+  "likes": 0,
+  "numberOfComments": 1,
+  "isLiked": 0,
+
+
+  "isExpand": false,
+  "replyCurrentPage": 0,
+  "parentComment": "$short_video_comment_model",
+  "replyList": "$[]short_video_comment_model"
+}
