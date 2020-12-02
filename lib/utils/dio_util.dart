@@ -13,7 +13,8 @@ class DioUtil {
   static final String HTTP_RESP_CODE_SUCCESS = '1';
 
 //  static final String SERVER_URL = 'https://47.108.196.26:2020';
-  static final String SERVER_URL = 'https://huangque.tech:2020';
+  static final String SERVER_URL = 'https://47.104.105.255:2020';
+  // static final String SERVER_URL = 'https://huangque.tech:2020';
 //  static final String SERVER_URL = 'https://192.168.2.149:2020';
 
   // 单例对象
