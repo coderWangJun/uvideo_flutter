@@ -14,6 +14,8 @@ class DioUtil {
 
 //  static final String SERVER_URL = 'https://47.108.196.26:2020';
   static final String SERVER_URL = 'https://47.104.105.255:2020';
+  // static final String SERVER_URL = 'https://47.104.105.255:2020';
+  // static final String SERVER_URL = 'https://127.0.0.1:2020';
   // static final String SERVER_URL = 'https://huangque.tech:2020';
 //  static final String SERVER_URL = 'https://192.168.2.149:2020';
 
@@ -33,7 +35,7 @@ class DioUtil {
           baseUrl: SERVER_URL,
           connectTimeout: 300000,
           receiveTimeout: 300000,
-//          headers: headers,
+         headers: headers,
           method: 'POST');
 
       _dio = new Dio(options);
