@@ -4,7 +4,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as GetRequest;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
@@ -217,7 +217,7 @@ class _PersonBasicEditState extends State<PersonBasicEdit> {
               var pickedFile = await ImagePicker.pickImage(
                   source: ImageSource.gallery, imageQuality: 50);
               if (pickedFile != null) {
-                Get.to(HeadImageCrop(pickedFile.path)).then((value) {
+                GetRequest.Get.to(HeadImageCrop(pickedFile.path)).then((value) {
                   if (value != null) {
                     setState(() {
                       _pickedFile = value as File;
