@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as GetRequest;
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -45,34 +45,34 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
-      backgroundColor: Colors.white,
-      body: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverToBoxAdapter(
-              child: Container(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text('输入想发布的内容标题如是提问请以问号结尾', style: TextStyle(fontSize: 15, color: Colors.black)),
-                    _buildTextField(),
-                  ]
-                ),
-              )
-            ),
-            widget.publishType == 1 ? _buildImageGrid() : _buildVideoWidget(),
-            _buildMenus(),
-            _buildPublishButtons(context)
-          ],
-        )
-      )
-    );
+        appBar: _buildAppBar(),
+        backgroundColor: Colors.white,
+        body: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverToBoxAdapter(
+                    child: Container(
+                  padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text('输入想发布的内容标题如是提问请以问号结尾',
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.black)),
+                        _buildTextField(),
+                      ]),
+                )),
+                widget.publishType == 1
+                    ? _buildImageGrid()
+                    : _buildVideoWidget(),
+                _buildMenus(),
+                _buildPublishButtons(context)
+              ],
+            )));
   }
 
   Widget _buildAppBar() {
@@ -83,9 +83,10 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Image.asset(join(AssetsUtil.assetsDirectoryCommon, 'nav_back_black.png')),
+          icon: Image.asset(
+              join(AssetsUtil.assetsDirectoryCommon, 'nav_back_black.png')),
           onPressed: () {
-            Get.back();
+            GetRequest.Get.back();
           },
         ),
         actions: <Widget>[
@@ -104,39 +105,34 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
     return Container(
       margin: EdgeInsets.only(top: 20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: Color.fromRGBO(238, 238, 238, 0.5)
-      ),
+          borderRadius: BorderRadius.circular(8),
+          color: Color.fromRGBO(238, 238, 238, 0.5)),
       child: Column(
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Container(
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+            Container(
                 width: 24,
                 height: 24,
                 margin: EdgeInsets.only(top: 5, right: 3),
                 child: IconButton(
                   padding: EdgeInsets.all(0),
-                  icon: Image.asset(join(AssetsUtil.assetsDirectoryCircle, 'publish_content_clear.png')),
-                )
-              )
-            ]
-          ),
+                  icon: Image.asset(join(AssetsUtil.assetsDirectoryCircle,
+                      'publish_content_clear.png')),
+                ))
+          ]),
           Container(
-            margin: EdgeInsets.only(left: 13, right: 13, bottom: 13),
-            child: TextField(
-              controller: _textController,
-              maxLines: 3,
-              style: TextStyle(fontSize: 13, color: ColorConstants.textColor51),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.all(0),
-                hintText: '平台使用补充说明，仅新用户第一次发布提示',
-                hintStyle: TextStyle(fontSize: 13, color: Colors.black.withOpacity(0.5))
-              )
-            )
-          )
+              margin: EdgeInsets.only(left: 13, right: 13, bottom: 13),
+              child: TextField(
+                  controller: _textController,
+                  maxLines: 3,
+                  style: TextStyle(
+                      fontSize: 13, color: ColorConstants.textColor51),
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(0),
+                      hintText: '平台使用补充说明，仅新用户第一次发布提示',
+                      hintStyle: TextStyle(
+                          fontSize: 13, color: Colors.black.withOpacity(0.5)))))
         ],
       ),
     );
@@ -150,109 +146,118 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
             crossAxisCount: 3,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
-            childAspectRatio: 0.92
-        ),
-        delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-              return InkWell(
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Color.fromRGBO(238, 238, 238, 0.5),
-                      borderRadius: BorderRadius.circular(8)
-                  ),
-                  child: index == _pickedImageFiles.length ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Image.asset(join(AssetsUtil.assetsDirectoryCircle, 'publish_take_photo.png')),
-                      SizedBox(height: 10),
-                      Text("照片", style: TextStyle(fontSize: 13, color: Colors.black.withOpacity(0.5)))
-                    ],
-                  ) : ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Stack(
-                      children: [
-                        Image.file(_pickedImageFiles[index], width: double.infinity, height: double.infinity, fit: BoxFit.cover),
-                        Positioned(
-                          top: 3,
-                          right: 5,
-                          child: ButtonTheme(
-                            minWidth: 0,
-                            height: 0,
-                            child: FlatButton(
-                              padding: EdgeInsets.all(5),
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              child: Image.asset(imagePath("common", "alert_close.png")),
-                              onPressed: () {
-                                setState(() {
-                                  _pickedImageFiles.removeAt(index);
-                                });
-                              },
-                            ),
-                          )
-                        ),
-                      ],
-                    )
-                  )
-                ),
-                onTap: () async {
-                  if (index == _pickedImageFiles.length) {
-                    var pickedFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+            childAspectRatio: 0.92),
+        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+          return InkWell(
+            child: Container(
+                decoration: BoxDecoration(
+                    color: Color.fromRGBO(238, 238, 238, 0.5),
+                    borderRadius: BorderRadius.circular(8)),
+                child: index == _pickedImageFiles.length
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(join(AssetsUtil.assetsDirectoryCircle,
+                              'publish_take_photo.png')),
+                          SizedBox(height: 10),
+                          Text("照片",
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.black.withOpacity(0.5)))
+                        ],
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Stack(
+                          children: [
+                            Image.file(_pickedImageFiles[index],
+                                width: double.infinity,
+                                height: double.infinity,
+                                fit: BoxFit.cover),
+                            Positioned(
+                                top: 3,
+                                right: 5,
+                                child: ButtonTheme(
+                                  minWidth: 0,
+                                  height: 0,
+                                  child: FlatButton(
+                                    padding: EdgeInsets.all(5),
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    child: Image.asset(
+                                        imagePath("common", "alert_close.png")),
+                                    onPressed: () {
+                                      setState(() {
+                                        _pickedImageFiles.removeAt(index);
+                                      });
+                                    },
+                                  ),
+                                )),
+                          ],
+                        ))),
+            onTap: () async {
+              if (index == _pickedImageFiles.length) {
+                var pickedFile =
+                    await ImagePicker.pickImage(source: ImageSource.gallery);
 
-                    if (pickedFile != null) {
-                      _pickedImageFiles.add(pickedFile);
-                      setState(() { });
-                    }
-                  }
-                },
-              );
+                if (pickedFile != null) {
+                  _pickedImageFiles.add(pickedFile);
+                  setState(() {});
+                }
+              }
             },
-            childCount: _pickedImageFiles.length + 1
-        ),
+          );
+        }, childCount: _pickedImageFiles.length + 1),
       ),
     );
   }
-  
+
   Widget _buildVideoWidget() {
     double videoWidth = (ScreenUtil.mediaQueryData.size.width - 60) / 3;
     double videoHeight = videoWidth * 1.1;
 
     return SliverToBoxAdapter(
-      child: UnconstrainedBox(
-        alignment: Alignment.centerLeft,
-        child: InkWell(
-          child: Container(
+        child: UnconstrainedBox(
+      alignment: Alignment.centerLeft,
+      child: InkWell(
+        child: Container(
             width: videoWidth,
             height: videoHeight,
             margin: EdgeInsets.all(20),
             decoration: BoxDecoration(
                 color: Color.fromRGBO(238, 238, 238, 0.5),
-                borderRadius: BorderRadius.circular(8)
-            ),
-            child: _videoThumbPath == null ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(join(AssetsUtil.assetsDirectoryCircle, 'publish_take_photo.png')),
-                SizedBox(height: 10),
-                Text("视频", style: TextStyle(fontSize: 13, color: Colors.black.withOpacity(0.5)))
-              ],
-            ) : ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.file(File(_videoThumbPath), fit: BoxFit.cover),
-            )
-          ),
-          onTap: () async {
-            var pickedFile = await ImagePicker.pickVideo(source: ImageSource.gallery);
+                borderRadius: BorderRadius.circular(8)),
+            child: _videoThumbPath == null
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Image.asset(join(AssetsUtil.assetsDirectoryCircle,
+                          'publish_take_photo.png')),
+                      SizedBox(height: 10),
+                      Text("视频",
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.black.withOpacity(0.5)))
+                    ],
+                  )
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.file(File(_videoThumbPath), fit: BoxFit.cover),
+                  )),
+        onTap: () async {
+          var pickedFile =
+              await ImagePicker.pickVideo(source: ImageSource.gallery);
 
-            if (pickedFile != null) {
-              _pickedVideoFile = pickedFile;
-              _videoThumbPath = await VideoThumbnail.thumbnailFile(video: _pickedVideoFile.path);
+          if (pickedFile != null) {
+            _pickedVideoFile = pickedFile;
+            _videoThumbPath = await VideoThumbnail.thumbnailFile(
+                video: _pickedVideoFile.path);
 
-              setState(() { });
-            }
-          },
-        ),
-      )
-    );
+            setState(() {});
+          }
+        },
+      ),
+    ));
   }
 
   Widget _buildMenus() {
@@ -281,34 +286,34 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
 //            ),
 //            onTap: () {
 //              if (index == 0) { // @提及
-//                Get.to(PublishAtFriends()).then((friendModel) {
+//                GetRequest.Get.to(PublishAtFriends()).then((friendModel) {
 //                  setState(() {
 //                    _atFriendModel = friendModel;
 //                  });
 //                });
 //              } else if (index == 1) { // 所在位置
-//                Get.to(PublishChooseLocation());
+//                GetRequest.Get.to(PublishChooseLocation());
 //              } else if (index == 2) { // 添加圈层
-//                Get.to(PublishChooseCircle());
+//                GetRequest.Get.to(PublishChooseCircle());
 //              } else if (index == 3) { // 谁可以看
-//                Get.to(PublishChossePriv());
+//                GetRequest.Get.to(PublishChossePriv());
 //              }
 //            },
 //          );
-          if (index == 0) {
-            return _buildAtFriendMenu();
-          } else if (index == 1) {
-            return _buildLocationMenu();
-          } else if (index == 2) {
-            return widget.circleId != null ? SizedBox.shrink() : _buildCircleMenu();
-          } else if (index == 3) {
-            return _buildLookMenu();
-          }
+        if (index == 0) {
+          return _buildAtFriendMenu();
+        } else if (index == 1) {
+          return _buildLocationMenu();
+        } else if (index == 2) {
+          return widget.circleId != null
+              ? SizedBox.shrink()
+              : _buildCircleMenu();
+        } else if (index == 3) {
+          return _buildLookMenu();
+        }
 
-          return SizedBox.shrink();
-        },
-        childCount: 4
-      ),
+        return SizedBox.shrink();
+      }, childCount: 4),
     );
   }
 
@@ -323,9 +328,22 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Image.asset(imagePath("publish", _atFriendModel != null ? "publish_menu_at1.png" : "publish_menu_at.png")),
+                Image.asset(imagePath(
+                    "publish",
+                    _atFriendModel != null
+                        ? "publish_menu_at1.png"
+                        : "publish_menu_at.png")),
                 SizedBox(width: 10),
-                Text(_atFriendModel != null ? "@${_atFriendModel.targetNickname}" : "@提及", style: TextStyle(fontSize: 15, color: _atFriendModel != null ? ColorConstants.themeColorBlue : Colors.black, fontWeight: FontWeight.w600))
+                Text(
+                    _atFriendModel != null
+                        ? "@${_atFriendModel.targetNickname}"
+                        : "@提及",
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: _atFriendModel != null
+                            ? ColorConstants.themeColorBlue
+                            : Colors.black,
+                        fontWeight: FontWeight.w600))
               ],
             ),
             Image.asset(imagePath("common", "icon_forward_small.png"))
@@ -334,7 +352,8 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
       ),
       onTap: () {
         FocusManager.instance.primaryFocus.unfocus();
-        Get.to(PublishAtFriends(selectedFriendModel: _atFriendModel)).then((friendModel) {
+        GetRequest.Get.to(PublishAtFriends(selectedFriendModel: _atFriendModel))
+            .then((friendModel) {
           setState(() {
             _atFriendModel = friendModel;
           });
@@ -354,9 +373,19 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Image.asset(imagePath("publish", _locationMap != null ? "publish_menu_area1.png" : "publish_menu_area.png")),
+                Image.asset(imagePath(
+                    "publish",
+                    _locationMap != null
+                        ? "publish_menu_area1.png"
+                        : "publish_menu_area.png")),
                 SizedBox(width: 10),
-                Text(_locationMap != null ? _locationMap["title"] : "所在位置", style: TextStyle(fontSize: 15, color: _locationMap != null ? ColorConstants.themeColorBlue : Colors.black, fontWeight: FontWeight.w600))
+                Text(_locationMap != null ? _locationMap["title"] : "所在位置",
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: _locationMap != null
+                            ? ColorConstants.themeColorBlue
+                            : Colors.black,
+                        fontWeight: FontWeight.w600))
               ],
             ),
             Image.asset(imagePath("common", "icon_forward_small.png"))
@@ -365,7 +394,7 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
       ),
       onTap: () {
         FocusManager.instance.primaryFocus.unfocus();
-        Get.to(ChooseLocationRoute()).then((location) {
+        GetRequest.Get.to(ChooseLocationRoute()).then((location) {
           setState(() {
             _locationMap = location;
           });
@@ -375,11 +404,14 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
   }
 
   Widget _buildCircleMenu() {
-    Widget iconWidget = Image.asset(imagePath("publish", "publish_menu_tag.png"));
+    Widget iconWidget =
+        Image.asset(imagePath("publish", "publish_menu_tag.png"));
     if (_selectedCircleMap != null) {
       iconWidget = ClipRRect(
         borderRadius: BorderRadius.circular(25),
-        child: Image.asset(imagePath("publish", "publish_menu_tag.png"), color: ColorConstants.themeColorBlue, colorBlendMode: BlendMode.colorDodge),
+        child: Image.asset(imagePath("publish", "publish_menu_tag.png"),
+            color: ColorConstants.themeColorBlue,
+            colorBlendMode: BlendMode.colorDodge),
       );
     }
 
@@ -395,7 +427,16 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
               children: <Widget>[
                 iconWidget,
                 SizedBox(width: 10),
-                Text(_selectedCircleMap != null ? _selectedCircleMap["circleName"] : "添加圈层", style: TextStyle(fontSize: 15, color: _selectedCircleMap != null ? ColorConstants.themeColorBlue : Colors.black, fontWeight: FontWeight.w600))
+                Text(
+                    _selectedCircleMap != null
+                        ? _selectedCircleMap["circleName"]
+                        : "添加圈层",
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: _selectedCircleMap != null
+                            ? ColorConstants.themeColorBlue
+                            : Colors.black,
+                        fontWeight: FontWeight.w600))
               ],
             ),
             Image.asset(imagePath("common", "icon_forward_small.png"))
@@ -403,10 +444,12 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
         ),
       ),
       onTap: () {
-        int selectedCircleId = _selectedCircleMap == null ? -1 : _selectedCircleMap["circleId"];
+        int selectedCircleId =
+            _selectedCircleMap == null ? -1 : _selectedCircleMap["circleId"];
 
         FocusManager.instance.primaryFocus.unfocus();
-        Get.to(ChooseCircleRoute(initialCircleId: selectedCircleId)).then((circleMap) {
+        GetRequest.Get.to(ChooseCircleRoute(initialCircleId: selectedCircleId))
+            .then((circleMap) {
           if (circleMap != null) {
             setState(() {
               _selectedCircleMap = circleMap;
@@ -418,11 +461,14 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
   }
 
   Widget _buildLookMenu() {
-    Widget iconWidget = Image.asset(imagePath("publish", "publish_menu_pri.png"));
+    Widget iconWidget =
+        Image.asset(imagePath("publish", "publish_menu_pri.png"));
     if (_privMap != null) {
       iconWidget = ClipRRect(
         borderRadius: BorderRadius.circular(25),
-        child: Image.asset(imagePath("publish", "publish_menu_pri.png"), color: ColorConstants.themeColorBlue, colorBlendMode: BlendMode.colorDodge),
+        child: Image.asset(imagePath("publish", "publish_menu_pri.png"),
+            color: ColorConstants.themeColorBlue,
+            colorBlendMode: BlendMode.colorDodge),
       );
     }
 
@@ -438,7 +484,13 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
               children: <Widget>[
                 iconWidget,
                 SizedBox(width: 10),
-                Text(_privMap != null ? _privMap["title"] : "谁可以看", style: TextStyle(fontSize: 15, color: _privMap != null ? ColorConstants.themeColorBlue : Colors.black, fontWeight: FontWeight.w600))
+                Text(_privMap != null ? _privMap["title"] : "谁可以看",
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: _privMap != null
+                            ? ColorConstants.themeColorBlue
+                            : Colors.black,
+                        fontWeight: FontWeight.w600))
               ],
             ),
             Image.asset(imagePath("common", "icon_forward_small.png"))
@@ -452,7 +504,8 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
         }
 
         FocusManager.instance.primaryFocus.unfocus();
-        Get.to(ChooseMarketPriv(initialIndex: initialIndex)).then((result) {
+        GetRequest.Get.to(ChooseMarketPriv(initialIndex: initialIndex))
+            .then((result) {
           if (result != null) {
             setState(() => _privMap = result);
           }
@@ -475,9 +528,11 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                       color: Color.fromRGBO(153, 153, 153, 0.2),
-                      borderRadius: BorderRadius.circular(16)
-                  ),
-                  child: Text('普通发布', style: TextStyle(fontSize: 17, color: Color.fromRGBO(153, 153, 153, 1))),
+                      borderRadius: BorderRadius.circular(16)),
+                  child: Text('普通发布',
+                      style: TextStyle(
+                          fontSize: 17,
+                          color: Color.fromRGBO(153, 153, 153, 1))),
                 ),
                 onTap: () {
                   _uploadAndSavePost(0);
@@ -491,13 +546,14 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
                   height: 32,
                   decoration: BoxDecoration(
                       color: ColorConstants.themeColorBlue,
-                      borderRadius: BorderRadius.circular(16)
-                  ),
+                      borderRadius: BorderRadius.circular(16)),
                   alignment: Alignment.center,
-                  child: Text('有奖发布', style: TextStyle(fontSize: 17, color: Colors.white)),
+                  child: Text('有奖发布',
+                      style: TextStyle(fontSize: 17, color: Colors.white)),
                 ),
                 onTap: () async {
-                  int ucoin = await PublishUcoinDialog.showUcoinDialog(parentContext);
+                  int ucoin =
+                      await PublishUcoinDialog.showUcoinDialog(parentContext);
                   if (ucoin != null && ucoin > 0) {
                     _uploadAndSavePost(ucoin);
                   }
@@ -565,11 +621,13 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
         // 批量上传图片
         FormData formData = FormData.fromMap({});
         for (File file in _pickedImageFiles) {
-          formData.files.add(MapEntry("fileList", MultipartFile.fromFileSync(file.path)));
+          formData.files
+              .add(MapEntry("fileList", MultipartFile.fromFileSync(file.path)));
         }
 
         BotToast.showLoading();
-        DioUtil.request("/market/uploadPicWorks", parameters: formData).then((response) {
+        DioUtil.request("/market/uploadPicWorks", parameters: formData)
+            .then((response) {
           bool success = DioUtil.checkRequestResult(response, showToast: true);
           if (success) {
             // 上传成功，开始保存
@@ -584,22 +642,30 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
         _savePostAfterSave(params);
       }
     } else {
-          BotToast.showLoading();
-          params["marketWorksList"] = [{}];
-          // 上传视频
-          OssUpLoad.upLoad(_videoThumbPath, UpFileType.image, UpFileUrlType.marketCoverImage).then((value){
-            if(value!=null){
-              params["marketWorksList"][0]['ossCoverName'] = value.fileOssName;
-              params["marketWorksList"][0]['coverUrl'] = value.fileURL;
-              OssUpLoad.upLoad(_pickedVideoFile.path, UpFileType.video, UpFileUrlType.marketVideo).then((value){
-                if(value!=null){
-                  params["marketWorksList"][0]['ossName'] = value.fileOssName;
-                  params["marketWorksList"][0]['worksUrl'] = value.fileURL;
-                  _savePostAfterSave(params);
-                }else{errorHandler();}
-              });
-            }else{errorHandler();}
+      BotToast.showLoading();
+      params["marketWorksList"] = [{}];
+      // 上传视频
+      OssUpLoad.upLoad(
+              _videoThumbPath, UpFileType.image, UpFileUrlType.marketCoverImage)
+          .then((value) {
+        if (value != null) {
+          params["marketWorksList"][0]['ossCoverName'] = value.fileOssName;
+          params["marketWorksList"][0]['coverUrl'] = value.fileURL;
+          OssUpLoad.upLoad(_pickedVideoFile.path, UpFileType.video,
+                  UpFileUrlType.marketVideo)
+              .then((value) {
+            if (value != null) {
+              params["marketWorksList"][0]['ossName'] = value.fileOssName;
+              params["marketWorksList"][0]['worksUrl'] = value.fileURL;
+              _savePostAfterSave(params);
+            } else {
+              errorHandler();
+            }
           });
+        } else {
+          errorHandler();
+        }
+      });
 
 //      FormData formData = FormData.fromMap({
 //        "cover": MultipartFile.fromFileSync(_videoThumbPath),
@@ -620,16 +686,17 @@ class _PublishMarketPostState extends State<PublishMarketPost> {
     }
   }
 
-  void errorHandler(){
+  void errorHandler() {
     BotToast.closeAllLoading();
   }
 
   void _savePostAfterSave(Map<String, dynamic> params) {
-    DioUtil.request("/market/updateMarket", parameters: params).then((response) {
+    DioUtil.request("/market/updateMarket", parameters: params)
+        .then((response) {
       bool success = DioUtil.checkRequestResult(response, showToast: true);
       if (success) {
         BotToast.showText(text: response["msg"]);
-        Get.back();
+        GetRequest.Get.back();
       }
     }).whenComplete(() => BotToast.closeAllLoading());
   }

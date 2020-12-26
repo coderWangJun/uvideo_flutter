@@ -5,7 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as GetRequest;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
@@ -354,7 +354,7 @@ class _PublishInviteVideoState extends State<PublishInviteVideo> {
             onTap: () {
               if (title == "+添加技能") {
                 FocusManager.instance.primaryFocus.unfocus();
-                Get.to(PersonBasicEditSecond(_personEdit)).then((value) {
+                GetRequest.Get.to(PersonBasicEditSecond(_personEdit)).then((value) {
                   if (value != null) {
                     setState(() {
                       _personEdit = value;
@@ -389,7 +389,7 @@ class _PublishInviteVideoState extends State<PublishInviteVideo> {
         ),
       ),
       onTap: () {
-        Get.to(ChooseLocationRoute()).then((location) {
+        GetRequest.Get.to(ChooseLocationRoute()).then((location) {
           if (location != null) {
             setState(() {
               _locationMap = location;
@@ -420,7 +420,7 @@ class _PublishInviteVideoState extends State<PublishInviteVideo> {
         ),
       ),
       onTap: () {
-        Get.to(ChooseIndustryRoute()).then((map) {
+        GetRequest.Get.to(ChooseIndustryRoute()).then((map) {
           if (map != null) {
             setState(() {
               _industryMap = map;
@@ -543,7 +543,7 @@ class _PublishInviteVideoState extends State<PublishInviteVideo> {
       bool success = DioUtil.checkRequestResult(responseData);
       if (success) {
         BotToast.showText(text: responseData["msg"]);
-        Get.back();
+        GetRequest.Get.back();
       }
     }).whenComplete(() => BotToast.closeAllLoading());
   }

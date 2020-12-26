@@ -4,7 +4,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' as GetRequest;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
@@ -72,45 +72,49 @@ class _PublishResumeVideoState extends State<PublishResumeVideo> {
 
   Widget _buildVideoButton(parentContext) {
     return InkWell(
-      child: (_pickedFile == null) ? _buildVideoButtonUnselect() : _buildVideoButtonSelected(),
-      onTap: () async {
-        File pickedFile = await VideoPicker.showVideoPicker(parentContext);
+        child: (_pickedFile == null)
+            ? _buildVideoButtonUnselect()
+            : _buildVideoButtonSelected(),
+        onTap: () async {
+          File pickedFile = await VideoPicker.showVideoPicker(parentContext);
 
-        if (pickedFile != null) {
-          _pickedFile = pickedFile;
-          //_thumbImagePath = await VideoThumbnail.thumbnailFile(video: _pickedFile.path);
+          if (pickedFile != null) {
+            _pickedFile = pickedFile;
+            //_thumbImagePath = await VideoThumbnail.thumbnailFile(video: _pickedFile.path);
 
-          var tempPath = (await getTemporaryDirectory()).path;
-          _thumbImagePath = await VideoThumbnail.thumbnailFile(
-              video: _pickedFile.path,
-              thumbnailPath: tempPath,
-              imageFormat: ImageFormat.JPEG,
-              quality: 100
-          );
-        }
+            var tempPath = (await getTemporaryDirectory()).path;
+            _thumbImagePath = await VideoThumbnail.thumbnailFile(
+                video: _pickedFile.path,
+                thumbnailPath: tempPath,
+                imageFormat: ImageFormat.JPEG,
+                quality: 100);
+          }
 
-        setState(() { });
-      }
-    );
+          setState(() {});
+        });
   }
+
   Widget _buildVideoButtonUnselect() {
     return Container(
       width: 160,
       height: 185,
       decoration: BoxDecoration(
           color: Color.fromRGBO(238, 238, 238, 0.5),
-          borderRadius: BorderRadius.circular(8)
-      ),
+          borderRadius: BorderRadius.circular(8)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Image.asset(join(AssetsUtil.assetsDirectoryCommon, "icon_camera.png")),
+          Image.asset(
+              join(AssetsUtil.assetsDirectoryCommon, "icon_camera.png")),
           SizedBox(height: 10),
-          Text("添加视频", style: TextStyle(fontSize: 13, color: Colors.black.withOpacity(0.5)))
+          Text("添加视频",
+              style:
+                  TextStyle(fontSize: 13, color: Colors.black.withOpacity(0.5)))
         ],
       ),
     );
   }
+
   Widget _buildVideoButtonSelected() {
     return Container(
         width: 160,
@@ -119,8 +123,7 @@ class _PublishResumeVideoState extends State<PublishResumeVideo> {
           borderRadius: BorderRadius.circular(8),
           //child: _thumbImage,
           child: Image.file(File(_thumbImagePath), fit: BoxFit.cover),
-        )
-    );
+        ));
   }
 
   Widget _buildTitleInputWidgets() {
@@ -130,30 +133,30 @@ class _PublishResumeVideoState extends State<PublishResumeVideo> {
       decoration: InputDecoration(
         hintText: "填写标题让人一目了然~",
         hintStyle: TextStyle(fontSize: 17, color: ColorConstants.textColor153),
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: ColorConstants.dividerColor)),
-        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: ColorConstants.dividerColor)),
+        enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorConstants.dividerColor)),
+        focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorConstants.dividerColor)),
       ),
     );
   }
 
   Widget _buildDescInputWidgets() {
-    return Column(
-        children: <Widget>[
-          TextField(
-            controller: _jobDescController,
-            style: TextStyle(fontSize: 13, color: ColorConstants.textColor51),
-            maxLength: 1000,
-            maxLines: 5,
-            decoration: InputDecoration(
-                hintText: "填写个人优势...",
-                hintStyle: TextStyle(fontSize: 13, color: ColorConstants.textColor153),
-                border: InputBorder.none
-            ),
-          ),
-          SizedBox(height: 15),
-          Container(height: 1, color: ColorConstants.dividerColor)
-        ]
-    );
+    return Column(children: <Widget>[
+      TextField(
+        controller: _jobDescController,
+        style: TextStyle(fontSize: 13, color: ColorConstants.textColor51),
+        maxLength: 1000,
+        maxLines: 5,
+        decoration: InputDecoration(
+            hintText: "填写个人优势...",
+            hintStyle:
+                TextStyle(fontSize: 13, color: ColorConstants.textColor153),
+            border: InputBorder.none),
+      ),
+      SizedBox(height: 15),
+      Container(height: 1, color: ColorConstants.dividerColor)
+    ]);
   }
 
   Widget _buildSalaryWidgets(parentContext) {
@@ -163,8 +166,9 @@ class _PublishResumeVideoState extends State<PublishResumeVideo> {
       child: Container(
         height: 90,
         decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: ColorConstants.dividerColor, width: 1))
-        ),
+            border: Border(
+                bottom:
+                    BorderSide(color: ColorConstants.dividerColor, width: 1))),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -172,14 +176,24 @@ class _PublishResumeVideoState extends State<PublishResumeVideo> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("期望薪资", style: TextStyle(fontSize: 13, color: ColorConstants.textColor51)),
+                  Text("期望薪资",
+                      style: TextStyle(
+                          fontSize: 13, color: ColorConstants.textColor51)),
                   SizedBox(height: 10),
-                  Text(_selectedSalary != null ? "${_selectedSalary["minSalary"]} - ${_selectedSalary["maxSalary"]}" : "请选择薪资要求",
-                      style: TextStyle(fontSize: 17, color: _selectedSalary != null ? ColorConstants.themeColorBlue : ColorConstants.textColor153))
+                  Text(
+                      _selectedSalary != null
+                          ? "${_selectedSalary["minSalary"]} - ${_selectedSalary["maxSalary"]}"
+                          : "请选择薪资要求",
+                      style: TextStyle(
+                          fontSize: 17,
+                          color: _selectedSalary != null
+                              ? ColorConstants.themeColorBlue
+                              : ColorConstants.textColor153))
                 ],
               ),
             ),
-            Image.asset(join(AssetsUtil.assetsDirectoryCommon, "icon_forward_small.png"))
+            Image.asset(join(
+                AssetsUtil.assetsDirectoryCommon, "icon_forward_small.png"))
           ],
         ),
       ),
@@ -189,7 +203,7 @@ class _PublishResumeVideoState extends State<PublishResumeVideo> {
           _selectedSalary = result;
         }
 
-        setState(() { });
+        setState(() {});
       },
     );
   }
@@ -214,15 +228,17 @@ class _PublishResumeVideoState extends State<PublishResumeVideo> {
                 padding: EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                     color: ColorConstants.backgroundColor.withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(5)
-                ),
-                child: Text(title, style: TextStyle(fontSize: 12, color: ColorConstants.textColor153)),
+                    borderRadius: BorderRadius.circular(5)),
+                child: Text(title,
+                    style: TextStyle(
+                        fontSize: 12, color: ColorConstants.textColor153)),
               ),
             ),
             onTap: () {
               if (title == "+添加技能") {
                 FocusManager.instance.primaryFocus.unfocus();
-                Get.to(PersonBasicEditSecond(_personEdit)).then((value) {
+                GetRequest.Get.to(PersonBasicEditSecond(_personEdit))
+                    .then((value) {
                   if (value != null) {
                     setState(() {
                       _personEdit = value;
@@ -247,17 +263,27 @@ class _PublishResumeVideoState extends State<PublishResumeVideo> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Image.asset(join(AssetsUtil.assetsDirectoryPublish, _locationMap != null ? "publish_menu_area1.png" : "publish_menu_area.png")),
+                Image.asset(join(
+                    AssetsUtil.assetsDirectoryPublish,
+                    _locationMap != null
+                        ? "publish_menu_area1.png"
+                        : "publish_menu_area.png")),
                 SizedBox(width: 10),
-                Text(_locationMap != null ? _locationMap["title"] : "所在位置", style: TextStyle(fontSize: 15, color: _locationMap != null ? ColorConstants.themeColorBlue : ColorConstants.textColor51))
+                Text(_locationMap != null ? _locationMap["title"] : "所在位置",
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: _locationMap != null
+                            ? ColorConstants.themeColorBlue
+                            : ColorConstants.textColor51))
               ],
             ),
-            Image.asset(join(AssetsUtil.assetsDirectoryCommon, 'icon_forward_small.png'))
+            Image.asset(join(
+                AssetsUtil.assetsDirectoryCommon, 'icon_forward_small.png'))
           ],
         ),
       ),
       onTap: () {
-        Get.to(ChooseLocationRoute()).then((location) {
+        GetRequest.Get.to(ChooseLocationRoute()).then((location) {
           if (location != null) {
             setState(() {
               _locationMap = location;
@@ -278,18 +304,28 @@ class _PublishResumeVideoState extends State<PublishResumeVideo> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Image.asset(join(AssetsUtil.assetsDirectoryPublish, _currentJob != null ? "publish_menu_at1.png" : "publish_menu_at.png")),
+                Image.asset(join(
+                    AssetsUtil.assetsDirectoryPublish,
+                    _currentJob != null
+                        ? "publish_menu_at1.png"
+                        : "publish_menu_at.png")),
                 SizedBox(width: 10),
-                Text(_currentJob != null ? _currentJob["name"] : "提及岗位", style: TextStyle(fontSize: 15, color: _currentJob != null ? ColorConstants.themeColorBlue : ColorConstants.textColor51))
+                Text(_currentJob != null ? _currentJob["name"] : "提及岗位",
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: _currentJob != null
+                            ? ColorConstants.themeColorBlue
+                            : ColorConstants.textColor51))
               ],
             ),
-            Image.asset(join(AssetsUtil.assetsDirectoryCommon, 'icon_forward_small.png'))
+            Image.asset(join(
+                AssetsUtil.assetsDirectoryCommon, 'icon_forward_small.png'))
           ],
         ),
       ),
       onTap: () {
         FocusManager.instance.primaryFocus.unfocus();
-        Get.to(ChooseWorkName()).then((value) {
+        GetRequest.Get.to(ChooseWorkName()).then((value) {
           if (value != null) {
             setState(() {
               _currentJob = value;
@@ -311,7 +347,8 @@ class _PublishResumeVideoState extends State<PublishResumeVideo> {
             color: ColorConstants.themeColorBlue,
             borderRadius: BorderRadius.circular(6),
           ),
-          child: Text('发布', style: TextStyle(fontSize: 17, color: Colors.white)),
+          child:
+              Text('发布', style: TextStyle(fontSize: 17, color: Colors.white)),
         ),
         onTap: () {
           _uploadAndSaveInviteInfo();
@@ -319,10 +356,11 @@ class _PublishResumeVideoState extends State<PublishResumeVideo> {
       ),
     );
   }
-  
+
   // 加载服务器数据字典
   void _loadRemoteDictionary() {
-    DioUtil.request("/resource/getPublishAndSearchOptions", method: "GET").then((responseData) {
+    DioUtil.request("/resource/getPublishAndSearchOptions", method: "GET")
+        .then((responseData) {
       bool success = DioUtil.checkRequestResult(responseData, showToast: false);
       if (success) {
         var data = responseData["data"];
@@ -379,11 +417,12 @@ class _PublishResumeVideoState extends State<PublishResumeVideo> {
 
     BotToast.showLoading();
     FormData formData = FormData.fromMap(params);
-    DioUtil.request("/resume/uploadMediaResume", parameters: formData).then((responseData) {
+    DioUtil.request("/resume/uploadMediaResume", parameters: formData)
+        .then((responseData) {
       bool success = DioUtil.checkRequestResult(responseData);
       if (success) {
         BotToast.showText(text: responseData["msg"]);
-        Get.back();
+        GetRequest.Get.back();
       }
     }).whenComplete(() => BotToast.closeAllLoading());
   }
