@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:get/get.dart' as GetRequest;
+import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:youpinapp/global/color_constants.dart';
@@ -63,7 +63,7 @@ class _PublishCompanyVideoState extends State<PublishCompanyVideo> {
       leading: IconButton(
         icon: Image.asset(join(AssetsUtil.assetsDirectoryCommon, 'nav_back_black.png')),
         onPressed: () {
-          GetRequest.Get.back();
+          Get.back();
         },
       ),
       title: Text('发布宣传片', style: TextStyle(fontSize: 17, color: ColorConstants.textColor51, fontWeight: FontWeight.bold)),
@@ -182,7 +182,7 @@ class _PublishCompanyVideoState extends State<PublishCompanyVideo> {
       ),
       onTap: () {
         FocusManager.instance.primaryFocus.unfocus();
-        GetRequest.Get.to(ChooseLocationRoute()).then((location) {
+        Get.to(ChooseLocationRoute()).then((location) {
           setState(() {
             _locationMap = location;
           });
@@ -212,7 +212,7 @@ class _PublishCompanyVideoState extends State<PublishCompanyVideo> {
       ),
       onTap: () {
         FocusManager.instance.primaryFocus.unfocus();
-        GetRequest.Get.to(ChooseIndustryRoute()).then((map) {
+        Get.to(ChooseIndustryRoute()).then((map) {
           setState(() {
             _industryMap = map;
           });
@@ -274,7 +274,7 @@ class _PublishCompanyVideoState extends State<PublishCompanyVideo> {
       bool success = DioUtil.checkRequestResult(responseData);
       if (success) {
         BotToast.showText(text: responseData["msg"]);
-        GetRequest.Get.back();
+        Get.back();
       }
     }).whenComplete(() => BotToast.closeAllLoading());
   }

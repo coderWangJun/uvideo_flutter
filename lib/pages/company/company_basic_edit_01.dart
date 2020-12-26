@@ -4,7 +4,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart' as GetRequest;
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:youpinapp/app/account.dart';
@@ -20,10 +20,10 @@ import '../../utils/assets_util.dart';
 enum Gender { male, female }
 
 class CompanyBasicEdit01 extends StatefulWidget {
+
   bool changeTypeId = false;
   bool firstIntoFlag = false;
-
-  CompanyBasicEdit01({this.changeTypeId = false, this.firstIntoFlag = false});
+  CompanyBasicEdit01({this.changeTypeId = false,this.firstIntoFlag = false});
 
   @override
   _CompanyBasicEditImpl createState() => _CompanyBasicEditImpl();
@@ -42,13 +42,13 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
   String _logoUrl;
 
   TextEditingController _nameController = new TextEditingController();
-
 //  TextEditingController _companyController = new TextEditingController();
   TextEditingController _myWorkNameController = new TextEditingController();
   TextEditingController _myEmailController = new TextEditingController();
-
+  
   ///方便全局获取context使用
   BuildContext _context;
+
 
   @override
   void dispose() {
@@ -60,30 +60,25 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
 
   @override
   void initState() {
-    DioUtil.request('/company/getCompanyStaff',
-        parameters: {'isManager': 1, 'queryType': 2}).then((value) {
-      if (DioUtil.checkRequestResult(value)) {
-        if (value["data"] != null) {
-          Map m = value["data"][0];
-          setState(() {
-            if (m['headPortraitUrl'] != null && m['headPortraitUrl'] != "") {
-              headImg = Image.network(m['headPortraitUrl'] as String,
-                  width: 50, height: 50, fit: BoxFit.cover);
-            }
-            if ((m['sex'] as num) == 2) {
-              _gender = Gender.female;
-            }
-            if (m['name'] != null && m['name'] != "") {
-              _nameController.text = m['name'] as String;
-            }
-            if (m['position'] != null && m['position'] != "") {
-              _myWorkNameController.text = m['position'] as String;
-            }
-            if (m['email'] != null && m['email'] != "") {
-              _myEmailController.text = m['email'] as String;
-            }
-          });
-        }
+    DioUtil.request('/company/getCompanyStaff',parameters: {'isManager':1,'queryType':2}).then((value){
+      if(DioUtil.checkRequestResult(value)){
+        if(value["data"]!=null){
+        Map m = value["data"][0];
+        setState(() {
+          if(m['headPortraitUrl']!=null && m['headPortraitUrl']!=""){
+            headImg = Image.network(m['headPortraitUrl'] as String,width: 50, height: 50, fit: BoxFit.cover);
+          }
+          if((m['sex'] as num)==2){_gender = Gender.female;}
+          if(m['name']!=null && m['name']!=""){
+            _nameController.text = m['name'] as String;
+          }
+          if(m['position']!=null && m['position']!=""){
+          _myWorkNameController.text = m['position'] as String;
+          }
+          if(m['email']!=null && m['email']!=""){
+          _myEmailController.text = m['email'] as String;
+          }
+        });}
       }
     });
     super.initState();
@@ -91,50 +86,47 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
 
   @override
   Widget build(BuildContext context) {
+    
     _context = context;
 
     return
 //      MaterialApp(title: "company01",debugShowCheckedModeBanner: false,home:
         Scaffold(
-            backgroundColor: Colors.white,
-            appBar: _buildAppBar(),
-            body: GestureDetector(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 25),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _buildTitleWidgets(),
-                    _buildAvatarWidgets(),
-                    _buildGenderWidgets(),
-                    _buildNameInputWidgets(),
+          backgroundColor: Colors.white,
+          appBar: _buildAppBar(),
+          body: GestureDetector(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(left: 20, right: 20, top: 25),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _buildTitleWidgets(),
+                  _buildAvatarWidgets(),
+                  _buildGenderWidgets(),
+                  _buildNameInputWidgets(),
 //                  _buildCompanyInputWidgets(),
-                    _buildMyWorkNameInputWidgets(),
-                    _buildMyEmailInputWidgets(),
-                    _buildCommitButton()
-                  ],
-                ),
+                  _buildMyWorkNameInputWidgets(),
+                  _buildMyEmailInputWidgets(),
+                  _buildCommitButton()
+                ],
               ),
-              onTap: () {
-                FocusScope.of(context).requestFocus(FocusNode());
-              },
-            )
+            ),
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+          )
 //      ),
-            );
+    );
   }
 
   Widget _buildAppBar() {
     return PreferredSize(
         preferredSize: Size(double.infinity, 44),
         child: AppBar(
-          leading: IconButton(
-            icon: Image.asset(
-                join(AssetsUtil.assetsDirectoryCommon, "nav_back_black.png")),
-            onPressed: () {
-              ///back返回上一步
-              Navigator.of(_context)..pop();
-            },
-          ),
+          leading: IconButton(icon: Image.asset(join(AssetsUtil.assetsDirectoryCommon,"nav_back_black.png")),onPressed: (){
+          ///back返回上一步
+          Navigator.of(_context)..pop();
+        },),
           elevation: 0,
           brightness: _pageWillDisappear ? Brightness.dark : Brightness.light,
           backgroundColor: Colors.white,
@@ -152,23 +144,17 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
 //            )
 //
 //          ],
-        ));
+
+        )
+    );
   }
 
   Widget _buildTitleWidgets() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text('我的名片',
-            style: TextStyle(
-                fontSize: 24,
-                color: ColorConstants.textColor51,
-                fontWeight: FontWeight.bold)),
-        Text('向人才介绍一下自己',
-            style: TextStyle(
-                fontSize: 13,
-                color: Color.fromRGBO(102, 102, 102, 1),
-                fontWeight: FontWeight.w500))
+        Text('我的名片', style: TextStyle(fontSize: 24, color: ColorConstants.textColor51, fontWeight: FontWeight.bold)),
+        Text('向人才介绍一下自己', style: TextStyle(fontSize: 13, color: Color.fromRGBO(102, 102, 102, 1), fontWeight: FontWeight.w500))
       ],
     );
   }
@@ -183,11 +169,7 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('头像',
-                    style: TextStyle(
-                        fontSize: 17,
-                        color: ColorConstants.textColor51,
-                        fontWeight: FontWeight.bold)),
+                Text('头像', style: TextStyle(fontSize: 17, color: ColorConstants.textColor51, fontWeight: FontWeight.bold)),
                 SizedBox(height: 5),
               ],
             ),
@@ -198,20 +180,18 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
               height: 50,
               decoration: BoxDecoration(
                   color: ColorConstants.themeColorBlue,
-                  borderRadius: BorderRadius.circular(25)),
-              child: _pickedFile != null
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(25),
-                      child: Image.file(File(_pickedFile.path),
-                          width: 50, height: 50, fit: BoxFit.cover))
-                  : headImg,
+                  borderRadius: BorderRadius.circular(25)
+              ),
+              child: _pickedFile != null ? ClipRRect(
+                  borderRadius: BorderRadius.circular(25),
+                  child: Image.file(File(_pickedFile.path), width: 50, height: 50, fit: BoxFit.cover)
+              ) : headImg,
             ),
             onTap: () async {
-              var pickedFile = await ImagePicker.pickImage(
-                  source: ImageSource.gallery, imageQuality: 50);
-              if (pickedFile != null) {
-                GetRequest.Get.to(HeadImageCrop(pickedFile.path)).then((value) {
-                  if (value != null) {
+              var pickedFile = await ImagePicker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+              if(pickedFile != null){
+                Get.to(HeadImageCrop(pickedFile.path)).then((value){
+                  if(value != null){
                     setState(() {
                       _pickedFile = value as File;
                     });
@@ -232,11 +212,7 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text('性别',
-              style: TextStyle(
-                  fontSize: 17,
-                  color: ColorConstants.textColor51,
-                  fontWeight: FontWeight.bold)),
+          Text('性别', style: TextStyle(fontSize: 17, color: ColorConstants.textColor51, fontWeight: FontWeight.bold)),
           Row(
             children: <Widget>[
               SizedBox(
@@ -249,7 +225,8 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
                       setState(() {
                         _gender = value;
                       });
-                    }),
+                    }
+                ),
               ),
               SizedBox(
                 width: 90,
@@ -261,7 +238,8 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
                       setState(() {
                         _gender = value;
                       });
-                    }),
+                    }
+                ),
               )
             ],
           )
@@ -276,31 +254,25 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
         height: 90,
         padding: EdgeInsets.only(top: 10),
         decoration: BoxDecoration(
-            border: Border(
-                bottom:
-                    BorderSide(color: ColorConstants.dividerColor, width: 1))),
+            border: Border(bottom: BorderSide(color: ColorConstants.dividerColor, width: 1))
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('姓名',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Color.fromRGBO(102, 102, 102, 1),
-                  fontWeight: FontWeight.w500,
-                )),
+            Text('姓名', style: TextStyle(fontSize: 13, color: Color.fromRGBO(102, 102, 102, 1),fontWeight: FontWeight.w500,)),
             TextField(
               controller: _nameController,
               style: TextStyle(fontSize: 17, color: ColorConstants.textColor51),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: '请填写真实姓名',
-                hintStyle:
-                    TextStyle(fontSize: 17, color: ColorConstants.textColor153),
+                hintStyle: TextStyle(fontSize: 17, color: ColorConstants.textColor153),
               ),
             )
           ],
-        ));
+        )
+    );
   }
 
   ///我的公司
@@ -352,45 +324,40 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
         height: 90,
         padding: EdgeInsets.only(top: 10),
         decoration: BoxDecoration(
-            border: Border(
-                bottom:
-                    BorderSide(color: ColorConstants.dividerColor, width: 1))),
+            border: Border(bottom: BorderSide(color: ColorConstants.dividerColor, width: 1))
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('我的职务',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Color.fromRGBO(102, 102, 102, 1),
-                  fontWeight: FontWeight.w500,
-                )),
+            Text('我的职务', style: TextStyle(fontSize: 13, color: Color.fromRGBO(102, 102, 102, 1),fontWeight: FontWeight.w500,)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    controller: _myWorkNameController,
-                    style: TextStyle(
-                        fontSize: 17, color: ColorConstants.textColor51),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: '明确的职务。更能赢得人才的信任',
-                      hintStyle: TextStyle(
-                          fontSize: 17, color: ColorConstants.textColor153),
-                    ),
-                  ),
+                Expanded(child:
+                TextField(
+                controller: _myWorkNameController,
+                style: TextStyle(fontSize: 17, color: ColorConstants.textColor51),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: '明确的职务。更能赢得人才的信任',
+                  hintStyle: TextStyle(fontSize: 17, color: ColorConstants.textColor153),
                 ),
+              ),),
+
 
 //              IconButton(icon: Image.asset(join(AssetsUtil.assetsDirectoryCommon,"icon_forward_small.png")),onPressed: (){
 //                ///我也不知道这个到底能不能点，总之先放这儿了
 //                print("点了一下>");
 //              },)
-              ],
-            )
+
+
+            ],)
           ],
-        ));
+        )
+    );
   }
+
 
   ///我的邮箱(选填)
   Widget _buildMyEmailInputWidgets() {
@@ -398,44 +365,39 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
         height: 90,
         padding: EdgeInsets.only(top: 10),
         decoration: BoxDecoration(
-            border: Border(
-                bottom:
-                    BorderSide(color: ColorConstants.dividerColor, width: 1))),
+            border: Border(bottom: BorderSide(color: ColorConstants.dividerColor, width: 1))
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('我的邮箱',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Color.fromRGBO(102, 102, 102, 1),
-                  fontWeight: FontWeight.w500,
-                )),
+            Text('我的邮箱', style: TextStyle(fontSize: 13, color: Color.fromRGBO(102, 102, 102, 1),fontWeight: FontWeight.w500,)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    controller: _myEmailController,
-                    style: TextStyle(
-                        fontSize: 17, color: ColorConstants.textColor51),
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: '请填写邮箱(选填)',
-                      hintStyle: TextStyle(
-                          fontSize: 17, color: ColorConstants.textColor153),
-                    ),
-                  ),
+
+                Expanded(child:
+              TextField(
+                controller: _myEmailController,
+                style: TextStyle(fontSize: 17, color: ColorConstants.textColor51),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: '请填写邮箱(选填)',
+                  hintStyle: TextStyle(fontSize: 17, color: ColorConstants.textColor153),
                 ),
+              ),),
+
 
 //              IconButton(icon: Image.asset(join(AssetsUtil.assetsDirectoryCommon,"icon_forward_small.png")),onPressed: (){
 //                ///我也不知道这个到底能不能点，总之先放这儿了
 //                print("点了一下>");
 //              },)
-              ],
-            )
+
+
+            ],)
           ],
-        ));
+        )
+    );
   }
 
   Widget _buildCommitButton() {
@@ -447,12 +409,9 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
           alignment: Alignment.center,
           decoration: BoxDecoration(
               color: ColorConstants.themeColorBlue,
-              borderRadius: BorderRadius.circular(8)),
-          child: Text(widget.changeTypeId ? '确认切换身份' : '保存',
-              style: TextStyle(
-                  fontSize: 17,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold)),
+              borderRadius: BorderRadius.circular(8)
+          ),
+          child: Text(widget.changeTypeId?'确认切换身份':'保存', style: TextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold)),
         ),
         onTap: _savePersonInfo,
       ),
@@ -462,10 +421,8 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
   void _savePersonInfo() {
     BotToast.showLoading();
     if (_pickedFile != null) {
-      FormData formData = FormData.fromMap(
-          {'file': MultipartFile.fromFileSync(_pickedFile.path)});
-      DioUtil.request('/company/uploadCompanyLogo', parameters: formData)
-          .then((responseData) {
+      FormData formData = FormData.fromMap({'file': MultipartFile.fromFileSync(_pickedFile.path)});
+      DioUtil.request('/company/uploadCompanyLogo', parameters: formData).then((responseData) {
         bool success = DioUtil.checkRequestResult(responseData);
         if (success) {
           var data = responseData["data"];
@@ -506,7 +463,7 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
       return;
     }
 
-    if (email != "" && email != null && !email.contains("@")) {
+    if(email != "" && email != null && !email.contains("@")){
       BotToast.showText(text: '你输入邮箱格式错误');
       BotToast.closeAllLoading();
       return;
@@ -518,36 +475,30 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
       genderInt = 2;
     }
 
+
     var saveParams = {
-      'headPortraitUrl': _logoUrl,
-      'sex': genderInt,
-      'name': realName,
-      'email': email,
-      'position': workName
+      'headPortraitUrl' : _logoUrl,
+      'sex' : genderInt,
+      'name' : realName,
+      'email' : email,
+      'position' : workName
     };
     BotToast.closeAllLoading();
 
-    if (widget.changeTypeId) {
+    if(widget.changeTypeId){
       int typeId = 0;
-      if (g_accountManager.currentUser.typeId == 1) {
-        typeId = 2;
-      } else {
-        typeId = 1;
-      }
+      if(g_accountManager.currentUser.typeId==1){typeId = 2;}
+      else{typeId = 1;}
       saveParams['userid'] = g_accountManager.currentUser.id;
-      DioUtil.request("/company/addCompanyStaff", parameters: saveParams)
-          .then((responseData) {
-        bool success = DioUtil.checkRequestResult(responseData);
-        if (success) {
-          DioUtil.request("/user/switchIdentities",
-              parameters: {"typeId": typeId}).then((value) {
-            if (DioUtil.checkRequestResult(value)) {
-              setState(() {
-                _pageWillDisappear = true;
-              });
-              g_accountManager.refreshRemoteUser().then((value) {
-                GetRequest.Get.back();
-              }).whenComplete(() => BotToast.closeAllLoading());
+          DioUtil.request("/company/addCompanyStaff", parameters: saveParams).then((responseData) {
+            bool success = DioUtil.checkRequestResult(responseData);
+            if (success) {
+            DioUtil.request("/user/switchIdentities",parameters: {"typeId":typeId}).then((value){
+              if(DioUtil.checkRequestResult(value)){
+                setState(() { _pageWillDisappear = true; });
+                g_accountManager.refreshRemoteUser().then((value) {
+                  Get.back();
+                }).whenComplete(() => BotToast.closeAllLoading());
             } else {
               BotToast.closeAllLoading();
             }
@@ -556,23 +507,20 @@ class _CompanyBasicEditImpl extends State<CompanyBasicEdit01> {
           });
         }
       });
-    } else {
-      DioUtil.request("/company/addCompanyStaff", parameters: saveParams)
-          .then((responseData) {
-        bool success = DioUtil.checkRequestResult(responseData);
-        if (success) {
-          setState(() {
-            _pageWillDisappear = true;
-          });
-          g_accountManager.refreshRemoteUser().then((value) {
-            GetRequest.Get.back(result: widget.firstIntoFlag);
-          }).whenComplete(() => BotToast.closeAllLoading());
-        } else {
+    }else{
+        DioUtil.request("/company/addCompanyStaff", parameters: saveParams).then((responseData) {
+          bool success = DioUtil.checkRequestResult(responseData);
+          if (success) {
+            setState(() { _pageWillDisappear = true; });
+            g_accountManager.refreshRemoteUser().then((value) {
+              Get.back(result: widget.firstIntoFlag);
+            }).whenComplete(() => BotToast.closeAllLoading());
+          } else {
+            BotToast.closeAllLoading();
+          }
+        }).catchError((error) {
           BotToast.closeAllLoading();
-        }
-      }).catchError((error) {
-        BotToast.closeAllLoading();
-      });
+        });
     }
   }
 }

@@ -4,7 +4,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart' as GetRequest;
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:youpinapp/app/account.dart';
 import 'package:youpinapp/global/color_constants.dart';
@@ -66,7 +66,7 @@ class _CompanyBasicEditRouteState extends State<CompanyBasicEditRoute> {
               setState(() {
                 _pageWillDisappear = true;
               });
-              GetRequest.Get.offAll(HomeRoute());
+              Get.offAll(HomeRoute());
             },
           )
         ],
@@ -234,7 +234,7 @@ class _CompanyBasicEditRouteState extends State<CompanyBasicEditRoute> {
       if (success) {
         setState(() { _pageWillDisappear = true; });
         g_accountManager.refreshRemoteUser().then((value) {
-          GetRequest.Get.to(HomeRoute());
+          Get.to(HomeRoute());
         }).whenComplete(() => BotToast.closeAllLoading());
       } else {
         BotToast.closeAllLoading();
