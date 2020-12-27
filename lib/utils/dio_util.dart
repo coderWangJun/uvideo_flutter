@@ -14,20 +14,21 @@ class DioUtil {
 
 //  static final String SERVER_URL = 'https://47.108.196.26:2020';
   static final String SERVER_URL = 'https://47.104.105.255:2020';
+  // static final String SERVER_URL = 'https://www.im.com:2020';
+
   // static final String SERVER_URL = 'https://47.104.105.255:2020';
   // static final String SERVER_URL = 'https://127.0.0.1:2020';
   // static final String SERVER_URL = 'https://huangque.tech:2020';
-//  static final String SERVER_URL = 'https://192.168.2.149:2020';
+//  static final String ERVER_URL = 'https://192.168.2.149:2020';
 
   // 单例对象
   static Dio _dio;
 
-  static Dio getInstance(){
+  static Dio getInstance() {
     if (_dio == null) {
-
       // 头部
       Map<String, dynamic> headers = {
-        'Content-Type':'application/json',
+        'Content-Type': 'application/json',
 //        'token': AccountManager.instance.currentUser.token
       };
 
@@ -35,33 +36,33 @@ class DioUtil {
           baseUrl: SERVER_URL,
           connectTimeout: 300000,
           receiveTimeout: 300000,
-         headers: headers,
+          headers: headers,
           method: 'POST');
 
       _dio = new Dio(options);
     }
 
     // 头部
-    Map<String, dynamic> headers = {
-      'Content-Type':'application/json'
-    };
+    Map<String, dynamic> headers = {'Content-Type': 'application/json'};
 
-    if (g_accountManager.currentUser != null && g_accountManager.currentUser.token != null) {
+    if (g_accountManager.currentUser != null &&
+        g_accountManager.currentUser.token != null) {
       headers['token'] = g_accountManager.currentUser.token;
     }
 
     _dio.options.headers = headers;
 
     // 在调试模式下需要抓包调试，所以我们使用代理，并禁用HTTPS证书校验
-   (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-       (client) {
-   //   client.findProxy = (uri) {
-   //     //return "PROXY 192.168.2.102:8888";
-   //     return "PROXY 192.168.1.6:8888";
-   //   };
-   //   //代理工具会提供一个抓包的自签名证书，会通不过证书校验，所以我们禁用证书校验
-     client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
-   };
+    (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (client) {
+      // client.findProxy = (uri) {
+      //   //return "PROXY 192.168.32.173:8888";
+      //   return "PROXY 192.168.0.102:8888";
+      // };
+      //   //代理工具会提供一个抓包的自签名证书，会通不过证书校验，所以我们禁用证书校验
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+    };
 
     return _dio;
   }
@@ -70,7 +71,9 @@ class DioUtil {
   static bool checkRequestResult(responseData, {showToast = false}) {
     if (responseData == null) {
       print("responseData==null");
-      if (showToast) { BotToast.showText(text: "请求失败"); }
+      if (showToast) {
+        BotToast.showText(text: "请求失败");
+      }
       return false;
     } else {
       String respCode = responseData['code'];
@@ -81,9 +84,13 @@ class DioUtil {
         return true;
       } else {
         if (msg != null) {
-          if (showToast) { BotToast.showText(text: msg); }
+          if (showToast) {
+            BotToast.showText(text: msg);
+          }
         } else {
-          if (showToast) { BotToast.showText(text: responseData['errorMsg']??"请求失败"); }
+          if (showToast) {
+            BotToast.showText(text: responseData['errorMsg'] ?? "请求失败");
+          }
         }
 
         return false;
@@ -91,7 +98,8 @@ class DioUtil {
     }
   }
 
-  static Future<T> request<T>(String url, {parameters, method,ProgressCallback callback}) async {
+  static Future<T> request<T>(String url,
+      {parameters, method, ProgressCallback callback}) async {
     var result;
     parameters = parameters != null ? parameters : {};
     method = method != null ? method : 'POST';
@@ -100,10 +108,17 @@ class DioUtil {
       Dio dio = getInstance();
       print("$url\n${dio.options.headers}\n$parameters");
       Response response;
-      if(callback!=null){
-        response = await dio.request(url, data: parameters, options: Options(method: method),onSendProgress: callback);
-      }else{
-        response = await dio.request(url, data: parameters, options: Options(method: method),);
+      if (callback != null) {
+        response = await dio.request(url,
+            data: parameters,
+            options: Options(method: method),
+            onSendProgress: callback);
+      } else {
+        response = await dio.request(
+          url,
+          data: parameters,
+          options: Options(method: method),
+        );
       }
       print("code=${response.statusCode}\n");
       var responseData = response.data;

@@ -132,7 +132,7 @@ class _VideoPlayerHoriContainerState extends State<VideoPlayerHoriContainer> wit
       children: <Widget>[
         _topSelectedIndex == 2 ? NearbyVideoList() : VideoPlayerVertContainer(),
         _buildTopAppBar(),
-        _buildBottomTabBar(parentContext)
+        // _buildBottomTabBar(parentContext)
       ],
     );
   }
@@ -152,17 +152,17 @@ class _VideoPlayerHoriContainerState extends State<VideoPlayerHoriContainer> wit
         child: AppBar(
           elevation: 0,
           backgroundColor: Colors.transparent,
-          leading: widget.playType == VideoPlayType.shortVideo ? InkWell(
-            child: Image.asset(AssetsUtil.pathForAsset(AssetsUtil.assetsDirectoryHome, switchIconName)),
-            onTap: () {
-              _flipToHomeListRoute();
-            },
-          ) : InkWell(
-            child: Image.asset(imagePath("common", "nav_back.png")),
-            onTap: () {
-              Get.back();
-            },
-          ),
+          // leading: widget.playType == VideoPlayType.shortVideo ? InkWell(
+          //   child: Image.asset(AssetsUtil.pathForAsset(AssetsUtil.assetsDirectoryHome, switchIconName)),
+          //   onTap: () {
+          //     _flipToHomeListRoute();
+          //   },
+          // ) : InkWell(
+          //   child: Image.asset(imagePath("common", "nav_back.png")),
+          //   onTap: () {
+          //     Get.back();
+          //   },
+          // ),
           centerTitle: true,
           title: SizedBox(
             width: 180,
