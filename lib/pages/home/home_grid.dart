@@ -29,7 +29,7 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
   TabController _tabController;
   TabController _navTabController;
   List<dynamic> _categoryList = [{'index': -1, 'name': '全部'}];
-  List<String> _tabbarTitles = ['关注', '推荐', '附近'];
+  List<String> _tabbarTitles = ['作品', '企宣', '附近'];
 
   void _initData() async {
     AccountManager.instance.isLogin.then((isLogin) {

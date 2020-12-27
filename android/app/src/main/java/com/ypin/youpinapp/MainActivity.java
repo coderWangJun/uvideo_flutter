@@ -1,9 +1,10 @@
 package com.ypin.youpinapp;
 
 import io.flutter.embedding.android.FlutterActivity;
-
-import android.os.Build;
-import android.view.ViewTreeObserver;
-import android.view.WindowManager;
+import io.flutter.embedding.engine.FlutterEngine;
 public class MainActivity extends FlutterActivity {
+    @Override
+    public void configureFlutterEngine(FlutterEngine flutterEngine) {
+        super.configureFlutterEngine(flutterEngine);
+    }
 }
