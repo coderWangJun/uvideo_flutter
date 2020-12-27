@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bmflocation/bdmap_location_flutter_plugin.dart';
 // import 'package:flutter_baidu_map/flutter_baidu_map.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
@@ -11,8 +12,6 @@ import 'package:youpinapp/app/imProvider.dart';
 import 'package:youpinapp/app/search.dart';
 import 'package:youpinapp/app/web_socket.dart';
 import 'package:youpinapp/pages/agreement/agreement_route.dart';
-import 'package:youpinapp/pages/home/home_route.dart';
-import 'package:youpinapp/pages/setting/updataApp.dart';
 import 'package:youpinapp/utils/event_bus.dart';
 
 void main() {
@@ -86,8 +85,10 @@ class YouPinAppState extends State<YouPinApp> {
   }
 
   void _initBaiduSDK() async {
-    // FlutterBaiduMap.setAK("pdXG6yLQ9QAGGxhy5uSZ8nf8F5KfGhXe");
-
+    LocationFlutterPlugin _locationPlugin = new LocationFlutterPlugin();
+    _locationPlugin.requestPermission();
+//     FlutterBaiduMap.setAK("pdXG6yLQ9QAGGxhy5uSZ8nf8F5KfGhXe");
+//
 //    PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.location);
 //    bool hasPermission = permission == PermissionStatus.granted;
 //    if(!hasPermission){
@@ -98,8 +99,8 @@ class YouPinAppState extends State<YouPinApp> {
 //        return;
 //      }
 //    }
-
-    // BaiduLocation location = await FlutterBaiduMap.getCurrentLocation();
+//
+//     BaiduLocation location = await FlutterBaiduMap.getCurrentLocation();
     // print("百度地图定位：${location.longitude},${location.latitude}");
 
   }

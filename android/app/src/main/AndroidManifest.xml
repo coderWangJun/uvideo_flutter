@@ -49,6 +49,10 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- 配置百度地图apikey -->
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="pdXG6yLQ9QAGGxhy5uSZ8nf8F5KfGhXe" />
     </application>
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />

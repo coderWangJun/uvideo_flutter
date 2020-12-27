@@ -13,6 +13,8 @@ class StorageManager {
   static final String USER_SEARCH_HISTORY = "searchHistory";
   //用户sessionID
   static final String MY_SESSION_ID = "mySessionId";
+  //选择城市名称
+  static final String MY_CITY_NAME = "myCityName";
 
   //自定义消息--音视频邀请，音视频取消，正在进行其他音视频，拒绝邀请
   static final String RTC_YAOQING = "rtcYaoQing";

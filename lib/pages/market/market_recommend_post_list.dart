@@ -1,16 +1,15 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+import 'package:youpinapp/app/storage.dart';
 import 'package:get/route_manager.dart';
 import 'package:youpinapp/app/search.dart';
 import 'package:youpinapp/global/color_constants.dart';
-import 'package:youpinapp/models/index.dart';
 import 'package:youpinapp/pages/common/location_button.dart';
 import 'package:youpinapp/pages/common/sort_widget.dart';
 import 'package:youpinapp/pages/home/home_choose_city.dart';
 import 'package:youpinapp/pages/market/market_post_list.dart';
 import 'package:youpinapp/utils/dio_util.dart';
-import 'package:youpinapp/utils/event_bus.dart';
 
 class MarketRecommendPostList extends StatefulWidget {
   @override
@@ -21,16 +20,22 @@ class _MarketRecommendPostListState extends State<MarketRecommendPostList> with 
   List<String> _tabTitles = ['全部'];
   Map<String,num> _tabTitlesId = {};
   TabController _tabController;
-
   MarketPostListProvider marketModel = new MarketPostListProvider();
 
+
   Map params = {'marketTypeId': 1};
-  String cityName = '区域';
+  String cityName = '全部';
 
 
   @override
   void initState() {
     super.initState();
+    g_storageManager.getStorage(StorageManager.MY_CITY_NAME).then((value) {
+      setState(() {
+        cityName=value??'全部';
+        params['cityName']=cityName;
+      });
+    });
     _tabController = TabController(length: _tabTitles.length, vsync: this);
     //tabBar的数据拉取------>
     DioUtil.request("/resource/getMarketCircle",method: 'GET').then((value){
