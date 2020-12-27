@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +8,11 @@ import 'package:youpinapp/provider/tap_icon_search_provider.dart';
 import 'package:youpinapp/utils/assets_util.dart';
 import 'package:youpinapp/utils/dio_util.dart';
 import 'package:youpinapp/provider/city_choose.dart';
-
+import 'package:youpinapp/app/storage.dart';
+import 'package:flutter_bmflocation/bdmap_location_flutter_plugin.dart';
+import 'package:flutter_bmflocation/flutter_baidu_location.dart';
+import 'package:flutter_bmflocation/flutter_baidu_location_android_option.dart';
+import 'package:flutter_bmflocation/flutter_baidu_location_ios_option.dart';
 class HomeChooseCity extends StatefulWidget{
 
   SearchManager searchModel;
@@ -38,19 +42,21 @@ class HomeChooseCityImpl extends State<HomeChooseCity>{
 
   ///保存一级城市，防止多次点击同样的一级城市发送冗余的请求，默认选中常用项
   String _checkCity="常用";
-
+  var city = '定位中...';
   Widget _secondfrag;
   Widget _leftList = SizedBox.shrink();
   Widget _publicCity;
   Widget _hotCity = SizedBox.shrink();
 
   cityFontWeight _fontWeight = cityFontWeight();
-
+  LocationFlutterPlugin _locationPlugin = new LocationFlutterPlugin();
+  StreamSubscription<Map<String, Object>> _locationListener;
   @override
   void initState() {
     super.initState();
     _getListCityHotDoor();
     _getListCityFirstCity();
+    getCity();
   }
 
   @override
@@ -82,10 +88,12 @@ class HomeChooseCityImpl extends State<HomeChooseCity>{
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                     Image.asset(join(AssetsUtil.assetsDirectoryHome,"coordinate.png")),
-                    Text(widget.searchModel.nowCity,style: TextStyle(color: Color.fromRGBO(79, 154, 247, 1),fontSize: 13.0),textAlign: TextAlign.center,),
+                    Text(city,style: TextStyle(color: Color.fromRGBO(79, 154, 247, 1),fontSize: 13.0),textAlign: TextAlign.center,),
                   ],),
                   onTap: (){
                     ///点击当前定位的城市
+                    widget.searchModel.nowCity=city;
+                    g_storageManager.setStorage(StorageManager.MY_CITY_NAME,city);
                     Navigator.of(_context)..pop();
                   },
                 ),
@@ -145,6 +153,7 @@ class HomeChooseCityImpl extends State<HomeChooseCity>{
                     }
                   }
                   ///点击了就回去，往回传值
+                  g_storageManager.setStorage(StorageManager.MY_CITY_NAME, city);
                   Navigator.of(_context)..pop(true);
                 },
               )
@@ -294,5 +303,47 @@ class HomeChooseCityImpl extends State<HomeChooseCity>{
           });
         }});
     }
+  ///获取默认城市
+  void getCity(){
+    /// 动态申请定位权限
+    _locationPlugin.requestPermission();
+    _locationListener = _locationPlugin.onResultCallback().listen((Map<String, Object> result) {
+      setState(() {
+        try {
+          BaiduLocation _baiduLocation = BaiduLocation.fromMap(result);
+          city = _baiduLocation.city.split('市')[0];
+        } catch (e) {}
+      });
+    });
+    if (null != _locationPlugin) {
+      BaiduLocationAndroidOption androidOption = new BaiduLocationAndroidOption();
+      androidOption.setCoorType("bd09ll"); // 设置返回的位置坐标系类型
+      androidOption.setIsNeedAltitude(true); // 设置是否需要返回海拔高度信息
+      androidOption.setIsNeedAddres(true); // 设置是否需要返回地址信息
+      androidOption.setIsNeedLocationPoiList(true); // 设置是否需要返回周边poi信息
+      androidOption.setIsNeedNewVersionRgc(true); // 设置是否需要返回最新版本rgc信息
+      androidOption.setIsNeedLocationDescribe(true); // 设置是否需要返回位置描述
+      androidOption.setOpenGps(true); // 设置是否需要使用gps
+      androidOption.setLocationMode(LocationMode.Hight_Accuracy); // 设置定位模式
+      androidOption.setLocationPurpose(BDLocationPurpose.SignIn);//定位1次
+      androidOption.setScanspan(1000); // 设置发起定位请求时间间隔
+      Map androidMap = androidOption.getMap();
+
+      /// ios 端设置定位参数
+      BaiduLocationIOSOption iosOption = new BaiduLocationIOSOption();
+      iosOption.setIsNeedNewVersionRgc(true); // 设置是否需要返回最新版本rgc信息
+      iosOption.setBMKLocationCoordinateType("BMKLocationCoordinateTypeBMK09LL"); // 设置返回的位置坐标系类型
+      iosOption.setActivityType("CLActivityTypeAutomotiveNavigation"); // 设置应用位置类型
+      iosOption.setLocationTimeout(10); // 设置位置获取超时时间
+      iosOption.setDesiredAccuracy("kCLLocationAccuracyBest"); // 设置预期精度参数
+      iosOption.setReGeocodeTimeout(10); // 设置获取地址信息超时时间
+      iosOption.setDistanceFilter(100); // 设置定位最小更新距离
+      iosOption.setAllowsBackgroundLocationUpdates(true); // 是否允许后台定位
+      iosOption.setPauseLocUpdateAutomatically(true); //  定位是否会被系统自动暂停
+      Map iosMap = iosOption.getMap();
+      _locationPlugin.prepareLoc(androidMap, iosMap);
+      _locationPlugin.startLocation();
+    }
+  }
 }
 
