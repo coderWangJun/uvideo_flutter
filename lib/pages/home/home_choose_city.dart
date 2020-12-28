@@ -345,5 +345,12 @@ class HomeChooseCityImpl extends State<HomeChooseCity>{
       _locationPlugin.startLocation();
     }
   }
+  @override
+  void dispose() {
+    if (null != _locationListener) {
+      _locationListener.cancel(); // 停止定位
+    }
+    super.dispose();
+  }
 }
 
