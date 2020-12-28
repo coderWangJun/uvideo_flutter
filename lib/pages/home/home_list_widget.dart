@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:youpinapp/app/app.dart';
 import 'package:youpinapp/app/imProvider.dart';
@@ -12,6 +13,9 @@ import 'package:youpinapp/pages/mine/mine_index.dart';
 import 'package:youpinapp/pages/publish/publish_menu.dart';
 import 'package:youpinapp/utils/assets_util.dart';
 import 'package:youpinapp/utils/event_bus.dart';
+
+import '../../app/account.dart';
+import '../login/login_route.dart';
 
 class HomeListWidget extends StatefulWidget {
   @override
@@ -89,6 +93,10 @@ class _HomeListWidgetState extends State<HomeListWidget> with SingleTickerProvid
               }
             }).toList(),
             onTap: (index) {
+              if(g_accountManager.currentUser==null){
+                Get.offAll(LoginRoute());
+                return;
+              }
               if (index == 2) {
 //                Get.to(PublishMenu());
                 showGeneralDialog(
