@@ -1,8 +1,11 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bmflocation/bdmap_location_flutter_plugin.dart';
-// import 'package:flutter_baidu_map/flutter_baidu_map.dart';
+import 'package:flutter_bmfbase/BaiduMap/bmfmap_base.dart'
+    show BMFMapSDK, BMF_COORD_TYPE;
+import 'package:flutter_bmflocation/flutter_baidu_location.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -87,21 +90,13 @@ class YouPinAppState extends State<YouPinApp> {
   void _initBaiduSDK() async {
     LocationFlutterPlugin _locationPlugin = new LocationFlutterPlugin();
     _locationPlugin.requestPermission();
-//     FlutterBaiduMap.setAK("pdXG6yLQ9QAGGxhy5uSZ8nf8F5KfGhXe");
-//
-//    PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.location);
-//    bool hasPermission = permission == PermissionStatus.granted;
-//    if(!hasPermission){
-//      Map<PermissionGroup, PermissionStatus> map = await PermissionHandler().requestPermissions([
-//        PermissionGroup.location
-//      ]);
-//      if(map.values.toList()[0] != PermissionStatus.granted){
-//        return;
-//      }
-//    }
-//
-//     BaiduLocation location = await FlutterBaiduMap.getCurrentLocation();
-    // print("百度地图定位：${location.longitude},${location.latitude}");
+    if (Platform.isIOS) {
+      BMFMapSDK.setApiKeyAndCoordType(
+          'pdXG6yLQ9QAGGxhy5uSZ8nf8F5KfGhXe', BMF_COORD_TYPE.BD09LL);
+    } else if (Platform.isAndroid) {
+      BMFMapSDK.setCoordType(BMF_COORD_TYPE.BD09LL);
+    }
+
 
   }
 

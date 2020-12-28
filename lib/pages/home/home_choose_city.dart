@@ -61,7 +61,6 @@ class HomeChooseCityImpl extends State<HomeChooseCity>{
 
   @override
   Widget build(BuildContext context) {
-
     _context = context;
 
     ///默认常用城市碎片
@@ -303,7 +302,6 @@ class HomeChooseCityImpl extends State<HomeChooseCity>{
           });
         }});
     }
-  ///获取默认城市
   void getCity(){
     /// 动态申请定位权限
     _locationPlugin.requestPermission();
@@ -312,6 +310,9 @@ class HomeChooseCityImpl extends State<HomeChooseCity>{
         try {
           BaiduLocation _baiduLocation = BaiduLocation.fromMap(result);
           city = _baiduLocation.city.split('市')[0];
+          if (null != _locationListener) {
+            _locationListener.cancel(); // 停止定位
+          }
         } catch (e) {}
       });
     });
@@ -345,12 +346,6 @@ class HomeChooseCityImpl extends State<HomeChooseCity>{
       _locationPlugin.startLocation();
     }
   }
-  @override
-  void dispose() {
-    if (null != _locationListener) {
-      _locationListener.cancel(); // 停止定位
-    }
-    super.dispose();
-  }
+
 }
 

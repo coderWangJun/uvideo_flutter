@@ -59,6 +59,8 @@ dependencies:
   file_picker: ^2.1.0
   #百度地图定位插件 http://lbsyun.baidu.com/index.php?title=flutter/loc
   flutter_bmflocation: ^1.0.2
+  flutter_bmfmap: ^1.0.2
+  flutter_bmfutils: ^1.0.2
   permission_handler: ^5.0.1
   tencent_im_plugin: ^0.2.42
   flutter_native_splash: ^0.1.9

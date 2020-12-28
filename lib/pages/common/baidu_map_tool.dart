@@ -1,10 +1,12 @@
-// import 'package:flutter_baidu_map/flutter_baidu_map.dart';
+
+import 'dart:async';
+
+import 'package:flutter_bmflocation/flutter_baidu_location.dart';
 
 class BaiduMapTool {
-  // 获取当前定位
-  // static Future<BaiduLocation> getLocation() async {
-  //   BaiduLocation location = await FlutterBaiduMap.getCurrentLocation();
-  //   print("百度地图定位：${location.longitude} - ${location.latitude}");
-  //   return location;
-  // }
+  //获取位置信息
+  static Future<BaiduLocation> getLocation() async {
+
+
+  }
 }
