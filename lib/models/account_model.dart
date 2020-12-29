@@ -7,7 +7,7 @@ part 'account_model.g.dart';
 
 @JsonSerializable()
 class AccountModel {
-      AccountModel();
+  AccountModel();
 
   String id;
   String phonenumber;
@@ -16,9 +16,11 @@ class AccountModel {
   AccountTencentModel tXIMUser;
   double ucoinAmount;
   String token;
+  String isSetPwd;
   AccountPersonModel userData;
   AccountCompanyModel companyData;
 
-  factory AccountModel.fromJson(Map<String,dynamic> json) => _$AccountModelFromJson(json);
+  factory AccountModel.fromJson(Map<String, dynamic> json) => _$AccountModelFromJson(json);
+
   Map<String, dynamic> toJson() => _$AccountModelToJson(this);
 }

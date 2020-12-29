@@ -205,12 +205,60 @@ class ChooseWorkName extends StatelessWidget {
     if (data == null) {
       return <Widget>[];
     }
-    List<Widget> items = data.map((element) {
-      return _getItem(context, model, element);
-    }).toList();
+
+      List<Widget> items = data.map((element) {
+      if(isGangWeis){
+        return _getItemGangWei(context, model, element);
+      }else{
+        return _getItem(context, model, element);
+      }
+      }).toList();
+
+
     return items;
   }
-
+  Widget _getItemGangWei(BuildContext context, ChooseWorkNameProvider model, Map map) {
+    bool flagShow = true;
+    if (model.level != 0) {
+      flagShow = false;
+    }
+    return Center(
+        child: GestureDetector(
+          child: Container(
+              height: 50.0,
+              width: 360,
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(color: Color.fromRGBO(238, 238, 238, 1)))),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                      child: Text(
+                        map["name"]??'',
+                        style: TextStyle(
+                            color: Color.fromRGBO(51, 51, 51, 1), fontSize: 13.0),
+                      )),
+                  flagShow
+                      ? Image.asset(
+                    join(AssetsUtil.assetsDirectoryCommon,
+                        "icon_forward_normal.png"),
+                    width: 5.0,
+                  )
+                      : SizedBox(
+                    width: 5.0,
+                  ),
+                ],
+              )),
+          onTap: () {
+            //点击item
+            model.getNext(map["id"] as num).then((flag) {
+              if (!flag) {
+                Navigator.of(context)..pop(map);
+              }
+            });
+          },
+        ));
+  }
   Widget _getItem(BuildContext context, ChooseWorkNameProvider model, Map map) {
     bool flagShow = true;
     if (model.level != 0) {
@@ -228,7 +276,7 @@ class ChooseWorkName extends StatelessWidget {
             children: <Widget>[
               Expanded(
                   child: Text(
-                map["skillName"],
+                map["skillName"]??'',
                 style: TextStyle(
                     color: Color.fromRGBO(51, 51, 51, 1), fontSize: 13.0),
               )),

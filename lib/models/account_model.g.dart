@@ -17,6 +17,7 @@ AccountModel _$AccountModelFromJson(Map<String, dynamic> json) {
         : AccountTencentModel.fromJson(json['tXIMUser'] as Map<String, dynamic>)
     ..ucoinAmount = (json['ucoinAmount'] as num)?.toDouble()
     ..token = json['token'] as String
+    ..isSetPwd = json['isSetPwd'] as String
     ..userData = json['userData'] == null
         ? null
         : AccountPersonModel.fromJson(json['userData'] as Map<String, dynamic>)
@@ -37,4 +38,5 @@ Map<String, dynamic> _$AccountModelToJson(AccountModel instance) =>
       'token': instance.token,
       'userData': instance.userData,
       'companyData': instance.companyData,
+      'isSetPwd': instance.isSetPwd,
     };

@@ -15,13 +15,16 @@ class HomeRoute extends StatefulWidget {
   _HomeRouteState createState() => _HomeRouteState();
 }
 
-class _HomeRouteState extends State<HomeRoute> with SingleTickerProviderStateMixin {
+class _HomeRouteState extends State<HomeRoute>
+    with SingleTickerProviderStateMixin {
   AnimationController _animationController;
   Animation<double> _curvedAnimation;
 
   _HomeRouteState() {
-    _animationController = new AnimationController(vsync: this, duration: Duration(milliseconds: 800));
-    _curvedAnimation = new CurvedAnimation(parent: _animationController, curve: Curves.easeOut);
+    _animationController =
+    new AnimationController(vsync: this, duration: Duration(milliseconds: 800));
+    _curvedAnimation =
+    new CurvedAnimation(parent: _animationController, curve: Curves.easeOut);
 
     // FlipView切换事件
     g_eventBus.on(GlobalEvent.mainFlipSwitch, (reverse) {
@@ -38,11 +41,11 @@ class _HomeRouteState extends State<HomeRoute> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    DioUtil.request("/sysInfo/getSYSInfo",method: 'GET').then((value){
-      if(DioUtil.checkRequestResult(value)){
-        if(value['data']!=null){
-          num versionCode =  value['data']['updateF'] as num;
-          if(versionCode>App.VERSIONCODE){
+    DioUtil.request("/sysInfo/getSYSInfo", method: 'GET').then((value) {
+      if (DioUtil.checkRequestResult(value)) {
+        if (value['data'] != null) {
+          num versionCode = value['data']['updateF'] as num;
+          if (versionCode > App.VERSIONCODE) {
             Get.to(UpDataApp(mapParam: value['data'] as Map,));
           }
         }
@@ -55,9 +58,11 @@ class _HomeRouteState extends State<HomeRoute> with SingleTickerProviderStateMix
     ScreenUtil.init(context, width: 750, height: 1334, allowFontScaling: true);
 
     return FlipView(
-      animationController: _curvedAnimation,
-      front: HomeVideoWidget() ,
-      back: HomeListWidget(),
+        animationController: _curvedAnimation,
+        // front: HomeVideoWidget() ,
+        // back: HomeListWidget(),
+        front: HomeListWidget(),
+        back: SizedBox.shrink()
     );
   }
 }

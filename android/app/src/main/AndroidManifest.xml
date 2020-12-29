@@ -9,7 +9,7 @@
 
     <!-- 腾讯IM SDK需要加tools:replace属性，而这个属性需要在manifest中增加xmlns:tools属性 -->
     <application
-        android:name="io.flutter.app.FlutterApplication"
+        android:name=".MyApp"
         android:label="优视"
         tools:replace="android:label"
         android:usesCleartextTraffic="true"

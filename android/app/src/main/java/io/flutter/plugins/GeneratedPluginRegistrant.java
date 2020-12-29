@@ -22,6 +22,8 @@ public final class GeneratedPluginRegistrant {
     flutterEngine.getPlugins().add(new com.mr.flutter.plugin.filepicker.FilePickerPlugin());
     flutterEngine.getPlugins().add(new com.baidu.flutter_bmfbase.FlutterBmfbasePlugin());
       com.baidu.bdmap_location_flutter_plugin.LocationFlutterPlugin.registerWith(shimPluginRegistry.registrarFor("com.baidu.bdmap_location_flutter_plugin.LocationFlutterPlugin"));
+    flutterEngine.getPlugins().add(new com.baidu.flutter_bmfmap.FlutterBmfmapPlugin());
+    flutterEngine.getPlugins().add(new com.baidu.flutter_bmfutils.FlutterBmfutilsPlugin());
       com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin.registerWith(shimPluginRegistry.registrarFor("com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin"));
     flutterEngine.getPlugins().add(new io.flutter.plugins.flutter_plugin_android_lifecycle.FlutterAndroidLifecyclePlugin());
       com.dooboolab.fluttersound.FlutterSoundPlugin.registerWith(shimPluginRegistry.registrarFor("com.dooboolab.fluttersound.FlutterSoundPlugin"));

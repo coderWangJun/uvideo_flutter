@@ -28,24 +28,39 @@ class HomeGrid extends StatefulWidget {
 class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
   TabController _tabController;
   TabController _navTabController;
-  List<dynamic> _categoryList = [{'index': -1, 'name': '全部'}];
-  List<String> _tabbarTitles = ['作品', '企宣', '附近'];
+  List<dynamic> _categoryList = [
+    {'index': -1, 'name': '全部'}
+  ];
+  List<String> _tabbarTitles = ['作品','全部','企业宣传片'];
 
   void _initData() async {
     AccountManager.instance.isLogin.then((isLogin) {
       if (isLogin && g_accountManager.currentUser != null) {
         int typeId = g_accountManager.currentUser.typeId;
-        if (typeId == 1) {  // 个人
+        //区分是否开启求职铃
+        if (typeId == 1) {
+          _tabbarTitles = ['作品', '岗位', '企业宣传片'];
+          // 个人
           _loadIndustryCategory();
-        } else { // 企业
+        } else {
+          _tabbarTitles = ['作品', '简历', '企业宣传片'];
+          // 企业
           _loadJobCategory();
         }
+      } else {
+        _tabbarTitles = ['作品', '企业宣传片'];
+        // 企业
+        _loadJobCategory();
       }
+
+      isLoading = false;
+      setState(() {});
     });
   }
 
   _HomeGridState() {
-    _navTabController = TabController(initialIndex: 1, length: _tabbarTitles.length, vsync: this);
+    _navTabController = TabController(
+        initialIndex: 1, length: _tabbarTitles.length, vsync: this);
     g_eventBus.on(GlobalEvent.accountInitialized, (arg) {
       _initData();
     });
@@ -54,46 +69,51 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    if(g_accountManager.currentUser!=null){
+    if (g_accountManager.currentUser != null) {
       _initData();
     }
   }
 
+  bool isLoading = true;
+
   @override
   Widget build(BuildContext context) {
+    // if (isLoading) {
+    //   return SizedBox.shrink();
+    // }
     SearchManager model = Provider.of<SearchManager>(context);
     return Scaffold(
-          appBar: _buildAppBar(model),
-          body: Column(
-            children: <Widget>[
-              _buildCategoryView(context,model),
-              _buildGridView(model)
-            ],
-          ),
-          floatingActionButton: FloatingButton.buildJobRingButton('HomeGrid'),
-        );
+      appBar: _buildAppBar(model),
+      body: Column(
+        children: <Widget>[
+          _buildCategoryView(context, model),
+          _buildGridView(model)
+        ],
+      ),
+      floatingActionButton: FloatingButton.buildJobRingButton('HomeGrid'),
+    );
   }
 
   // 导航栏
   Widget _buildAppBar(SearchManager model) {
     return PreferredSize(
-      preferredSize: Size(double.infinity, 44),
-      child: AppBar(
-        elevation: 0,
-        brightness: Brightness.dark,
-        backgroundColor: ColorConstants.themeColorBlue,
-        leading: _buildAppBarLeading(),
-        title: _buildAppBarTitle(model),
-        centerTitle: true,
-        actions: _buildAppBarActions(model),
-      )
-    );
+        preferredSize: Size(double.infinity, 44),
+        child: AppBar(
+          elevation: 0,
+          brightness: Brightness.dark,
+          backgroundColor: ColorConstants.themeColorBlue,
+          // leading: _buildAppBarLeading(),
+          title: _buildAppBarTitle(model),
+          centerTitle: true,
+          actions: _buildAppBarActions(model),
+        ));
   }
 
   // 导航栏左边的按钮
   Widget _buildAppBarLeading() {
     return IconButton(
-      icon: Image.asset(join(AssetsUtil.assetsDirectoryHome, 'switch_youshi.png')),
+      icon: Image.asset(
+          join(AssetsUtil.assetsDirectoryHome, 'switch_youshi.png')),
       onPressed: () {
         App.instance.showMode = AppShowMode.player;
         g_eventBus.emit(GlobalEvent.mainFlipSwitch, false);
@@ -104,19 +124,28 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
   // 导航栏中间的tabbar
   Widget _buildAppBarTitle(SearchManager model) {
     return Container(
-        width: 180,
+        width: 240,
         child: TabBar(
           controller: _navTabController,
           labelPadding: EdgeInsets.zero,
-          labelStyle: TextStyle(fontSize: 36.sp, color: Color.fromRGBO(255, 255, 255, 1)),
-          unselectedLabelStyle: TextStyle(fontSize: 28.sp, fontWeight: FontWeight.bold, color: Color.fromRGBO(255, 255, 255, 0.5)),
+          labelStyle: TextStyle(
+              fontSize: 30.sp, color: Color.fromRGBO(255, 255, 255, 1)),
+          unselectedLabelStyle: TextStyle(
+              fontSize: 25.sp,
+              fontWeight: FontWeight.bold,
+              color: Color.fromRGBO(255, 255, 255, 0.5)),
           indicatorSize: TabBarIndicatorSize.label,
           indicatorColor: Colors.white,
-          indicatorPadding: EdgeInsets.only(bottom: 15.h),
+          indicatorPadding: EdgeInsets.only(bottom: 10.h),
           tabs: _tabbarTitles.map((title) {
-            return Tab(text: title, iconMargin: EdgeInsets.zero,);
+            return Tab(
+              text: title,
+              iconMargin: EdgeInsets.zero,
+            );
           }).toList(),
           onTap: (index) {
+            //顶部状态栏点击 区分是否开启求职铃
+
             // 查询类型 0/不传 推荐查询 1.指定用户2.关注用户3.已赞作品(喜欢)5.附近作品(需要传经纬度)
             int queryType = 0;
             if (index == 0) {
@@ -128,59 +157,73 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
             int accType = g_accountManager.currentUser.typeId;
             SearchParameters params = SearchParameters();
             params.queryType = queryType;
-            if(accType == 1){//个人
+            if (accType == 1) {
+              //个人
               model.getRefreshListCompany(params);
-            }else if(accType == 2){//公司
+            } else if (accType == 2) {
+              //公司
               model.getRefreshListResume(params);
             }
           },
-        )
-    );
+        ));
   }
 
   // 导航栏右边的按钮
   List _buildAppBarActions(SearchManager model) {
-    return <Widget>[IconButton(
-      icon: Image.asset(join(AssetsUtil.assetsDirectoryCommon, 'icon_search.png')),
-      onPressed: () {
-        Get.to(TapIconSearch(model));
-      },
-    )];
+    return <Widget>[
+      IconButton(
+        icon: Image.asset(
+            join(AssetsUtil.assetsDirectoryCommon, 'icon_search.png')),
+        onPressed: () {
+          Get.to(TapIconSearch(model));
+        },
+      )
+    ];
   }
 
   // 行业岗位分类
-  Widget _buildCategoryView(BuildContext context,SearchManager model) {
+  Widget _buildCategoryView(BuildContext context, SearchManager model) {
     return Row(
       children: <Widget>[
         Expanded(
-          child: _tabController != null ? TabBar(
-            controller: _tabController,
-            isScrollable: true,
-            indicator: BoxDecoration(),
-            labelPadding: EdgeInsets.only(left: 40.w),
-            labelColor: Color.fromRGBO(51, 51, 51, 1),
-            labelStyle: TextStyle(fontSize: 28.sp, color: Color.fromRGBO(51, 51, 51, 1), fontWeight: FontWeight.bold),
-            unselectedLabelColor: Color.fromRGBO(153, 153, 153, 1),
-            unselectedLabelStyle: TextStyle(fontSize: 28.sp, color: Color.fromRGBO(153, 153, 153, 1), fontWeight: FontWeight.w500),
+          child: _tabController != null
+              ? TabBar(
+                  controller: _tabController,
+                  isScrollable: true,
+                  indicator: BoxDecoration(),
+                  labelPadding: EdgeInsets.only(left: 40.w),
+                  labelColor: Color.fromRGBO(51, 51, 51, 1),
+                  labelStyle: TextStyle(
+                      fontSize: 28.sp,
+                      color: Color.fromRGBO(51, 51, 51, 1),
+                      fontWeight: FontWeight.bold),
+                  unselectedLabelColor: Color.fromRGBO(153, 153, 153, 1),
+                  unselectedLabelStyle: TextStyle(
+                      fontSize: 28.sp,
+                      color: Color.fromRGBO(153, 153, 153, 1),
+                      fontWeight: FontWeight.w500),
 //            onTap: _tapCategory,
-          //点击tabbar对应item逻辑更改
-            onTap: (index){
-              int typeId = g_accountManager.currentUser.typeId;
-                SearchParameters param = SearchParameters();
-                param.industryNo = index;
-              if(typeId==1){//个人身份
+                  //点击tabbar对应item逻辑更改
+                  onTap: (index) {
+                    int typeId = g_accountManager.currentUser.typeId;
+                    SearchParameters param = SearchParameters();
+                    param.industryNo = index;
+                    if (typeId == 1) {
+                      //个人身份
 //                Provider.of<SearchManager>(context,listen: false).getRefreshListCompany(param);
-              model.getRefreshListCompany(param);
-              }else if(typeId==2){//公司身份
+                      model.getRefreshListCompany(param);
+                    } else if (typeId == 2) {
+                      //公司身份
 //                Provider.of<SearchManager>(context,listen: false).getRefreshListResume(param);
-                model.getRefreshListResume(param);
-              }
-            },
+                      model.getRefreshListResume(param);
+                    }
+                  },
 
-            tabs: _categoryList.map((categoryJson) {
-              return Tab(text: categoryJson['name']);
-            }).toList(),
-          ) : SizedBox.shrink(),
+                  tabs: _categoryList.map((categoryJson) {
+                    return Tab(text: categoryJson['name']);
+                  }).toList(),
+                )
+              : SizedBox.shrink(),
         ),
         ButtonTheme(
           minWidth: 0,
@@ -188,14 +231,18 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
             padding: EdgeInsets.only(left: 20.w, right: 10.w),
             child: Row(
               children: <Widget>[
-                Text('筛选', style: TextStyle(fontSize: 26.sp, color: Color.fromRGBO(153, 153, 153, 1))),
+                Text('筛选',
+                    style: TextStyle(
+                        fontSize: 26.sp,
+                        color: Color.fromRGBO(153, 153, 153, 1))),
                 SizedBox(width: 10.w),
-                Image.asset(join(AssetsUtil.assetsDirectoryHome, 'home_arrow.png'))
+                Image.asset(
+                    join(AssetsUtil.assetsDirectoryHome, 'home_arrow.png'))
               ],
             ),
-            onPressed: (){
+            onPressed: () {
               ///点击筛选HomeChooseParm
-              Navigator.of(context).push(MaterialPageRoute(builder:(context){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                 return HomeChooseParm(model);
               }));
             },
@@ -207,15 +254,19 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
             padding: EdgeInsets.only(left: 20.w),
             child: Row(
               children: <Widget>[
-                Text(model.nowCity, style: TextStyle(fontSize: 26.sp, color: Color.fromRGBO(153, 153, 153, 1))),
+                Text(model.nowCity,
+                    style: TextStyle(
+                        fontSize: 26.sp,
+                        color: Color.fromRGBO(153, 153, 153, 1))),
                 SizedBox(width: 10.w),
-                Image.asset(join(AssetsUtil.assetsDirectoryHome, 'home_arrow.png'))
+                Image.asset(
+                    join(AssetsUtil.assetsDirectoryHome, 'home_arrow.png'))
               ],
             ),
-            onPressed: (){
+            onPressed: () {
               //设置为true，选完城市直接重绘
               model.couldFlash = true;
-              Navigator.of(context).push(MaterialPageRoute(builder:(context){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                 return HomeChooseCity(model);
               }));
             },
@@ -237,15 +288,14 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
   Widget _buildGridView(SearchManager model) {
     if (AccountManager.instance.currentUser != null) {
       int typeId = g_accountManager.currentUser.typeId;
-      if (typeId == 1) { // 个人账户
+      if (typeId == 1) {
+        // 个人账户
         return Expanded(
 //          child: HomeGridCompany(_currentCategoryMap)
-            child: HomeGridCompanyNew(model)
-        );
-      } else if (typeId == 2) { // 公司账户
-        return Expanded(
-            child: HomeGridResume(model)
-        );
+            child: HomeGridCompanyNew(model));
+      } else if (typeId == 2) {
+        // 公司账户
+        return Expanded(child: HomeGridResume(model));
       } else {
         return SizedBox.shrink();
       }
@@ -256,12 +306,14 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
 
   // 行业分类
   void _loadIndustryCategory() async {
-    DioUtil.request('/resource/getHotIndustryList', method: 'GET').then((responseData) {
+    DioUtil.request('/resource/getHotIndustryList', method: 'GET')
+        .then((responseData) {
       bool success = DioUtil.checkRequestResult(responseData);
       if (success) {
         setState(() {
           _categoryList = responseData['data'];
-          _tabController = TabController(length: _categoryList.length, vsync: this);
+          _tabController =
+              TabController(length: _categoryList.length, vsync: this);
         });
       }
     });
@@ -269,12 +321,14 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
 
   // 岗位分类
   void _loadJobCategory() async {
-    DioUtil.request('/resource/getHotPositionList', method: 'GET').then((responseData) {
+    DioUtil.request('/resource/getHotPositionList', method: 'GET')
+        .then((responseData) {
       bool success = DioUtil.checkRequestResult(responseData);
       if (success) {
         setState(() {
           _categoryList.addAll(responseData['data']);
-          _tabController = TabController(length: _categoryList.length, vsync: this);
+          _tabController =
+              TabController(length: _categoryList.length, vsync: this);
         });
       }
     });
