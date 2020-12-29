@@ -10,6 +10,7 @@ import 'package:youpinapp/pages/agreement/agreement_policy_route.dart';
 import 'package:youpinapp/pages/agreement/agreement_service_route.dart';
 import 'package:youpinapp/pages/home/home_grid.dart';
 import 'package:youpinapp/pages/login/verify_code_route.dart';
+import 'package:youpinapp/pages/password/forget_password.dart';
 import 'package:youpinapp/utils/dio_util.dart';
 
 class LoginRoute extends StatefulWidget {
@@ -240,6 +241,9 @@ class _LoginRouteState extends State<LoginRoute> {
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   padding: EdgeInsets.all(0),
                   child: Text('忘记密码？', style: TextStyle(fontSize: 12, color: ColorConstants.themeColorBlue)),
+                  onPressed: () {
+                    Get.to(ForgetPassWord());
+                  },
                 ),
               )
             ],

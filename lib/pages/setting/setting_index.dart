@@ -12,6 +12,7 @@ import 'package:youpinapp/pages/bankcard/bank_card_main.dart';
 import 'package:youpinapp/pages/bankcard/bank_card_tixian_end.dart';
 import 'package:youpinapp/pages/common/app_bar_white.dart';
 import 'package:youpinapp/pages/login/login_route.dart';
+import 'package:youpinapp/pages/password/setting_password.dart';
 import 'package:youpinapp/pages/setting/help.dart';
 import 'package:youpinapp/pages/setting/identity_switch_route.dart';
 import 'package:youpinapp/pages/setting/updataApp.dart';
@@ -24,7 +25,7 @@ class SettingIndex extends StatefulWidget {
 
 class _SettingIndexState extends State<SettingIndex> {
   String _identityString = "";
-
+  String isSetPwd = "0";
   @override
   void initState() {
     super.initState();
@@ -68,6 +69,7 @@ class _SettingIndexState extends State<SettingIndex> {
       children: <Widget>[
         _buildMenuListRow("身份切换", menuIndex: 0, value: _identityString, forwardWidget: IdentitySwitchRoute()),
         _buildMenuListRow("银行卡绑定", menuIndex: 1,forwardWidget: BankCardMain()),
+        _buildMenuListRow("设置密码", menuIndex: 7,forwardWidget: SettingPassWord()),
 //        _buildMenuListRow("通知与提醒", menuIndex: 2),
         _buildMenuListRow("隐私政策 | 服务协议", menuIndex: 3,forwardWidget: AgreementDetailRoute("隐私政策 | 服务协议",index: 3,)),
         _buildMenuListRow("帮助与反馈", menuIndex: 4,forwardWidget: UserHelp()),
