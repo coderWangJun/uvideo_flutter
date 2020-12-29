@@ -1,22 +1,11 @@
+import 'dart:async';
+
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:path/path.dart';
-import 'package:tencent_im_plugin/tencent_im_plugin.dart';
 import 'package:youpinapp/app/account.dart';
 import 'package:youpinapp/global/color_constants.dart';
-import 'package:youpinapp/models/account_model.dart';
-import 'package:youpinapp/pages/agreement/agreement_detail_route.dart';
-import 'package:youpinapp/pages/bankcard/bank_card_main.dart';
-import 'package:youpinapp/pages/bankcard/bank_card_tixian_end.dart';
 import 'package:youpinapp/pages/common/app_bar_white.dart';
-import 'package:youpinapp/pages/login/login_route.dart';
-import 'package:youpinapp/pages/setting/help.dart';
-import 'package:youpinapp/pages/setting/identity_switch_route.dart';
-import 'package:youpinapp/pages/setting/updataApp.dart';
-import 'package:youpinapp/utils/assets_util.dart';
 import 'package:youpinapp/utils/dio_util.dart';
 
 class ForgetPassWord extends StatefulWidget {
@@ -30,6 +19,9 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _codeController = TextEditingController();
   bool _passInputFinished = false;
+  int _totalTimerSeconds = 60;
+  String _timerButtonTitle = '获取验证码';
+  Timer _countDownTimer;
 
   _ForgetPassWordState() {
     _passController.addListener(() {
@@ -52,7 +44,10 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
     String pass = _passController.text;
     String pass1 = _passController1.text;
 
-    if (pass.length > 0 && pass1.length > 0 && phone.length > 0 && code.length > 0) {
+    if (pass.length > 0 &&
+        pass1.length > 0 &&
+        phone.length > 0 &&
+        code.length > 0) {
       _passInputFinished = true;
     } else {
       _passInputFinished = false;
@@ -86,7 +81,10 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
                       : ColorConstants.themeColorBlue.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(6)),
               child: Text('完成',
-                  style: TextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold)),
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold)),
             ),
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
@@ -101,6 +99,16 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
   void _settingPassWord(BuildContext context) {
     String pass = _passController.text;
     String pass1 = _passController1.text;
+    String phone =_phoneController.text;
+    String code=_codeController.text;
+    if (phone == '') {
+      BotToast.showText(text: '请输入手机号');
+      return;
+    }
+    if (code == '') {
+      BotToast.showText(text: '请输入短信验证码');
+      return;
+    }
     if (pass == '') {
       BotToast.showText(text: '请输入密码');
       return;
@@ -109,7 +117,10 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
       BotToast.showText(text: '请再次输入密码');
       return;
     }
-    if (pass.length < 6 || pass.length > 20 || pass1.length < 6 || pass1.length > 20) {
+    if (pass.length < 6 ||
+        pass.length > 20 ||
+        pass1.length < 6 ||
+        pass1.length > 20) {
       BotToast.showText(text: '密码长度6-20之间');
       return;
     }
@@ -117,24 +128,56 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
       BotToast.showText(text: '两次输入不一致');
       return;
     }
-    var params = {'phonenumber': g_accountManager.currentUser.phonenumber, 'password': pass};
+    var params = {
+      'phonenumber': g_accountManager.currentUser.phonenumber,
+      'password': pass
+    };
     BotToast.showLoading();
-    DioUtil.request('/user/updatePasswordByPhonenumber', parameters: params).then((responseData) {
+    DioUtil.request('/user/updatePasswordByPhonenumber', parameters: params)
+        .then((responseData) {
       bool success = DioUtil.checkRequestResult(responseData, showToast: true);
       if (success) {
-        BotToast.showText(text: '设置密码成功');
+        BotToast.showText(text: '修改密码成功');
         Navigator.of(context).pop();
       }
     }).whenComplete(() => BotToast.closeAllLoading());
   }
+  void _requestSmsCode() {
+    String phone =_phoneController.text;
+    if (phone == '') {
+      BotToast.showText(text: '请输入手机号');
+      return;
+    }
+    var params = {'phonenumber': phone};
+    DioUtil.request('/user/sendVcode', parameters: params).then((reponseData) {
+      bool success = DioUtil.checkRequestResult(reponseData, showToast: true);
+      if (success) {
+        if (_countDownTimer == null) {
+          _countDownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+            int currentTimerSeconds = _totalTimerSeconds - timer.tick;
 
+            if (currentTimerSeconds <= 0) {
+              _timerButtonTitle = '重新发送';
+              _countDownTimer.cancel();
+              _countDownTimer = null;
+            } else {
+              _timerButtonTitle = '重新发送($currentTimerSeconds)';
+            }
+
+            setState(() { });
+          });
+        }
+      }
+    }).whenComplete(() => setState(() {}));
+  }
   Widget _buildPassInputWidgets() {
     return Container(
         child: Column(children: <Widget>[
       Container(
         margin: EdgeInsets.only(top: 40, left: 20.0, right: 20.0),
         decoration: BoxDecoration(
-            color: Color.fromRGBO(237, 237, 237, 0.5), borderRadius: BorderRadius.circular(6)),
+            color: Color.fromRGBO(237, 237, 237, 0.5),
+            borderRadius: BorderRadius.circular(6)),
         child: TextField(
           controller: _phoneController,
           maxLength: 20,
@@ -146,13 +189,15 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
                   color: Color.fromRGBO(153, 153, 153, 1),
                   fontWeight: FontWeight.w500),
               hintText: '请输入手机号',
-              prefixIcon: Icon(Icons.phone_android, color: Color.fromRGBO(153, 153, 153, 1))),
+              prefixIcon: Icon(Icons.phone_android,
+                  color: Color.fromRGBO(153, 153, 153, 1))),
         ),
       ),
       Container(
         margin: EdgeInsets.only(top: 10, left: 20.0, right: 20.0),
         decoration: BoxDecoration(
-            color: Color.fromRGBO(237, 237, 237, 0.5), borderRadius: BorderRadius.circular(6)),
+            color: Color.fromRGBO(237, 237, 237, 0.5),
+            borderRadius: BorderRadius.circular(6)),
         child: Row(
           children: [
             Expanded(
@@ -167,16 +212,19 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
                         color: Color.fromRGBO(153, 153, 153, 1),
                         fontWeight: FontWeight.w500),
                     hintText: '请输入验证码',
-                    prefixIcon:
-                        Icon(Icons.textsms_rounded, color: Color.fromRGBO(153, 153, 153, 1))),
+                    prefixIcon: Icon(Icons.textsms_rounded,
+                        color: Color.fromRGBO(153, 153, 153, 1))),
               ),
             ),
-            Text(
-              '获取验证码',
-              style: TextStyle(
-                  fontSize: 13,
-                  color: Color.fromRGBO(153, 153, 153, 1),
-                  fontWeight: FontWeight.w500),
+            GestureDetector(
+              child: Text(
+                _timerButtonTitle,
+                style: TextStyle(
+                    fontSize: 13,
+                    color: Color.fromRGBO(153, 153, 153, 1),
+                    fontWeight: FontWeight.w500),
+              ),
+              onTap:()=>_timerButtonTitle=='获取验证码'? _requestSmsCode():null,
             ),
             Padding(padding: EdgeInsets.only(right: 10))
           ],
@@ -185,7 +233,8 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
       Container(
         margin: EdgeInsets.only(top: 10, left: 20.0, right: 20.0),
         decoration: BoxDecoration(
-            color: Color.fromRGBO(237, 237, 237, 0.5), borderRadius: BorderRadius.circular(6)),
+            color: Color.fromRGBO(237, 237, 237, 0.5),
+            borderRadius: BorderRadius.circular(6)),
         child: TextField(
           controller: _passController,
           maxLength: 20,
@@ -198,13 +247,15 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
                   color: Color.fromRGBO(153, 153, 153, 1),
                   fontWeight: FontWeight.w500),
               hintText: '请输入密码',
-              prefixIcon: Icon(Icons.lock_outline, color: Color.fromRGBO(153, 153, 153, 1))),
+              prefixIcon: Icon(Icons.lock_outline,
+                  color: Color.fromRGBO(153, 153, 153, 1))),
         ),
       ),
       Container(
         margin: EdgeInsets.only(top: 10, left: 20.0, right: 20.0),
         decoration: BoxDecoration(
-            color: Color.fromRGBO(237, 237, 237, 0.5), borderRadius: BorderRadius.circular(6)),
+            color: Color.fromRGBO(237, 237, 237, 0.5),
+            borderRadius: BorderRadius.circular(6)),
         child: TextField(
           controller: _passController1,
           obscureText: true,
@@ -217,7 +268,8 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
                   color: Color.fromRGBO(153, 153, 153, 1),
                   fontWeight: FontWeight.w500),
               hintText: '再次输入密码',
-              prefixIcon: Icon(Icons.lock_outline, color: Color.fromRGBO(153, 153, 153, 1))),
+              prefixIcon: Icon(Icons.lock_outline,
+                  color: Color.fromRGBO(153, 153, 153, 1))),
         ),
       ),
     ]));
