@@ -31,10 +31,11 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
   List<dynamic> _categoryList = [
     {'index': -1, 'name': '全部'}
   ];
-  List<String> _tabbarTitles = ['作品','全部','企业宣传片'];
+  List<String> _tabbarTitles = ['作品', '企业宣传片'];
 
   void _initData() async {
     AccountManager.instance.isLogin.then((isLogin) {
+      print("isLogin = $isLogin");
       if (isLogin && g_accountManager.currentUser != null) {
         int typeId = g_accountManager.currentUser.typeId;
         //区分是否开启求职铃
@@ -52,36 +53,35 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
         // 企业
         _loadJobCategory();
       }
-
+      _navTabController = TabController(
+          initialIndex: 1, length: _tabbarTitles.length, vsync: this);
+      g_eventBus.on(GlobalEvent.accountInitialized, (arg) {
+        _initData();
+      });
       isLoading = false;
       setState(() {});
-    });
-  }
-
-  _HomeGridState() {
-    _navTabController = TabController(
-        initialIndex: 1, length: _tabbarTitles.length, vsync: this);
-    g_eventBus.on(GlobalEvent.accountInitialized, (arg) {
-      _initData();
     });
   }
 
   @override
   void initState() {
     super.initState();
-    if (g_accountManager.currentUser != null) {
-      _initData();
-    }
+
+    // if (g_accountManager.currentUser != null) {
+    //
+    // }
+    _initData();
   }
 
   bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
-    // if (isLoading) {
-    //   return SizedBox.shrink();
-    // }
     SearchManager model = Provider.of<SearchManager>(context);
+
+    if (isLoading) {
+      return SizedBox.shrink();
+    }
     return Scaffold(
       appBar: _buildAppBar(model),
       body: Column(
@@ -154,8 +154,13 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
               queryType = 5;
             }
 
-            int accType = g_accountManager.currentUser.typeId;
             SearchParameters params = SearchParameters();
+//为登陆的修改
+            if (g_accountManager.currentUser == null) {
+              model.getRefreshListCompany(params);
+              return;
+            }
+            int accType = g_accountManager.currentUser.typeId;
             params.queryType = queryType;
             if (accType == 1) {
               //个人
@@ -287,6 +292,9 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
   // 列表
   Widget _buildGridView(SearchManager model) {
     if (AccountManager.instance.currentUser != null) {
+      if (g_accountManager.currentUser == null) {
+        return Expanded(child: HomeGridResume(model));
+      }
       int typeId = g_accountManager.currentUser.typeId;
       if (typeId == 1) {
         // 个人账户

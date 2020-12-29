@@ -18,6 +18,8 @@ import 'package:youpinapp/models/account_person_model.dart';
 import 'package:youpinapp/models/home_resume_model.dart';
 import 'package:youpinapp/models/index.dart';
 import 'package:youpinapp/pages/company/setting/company_edit.dart';
+import 'package:youpinapp/pages/home/home_video_widget.dart';
+import 'package:youpinapp/pages/market/market_index.dart';
 import 'package:youpinapp/pages/market/market_post_list.dart';
 import 'package:youpinapp/pages/mine/company_job_manage.dart';
 import 'package:youpinapp/pages/mine/company_video_manage.dart';
@@ -116,8 +118,8 @@ class _MineIndexState extends State<MineIndex>
                             children: <Widget>[
                               Stack(
                                 children: <Widget>[
-                                  _buildNameAndHeader(),
-                                  _buildCountRow()
+                                  _buildNameAndHeader(context),
+                                  _buildCountRow(context)
                                 ],
                               ),
                               _buildOnlineJobRow(),
@@ -289,7 +291,7 @@ class _MineIndexState extends State<MineIndex>
   }
 
   // 名称、头像，关注、粉丝、收藏、喜欢、影响力
-  Widget _buildNameAndHeader() {
+  Widget _buildNameAndHeader(BuildContext context) {
     return Container(
         width: double.infinity,
         height: 190,
@@ -402,6 +404,12 @@ class _MineIndexState extends State<MineIndex>
                   child: FlatButton(
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     padding: EdgeInsets.all(0),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return HomeVideoWidget();
+                      }));
+                    },
                     child: Column(
                       children: <Widget>[
                         Text("${_statisticModel.careCount ?? 0}",
@@ -438,6 +446,12 @@ class _MineIndexState extends State<MineIndex>
                   child: FlatButton(
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     padding: EdgeInsets.all(0),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                            return HomeVideoWidget();
+                          }));
+                    },
                     child: Column(
                       children: <Widget>[
                         Text('${_statisticModel.collectCount ?? 0}',
@@ -456,6 +470,12 @@ class _MineIndexState extends State<MineIndex>
                   child: FlatButton(
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     padding: EdgeInsets.all(0),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return HomeVideoWidget();
+                      }));
+                    },
                     child: Column(
                       children: <Widget>[
                         Text('${_statisticModel.likeCount ?? 0}',
@@ -489,7 +509,7 @@ class _MineIndexState extends State<MineIndex>
   }
 
   // 投递、圈子、诚信分、我的资产
-  Widget _buildCountRow() {
+  Widget _buildCountRow(BuildContext context) {
     return Container(
       height: 60,
       padding: EdgeInsets.only(left: 15, right: 15),
@@ -533,6 +553,12 @@ class _MineIndexState extends State<MineIndex>
             minWidth: 0,
             child: FlatButton(
               padding: EdgeInsets.all(0),
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                  return MarketIndex();
+                }));
+              },
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
