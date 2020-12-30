@@ -129,8 +129,9 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
       return;
     }
     var params = {
-      'phonenumber': g_accountManager.currentUser.phonenumber,
-      'password': pass
+      'phonenumber': phone,
+      'password': pass,
+      'vcode':code,
     };
     BotToast.showLoading();
     DioUtil.request('/user/updatePasswordByPhonenumber', parameters: params)
