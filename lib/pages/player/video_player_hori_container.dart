@@ -45,14 +45,18 @@ const SystemUiOverlayStyle dark = SystemUiOverlayStyle(
 class VideoPlayerHoriContainer extends StatefulWidget {
   final VideoPlayType playType;
   final HomeResumeModel currentResumeModel;
+  final int _showType = 0;
 
-  VideoPlayerHoriContainer(this.playType, {this.currentResumeModel});
+  VideoPlayerHoriContainer(this.playType,
+      {this.currentResumeModel});
 
   @override
-  _VideoPlayerHoriContainerState createState() => _VideoPlayerHoriContainerState();
+  _VideoPlayerHoriContainerState createState() =>
+      _VideoPlayerHoriContainerState();
 }
 
-class _VideoPlayerHoriContainerState extends State<VideoPlayerHoriContainer> with TickerProviderStateMixin {
+class _VideoPlayerHoriContainerState extends State<VideoPlayerHoriContainer>
+    with TickerProviderStateMixin {
   int _topSelectedIndex = 1;
   int _bottomSelectedIndex = 0;
   PlayerStateProvider _playerStateProvider = new PlayerStateProvider();
@@ -78,7 +82,8 @@ class _VideoPlayerHoriContainerState extends State<VideoPlayerHoriContainer> wit
     _bottomTabController = TabController(length: 5, vsync: this);
 
     g_eventBus.on(GlobalEvent.videoPageEvent, (pageIndex) {
-      _pageController.animateToPage(pageIndex, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+      _pageController.animateToPage(pageIndex,
+          duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
     });
 
     _pageController.addListener(() {
@@ -90,13 +95,13 @@ class _VideoPlayerHoriContainerState extends State<VideoPlayerHoriContainer> wit
 
     // 点击左上角切换按钮事件
     g_eventBus.on(GlobalEvent.mainFlipSwitch, (reverse) {
-      setState(() { });
+      setState(() {});
     });
   }
 
   @override
   void setState(fn) {
-    if(mounted){
+    if (mounted) {
       super.setState(fn);
     }
   }
@@ -106,21 +111,23 @@ class _VideoPlayerHoriContainerState extends State<VideoPlayerHoriContainer> wit
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: PreferredSize(
-        preferredSize: Size.zero,
-        child: AppBar(
-        brightness: Brightness.dark,
-        backgroundColor: Colors.transparent,
-      )),
+          preferredSize: Size.zero,
+          child: AppBar(
+            brightness: Brightness.dark,
+            backgroundColor: Colors.transparent,
+          )),
       body: ChangeNotifierProvider.value(
         value: _playerStateProvider,
         child: PageView(
           controller: _pageController,
-          children: widget.currentResumeModel == null ? <Widget>[
-            _buildPlayerPage(context),
-          ] : <Widget>[
-            _buildPlayerPage(context),
-            _buildDetailWidgets(),
-          ],
+          children: widget.currentResumeModel == null
+              ? <Widget>[
+                  _buildPlayerPage(context),
+                ]
+              : <Widget>[
+                  _buildPlayerPage(context),
+                  _buildDetailWidgets(),
+                ],
         ),
       ),
       // floatingActionButton: FloatingButton.buildJobRingButton('HomeVideo', margin: EdgeInsets.only(bottom: 80, right: 10))
@@ -136,10 +143,11 @@ class _VideoPlayerHoriContainerState extends State<VideoPlayerHoriContainer> wit
       ],
     );
   }
-  
+
   Widget _buildTopAppBar() {
     String switchIconName = "switch_youqi.png";
-    if (AccountManager.instance.currentUser != null && AccountManager.instance.currentUser.typeId ==2) {
+    if (AccountManager.instance.currentUser != null &&
+        AccountManager.instance.currentUser.typeId == 2) {
       switchIconName = "switch_youcai.png";
     }
 
@@ -176,7 +184,8 @@ class _VideoPlayerHoriContainerState extends State<VideoPlayerHoriContainer> wit
               labelColor: Color.fromRGBO(254, 254, 254, 1),
               labelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               unselectedLabelColor: Color.fromRGBO(255, 255, 255, 0.5),
-              unselectedLabelStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+              unselectedLabelStyle:
+                  TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
               tabs: <Widget>[
                 Tab(text: "关注"),
                 Tab(text: "推荐"),
@@ -202,64 +211,74 @@ class _VideoPlayerHoriContainerState extends State<VideoPlayerHoriContainer> wit
       ),
     );
   }
-  
-  Widget _buildBottomTabBar(parentContext) {
-    return widget.playType == VideoPlayType.shortVideo ? Positioned(
-        bottom: 0,
-        left: 0,
-        width: ScreenUtil.mediaQueryData.size.width,
-        child: SafeArea(
-          child: Container(
-            width: double.infinity,
-            height: 50,
-            decoration: BoxDecoration(
-                border: Border(top: BorderSide(color: Color.fromRGBO(155, 155, 155, 0.3), width: 0.5))
-            ),
-            child: Theme(
-              data: Theme.of(parentContext).copyWith( splashColor: Colors.transparent ),
-              child: TabBar(
-                controller: _bottomTabController,
-                indicator: BoxDecoration(),
-                labelColor: Colors.white,
-                labelStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                unselectedLabelColor: Colors.white.withOpacity(0.78),
-                unselectedLabelStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                tabs: <Widget>[
-                  Tab(text: "首页"),
-                  Tab(text: "集市"),
-                  Tab(icon: Image.asset(AssetsUtil.pathForAsset(AssetsUtil.assetsDirectoryHome, "tb_publish1.png"))),
-                  Tab(text: "消息"),
-                  Tab(text: "我的"),
-                ],
-                onTap: (index) {
-                  App.instance.showMode = AppShowMode.list;
-                  g_eventBus.emit(GlobalEvent.stopPlayEvent);
 
-                  if (index != 2) {
-                    context.read<AppProvider>().bottomTabBarIndex = index;
-                    _flipToHomeListRoute();
-                  } else {
-                    AccountManager.instance.checkLogin().then((isLogin) {
-                      if (isLogin) {
-                        showGeneralDialog(
-                          context: context,
-                          barrierLabel: "",
-                          barrierDismissible: true,
-                          transitionDuration: Duration(milliseconds: 300),
-                          pageBuilder: (BuildContext context, Animation animation,
-                              Animation secondaryAnimation) {
-                            return PublishMenu();
-                          },
-                        );
+  Widget _buildBottomTabBar(parentContext) {
+    return widget.playType == VideoPlayType.shortVideo
+        ? Positioned(
+            bottom: 0,
+            left: 0,
+            width: ScreenUtil.mediaQueryData.size.width,
+            child: SafeArea(
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                decoration: BoxDecoration(
+                    border: Border(
+                        top: BorderSide(
+                            color: Color.fromRGBO(155, 155, 155, 0.3),
+                            width: 0.5))),
+                child: Theme(
+                  data: Theme.of(parentContext)
+                      .copyWith(splashColor: Colors.transparent),
+                  child: TabBar(
+                    controller: _bottomTabController,
+                    indicator: BoxDecoration(),
+                    labelColor: Colors.white,
+                    labelStyle:
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                    unselectedLabelColor: Colors.white.withOpacity(0.78),
+                    unselectedLabelStyle:
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                    tabs: <Widget>[
+                      Tab(text: "首页"),
+                      Tab(text: "集市"),
+                      Tab(
+                          icon: Image.asset(AssetsUtil.pathForAsset(
+                              AssetsUtil.assetsDirectoryHome,
+                              "tb_publish1.png"))),
+                      Tab(text: "消息"),
+                      Tab(text: "我的"),
+                    ],
+                    onTap: (index) {
+                      App.instance.showMode = AppShowMode.list;
+                      g_eventBus.emit(GlobalEvent.stopPlayEvent);
+
+                      if (index != 2) {
+                        context.read<AppProvider>().bottomTabBarIndex = index;
+                        _flipToHomeListRoute();
+                      } else {
+                        AccountManager.instance.checkLogin().then((isLogin) {
+                          if (isLogin) {
+                            showGeneralDialog(
+                              context: context,
+                              barrierLabel: "",
+                              barrierDismissible: true,
+                              transitionDuration: Duration(milliseconds: 300),
+                              pageBuilder: (BuildContext context,
+                                  Animation animation,
+                                  Animation secondaryAnimation) {
+                                return PublishMenu();
+                              },
+                            );
+                          }
+                        });
                       }
-                    });
-                  }
-                },
+                    },
+                  ),
+                ),
               ),
-            ),
-          ),
-        )
-    ) : SizedBox.shrink();
+            ))
+        : SizedBox.shrink();
   }
 
   Widget _buildDetailWidgets() {
@@ -272,14 +291,13 @@ class _VideoPlayerHoriContainerState extends State<VideoPlayerHoriContainer> wit
 
     return NotificationListener<CustomNotification>(
       onNotification: (notification) {
-        _pageController.position.drag(notification.userInfo, () { });
+        _pageController.position.drag(notification.userInfo, () {});
 
         return false;
       },
       child: UserDetailRoute(userId: userId, showMode: UserDetailShowMode.dark),
     );
   }
-
 
   // 翻转到首页视频列表去
   void _flipToHomeListRoute() {

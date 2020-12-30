@@ -16,11 +16,12 @@ class AccountModel {
   AccountTencentModel tXIMUser;
   double ucoinAmount;
   String token;
-  String isSetPwd;
+  int isSetPwd;
   AccountPersonModel userData;
   AccountCompanyModel companyData;
 
-  factory AccountModel.fromJson(Map<String, dynamic> json) => _$AccountModelFromJson(json);
+  factory AccountModel.fromJson(Map<String, dynamic> json) =>
+      _$AccountModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$AccountModelToJson(this);
 }
