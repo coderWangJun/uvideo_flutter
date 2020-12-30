@@ -180,8 +180,9 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
             color: Color.fromRGBO(237, 237, 237, 0.5),
             borderRadius: BorderRadius.circular(6)),
         child: TextField(
+          keyboardType: TextInputType.phone,
           controller: _phoneController,
-          maxLength: 20,
+          maxLength: 11,
           decoration: InputDecoration(
               border: InputBorder.none,
               counterText: '',

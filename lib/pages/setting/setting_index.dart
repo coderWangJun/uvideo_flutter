@@ -25,7 +25,7 @@ class SettingIndex extends StatefulWidget {
 
 class _SettingIndexState extends State<SettingIndex> {
   String _identityString = "";
-  String isSetPwd = "0";
+  int isSetPwd = 0;
   @override
   void initState() {
     super.initState();
@@ -35,6 +35,7 @@ class _SettingIndexState extends State<SettingIndex> {
   void _refreshData() {
     AccountModel currentUser = g_accountManager.currentUser;
     int typeId = currentUser.typeId;
+    isSetPwd=currentUser.isSetPwd;
 
     if (typeId == 1) {
       _identityString = "个人";
@@ -69,7 +70,10 @@ class _SettingIndexState extends State<SettingIndex> {
       children: <Widget>[
         _buildMenuListRow("身份切换", menuIndex: 0, value: _identityString, forwardWidget: IdentitySwitchRoute()),
         _buildMenuListRow("银行卡绑定", menuIndex: 1,forwardWidget: BankCardMain()),
-        _buildMenuListRow("设置密码", menuIndex: 7,forwardWidget: SettingPassWord()),
+         Offstage(
+           offstage: isSetPwd==1,
+           child:  _buildMenuListRow("设置密码", menuIndex: 7,forwardWidget: SettingPassWord()),
+         ),
 //        _buildMenuListRow("通知与提醒", menuIndex: 2),
         _buildMenuListRow("隐私政策 | 服务协议", menuIndex: 3,forwardWidget: AgreementDetailRoute("隐私政策 | 服务协议",index: 3,)),
         _buildMenuListRow("帮助与反馈", menuIndex: 4,forwardWidget: UserHelp()),

@@ -24,6 +24,7 @@ import 'package:youpinapp/pages/market/market_post_list.dart';
 import 'package:youpinapp/pages/mine/company_job_manage.dart';
 import 'package:youpinapp/pages/mine/company_video_manage.dart';
 import 'package:youpinapp/pages/mine/my_balance_route.dart';
+import 'package:youpinapp/pages/mine/my_fens_list.dart';
 import 'package:youpinapp/pages/mine/resume_video_manage.dart';
 import 'package:youpinapp/pages/person/person_basic_edit.dart';
 import 'package:youpinapp/pages/person/short_video_list_widget.dart';
@@ -34,6 +35,8 @@ import 'package:youpinapp/utils/assets_util.dart';
 import 'package:youpinapp/utils/dio_util.dart';
 import 'package:youpinapp/widgets/custom_notification.dart';
 import 'package:youpinapp/widgets/single_video_player.dart';
+
+import 'my_deliver_list.dart';
 
 class MineIndex extends StatefulWidget {
   @override
@@ -405,10 +408,7 @@ class _MineIndexState extends State<MineIndex>
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     padding: EdgeInsets.all(0),
                     onPressed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (BuildContext context) {
-                        return HomeVideoWidget();
-                      }));
+                      Get.to(MyDeliverList());
                     },
                     child: Column(
                       children: <Widget>[
@@ -428,6 +428,9 @@ class _MineIndexState extends State<MineIndex>
                   child: FlatButton(
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     padding: EdgeInsets.all(0),
+                    onPressed: () {
+                      Get.to(MyFensList());
+                    },
                     child: Column(
                       children: <Widget>[
                         Text('${_statisticModel.fansCount ?? 0}',
@@ -533,6 +536,9 @@ class _MineIndexState extends State<MineIndex>
             child: FlatButton(
               padding: EdgeInsets.all(0),
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              onPressed: () {
+                Get.to(MyDeliverList());
+              },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
