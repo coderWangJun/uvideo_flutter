@@ -25,6 +25,7 @@ import 'package:youpinapp/pages/mine/company_job_manage.dart';
 import 'package:youpinapp/pages/mine/company_video_manage.dart';
 import 'package:youpinapp/pages/mine/my_balance_route.dart';
 import 'package:youpinapp/pages/mine/my_fens_list.dart';
+import 'package:youpinapp/pages/mine/my_attention_list.dart';
 import 'package:youpinapp/pages/mine/resume_video_manage.dart';
 import 'package:youpinapp/pages/person/person_basic_edit.dart';
 import 'package:youpinapp/pages/person/short_video_list_widget.dart';
@@ -408,7 +409,7 @@ class _MineIndexState extends State<MineIndex>
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     padding: EdgeInsets.all(0),
                     onPressed: () {
-                      Get.to(MyDeliverList());
+                      Get.to(MyAttentionList());
                     },
                     child: Column(
                       children: <Widget>[
