@@ -171,13 +171,13 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
                 // 点击格格
                 //判断类型
 
-                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-                  return HomeVideoWidget();
-                }));
-                // Navigator.of(context)
-                //     .push(MaterialPageRoute(builder: (BuildContext context) {
-                //   return CompanyDetail(companyModel);
+                // Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+                //   return HomeVideoWidget();
                 // }));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                  return CompanyDetail(companyModel);
+                }));
               },
             );
           }).toList(),
