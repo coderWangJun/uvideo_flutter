@@ -17,6 +17,7 @@ import 'package:youpinapp/models/account_model.dart';
 import 'package:youpinapp/models/account_person_model.dart';
 import 'package:youpinapp/models/home_resume_model.dart';
 import 'package:youpinapp/models/index.dart';
+import 'package:youpinapp/pages/chat/chat_friends_list.dart';
 import 'package:youpinapp/pages/company/setting/company_edit.dart';
 import 'package:youpinapp/pages/home/home_video_widget.dart';
 import 'package:youpinapp/pages/market/market_index.dart';
@@ -24,8 +25,6 @@ import 'package:youpinapp/pages/market/market_post_list.dart';
 import 'package:youpinapp/pages/mine/company_job_manage.dart';
 import 'package:youpinapp/pages/mine/company_video_manage.dart';
 import 'package:youpinapp/pages/mine/my_balance_route.dart';
-import 'package:youpinapp/pages/mine/my_fens_list.dart';
-import 'package:youpinapp/pages/mine/my_attention_list.dart';
 import 'package:youpinapp/pages/mine/resume_video_manage.dart';
 import 'package:youpinapp/pages/person/person_basic_edit.dart';
 import 'package:youpinapp/pages/person/short_video_list_widget.dart';
@@ -409,7 +408,7 @@ class _MineIndexState extends State<MineIndex>
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     padding: EdgeInsets.all(0),
                     onPressed: () {
-                      Get.to(MyAttentionList());
+                      Get.to(ChatFriendsList());
                     },
                     child: Column(
                       children: <Widget>[
@@ -430,7 +429,7 @@ class _MineIndexState extends State<MineIndex>
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     padding: EdgeInsets.all(0),
                     onPressed: () {
-                      Get.to(MyFensList());
+                      Get.to(ChatFriendsList());
                     },
                     child: Column(
                       children: <Widget>[
