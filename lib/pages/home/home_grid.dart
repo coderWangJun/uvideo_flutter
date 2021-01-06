@@ -144,6 +144,27 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
             );
           }).toList(),
           onTap: (index) {
+            if (index == 0) {
+              //作品
+            } else if (index == 2) {
+              //企宣
+
+            } else {
+              //index=1 岗位 简历 企宣
+
+              if (g_accountManager.currentUser == null) {
+                //未登陆是企宣
+                // model.getRefreshListCompany(params);
+              } else {
+                if (g_accountManager.currentUser.typeId == 1) {
+                  //个人请求岗位
+
+                } else {
+                  //企业请求简历
+                }
+              }
+            }
+
             //顶部状态栏点击 区分是否开启求职铃
 
             // 查询类型 0/不传 推荐查询 1.指定用户2.关注用户3.已赞作品(喜欢)5.附近作品(需要传经纬度)
