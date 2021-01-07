@@ -2,10 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:youpinapp/app/search.dart';
 import 'package:youpinapp/models/home_company_model.dart';
+import 'package:youpinapp/pages/company/company_trailer.dart';
 import 'package:youpinapp/pages/home/company_detail.dart';
 import 'package:youpinapp/pages/home/home_video_widget.dart';
 import 'package:youpinapp/utils/assets_util.dart';
@@ -171,13 +173,8 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
                 // 点击格格
                 //判断类型
 
-                // Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-                //   return HomeVideoWidget();
-                // }));
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (BuildContext context) {
-                  return CompanyDetail(companyModel);
-                }));
+
+                Get.to(CompanyTrailer(companyModel));
               },
             );
           }).toList(),

@@ -14,6 +14,8 @@ class CompanyPageModel {
   String staffScaleName;
   String logoUrl;
   String address;
+  String worksUrl;
+  String details;
 
 
 
@@ -23,6 +25,8 @@ class CompanyPageModel {
     ..staffScaleName = json['staffScaleName'] as String
     ..companyName = json['companyName'] as String
     ..address = json['address'] as String
+    ..worksUrl = json['worksUrl'] as String
+    ..details = json['details'] as String
     ..logoUrl = json['logoUrl'] as String;
 
   Map<String, dynamic> toJson() => _$CompanyPageModelToJson(this);
@@ -33,6 +37,8 @@ class CompanyPageModel {
         'financingStageName': instance.financingStageName,
         'staffScaleName': instance.staffScaleName,
         'logoUrl': instance.logoUrl,
+        'worksUrl': instance.worksUrl,
+        'details': instance.details,
         'address': instance.address,
 
       };
