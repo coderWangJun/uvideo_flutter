@@ -183,7 +183,7 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
           }).toList(),
         ),
         onRefresh: () async {
-          widget.model.getRefresh();
+          widget.model.getRefresh(3);
         },
       );
     } else {

@@ -28,10 +28,12 @@ class HomeGrid extends StatefulWidget {
 class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
   TabController _tabController;
   TabController _navTabController;
+  int _curListType = 0; // 0 作品 1 简历 2岗位 3 企宣
+
   List<dynamic> _categoryList = [
     {'index': -1, 'name': '全部'}
   ];
-  List<String> _tabbarTitles = ['作品', '企业宣传片'];
+  List<String> _tabbarTitles = ['作品', '企宣'];
 
   void _initData() async {
     AccountManager.instance.isLogin.then((isLogin) {
@@ -40,17 +42,18 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
         int typeId = g_accountManager.currentUser.typeId;
         //区分是否开启求职铃
         if (typeId == 1) {
-          _tabbarTitles = ['作品', '岗位', '企业宣传片'];
-          // 个人
+          _tabbarTitles = ['作品', '岗位', '企宣'];
+          _curListType = 2;
           _loadIndustryCategory();
         } else {
-          _tabbarTitles = ['作品', '简历', '企业宣传片'];
-          // 企业
-          _loadJobCategory();
+          _tabbarTitles = ['作品', '简历', '企宣'];
+          _curListType = 1;
+          _loadIndustryCategory();
         }
       } else {
-        _tabbarTitles = ['作品', '企业宣传片'];
-        // 企业
+        _tabbarTitles = ['作品', '企宣'];
+        _curListType = 3;
+        // // 企业
         _loadJobCategory();
       }
       _navTabController = TabController(
@@ -146,50 +149,69 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
           onTap: (index) {
             if (index == 0) {
               //作品
+              _curListType = 0;
+              // model.getProjects();
+              //职位分类
+              _loadJobCategory();
             } else if (index == 2) {
               //企宣
-
+              _curListType = 3;
+              // 企业分类
+              _loadIndustryCategory();
+              // model.getCompanyShow(SearchParameters());
             } else {
               //index=1 岗位 简历 企宣
 
               if (g_accountManager.currentUser == null) {
                 //未登陆是企宣
                 // model.getRefreshListCompany(params);
+                _curListType = 3;
+                // model.getCompanyShow(SearchParameters());
+
+                // 企业分类
+                _loadJobCategory();
               } else {
                 if (g_accountManager.currentUser.typeId == 1) {
                   //个人请求岗位
+                  _curListType = 2;
 
+                  // 企业分类
+                  _loadJobCategory();
                 } else {
                   //企业请求简历
+                  _curListType = 1;
+                  // model.getRefreshListResume(SearchParameters());
+                  // 个人
+                  _loadIndustryCategory();
                 }
               }
             }
-
+            model.getRefresh(_curListType);
             //顶部状态栏点击 区分是否开启求职铃
-
+            setState(() {});
             // 查询类型 0/不传 推荐查询 1.指定用户2.关注用户3.已赞作品(喜欢)5.附近作品(需要传经纬度)
-            int queryType = 0;
-            if (index == 0) {
-              queryType = 2;
-            } else if (index == 2) {
-              queryType = 5;
-            }
-
-            SearchParameters params = SearchParameters();
-//为登陆的修改
-            if (g_accountManager.currentUser == null) {
-              model.getRefreshListCompany(params);
-              return;
-            }
-            int accType = g_accountManager.currentUser.typeId;
-            params.queryType = queryType;
-            if (accType == 1) {
-              //个人
-              model.getRefreshListCompany(params);
-            } else if (accType == 2) {
-              //公司
-              model.getRefreshListResume(params);
-            }
+//             int queryType = 0;
+//             if (index == 0) {
+//               queryType = 2;
+//             } else if (index == 2) {
+//               queryType = 5;
+//             }
+//
+//             SearchParameters params = SearchParameters();
+// //为登陆的修改
+//             if (g_accountManager.currentUser == null) {
+//               model.getRefreshListCompany(params);
+//               return;
+//             }
+//             int accType = g_accountManager.currentUser.typeId;
+//             params.queryType = queryType;
+//             if (accType == 1) {
+//               //个人
+//               model.getRefreshListCompany(params);
+//             } else if (accType == 2) {
+//               //公司
+//               model.getRefreshListResume(params);
+//             }
           },
         ));
   }
@@ -231,18 +253,29 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
 //            onTap: _tapCategory,
                   //点击tabbar对应item逻辑更改
                   onTap: (index) {
-                    int typeId = g_accountManager.currentUser.typeId;
+                    // int typeId = g_accountManager.currentUser.typeId;
                     SearchParameters param = SearchParameters();
                     param.industryNo = index;
-                    if (typeId == 1) {
-                      //个人身份
-//                Provider.of<SearchManager>(context,listen: false).getRefreshListCompany(param);
-                      model.getRefreshListCompany(param);
-                    } else if (typeId == 2) {
-                      //公司身份
-//                Provider.of<SearchManager>(context,listen: false).getRefreshListResume(param);
+
+                    if (_curListType == 0) {
+                      model.getProjects(param);
+                    } else if (_curListType == 1) {
                       model.getRefreshListResume(param);
+                    } else if (_curListType == 2) {
+                      model.getRefreshListCompany(param);
+                    } else {
+                      model.getCompanyShow(param);
                     }
+
+//                     if (typeId == 1) {
+//                       //个人身份
+// //                Provider.of<SearchManager>(context,listen: false).getRefreshListCompany(param);
+//                       model.getRefreshListCompany(param);
+//                     } else if (typeId == 2) {
+//                       //公司身份
+// //                Provider.of<SearchManager>(context,listen: false).getRefreshListResume(param);
+//                       model.getRefreshListResume(param);
+//                     }
                   },
 
                   tabs: _categoryList.map((categoryJson) {
@@ -312,25 +345,43 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
 
   // 列表
   Widget _buildGridView(SearchManager model) {
-    if (AccountManager.instance.currentUser != null) {
-      if (g_accountManager.currentUser == null) {
-        return Expanded(child: HomeGridResume(model));
-      }
-      int typeId = g_accountManager.currentUser.typeId;
-      if (typeId == 1) {
-        // 个人账户
-        return Expanded(
+    //绘制当前列表 根据tab和用户身份
+    if (_curListType == 0) {
+      return Expanded(
 //          child: HomeGridCompany(_currentCategoryMap)
-            child: HomeGridCompanyNew(model));
-      } else if (typeId == 2) {
-        // 公司账户
-        return Expanded(child: HomeGridResume(model));
-      } else {
-        return SizedBox.shrink();
-      }
+          child: HomeGridResume(model, _curListType));
+    } else if (_curListType == 1) {
+      return Expanded(
+//          child: HomeGridCompany(_currentCategoryMap)
+          child: HomeGridResume(model, _curListType));
+    } else if (_curListType == 2) {
+      // 公司账户
+      return Expanded(child: HomeGridResume(model, _curListType));
+    } else {
+      return Expanded(
+//          child: HomeGridCompany(_currentCategoryMap)
+          child: HomeGridCompanyNew(model));
     }
 
-    return SizedBox.shrink();
+//     if (AccountManager.instance.currentUser != null) {
+//       if (g_accountManager.currentUser == null) {
+//         return Expanded(child: HomeGridResume(model));
+//       }
+//       int typeId = g_accountManager.currentUser.typeId;
+//       if (typeId == 1) {
+//         // 个人账户
+//         return Expanded(
+// //          child: HomeGridCompany(_currentCategoryMap)
+//             child: HomeGridCompanyNew(model));
+//       } else if (typeId == 2) {
+//         // 公司账户
+//         return Expanded(child: HomeGridResume(model));
+//       } else {
+//         return SizedBox.shrink();
+//       }
+//     }
+//
+//     return SizedBox.shrink();
   }
 
   // 行业分类
@@ -340,7 +391,8 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
       bool success = DioUtil.checkRequestResult(responseData);
       if (success) {
         setState(() {
-          _categoryList = responseData['data'];
+          _categoryList.clear();
+          _categoryList.addAll(responseData['data']);
           _tabController =
               TabController(length: _categoryList.length, vsync: this);
         });
@@ -355,6 +407,7 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
       bool success = DioUtil.checkRequestResult(responseData);
       if (success) {
         setState(() {
+          _categoryList.clear();
           _categoryList.addAll(responseData['data']);
           _tabController =
               TabController(length: _categoryList.length, vsync: this);

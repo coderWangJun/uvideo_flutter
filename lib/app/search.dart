@@ -9,7 +9,7 @@ import 'package:youpinapp/utils/event_bus.dart';
 class SearchManager extends ChangeNotifier {
   String requestUrl = "";
   SearchParameters searchParam;
-
+  int _cur_data_type = 0;
   num nowPage = 2;
   static final num MAX_SIZE = 10;
   bool isHasNextPage = true;
@@ -50,11 +50,12 @@ class SearchManager extends ChangeNotifier {
     }
   }
 
-  getRefresh() {
+  getRefresh(int _cur_data_type) {
+    this._cur_data_type = _cur_data_type;
     if (isLoadingFree) {
       isHasNextPage = true;
       nowPage = 1;
-      if (g_accountManager.currentUser.typeId == 1) {
+      if (_cur_data_type != 3) {
         modelListRes.clear();
       } else {
         modelListCom.clear();
@@ -66,13 +67,23 @@ class SearchManager extends ChangeNotifier {
   getMorePage() {
     if (isHasNextPage && isLoadingFree) {
       isLoadingFree = false;
-      bool flag = true;
-      if (g_accountManager.currentUser.typeId != 1) {
-        requestUrl = "/resume/getMediaResume";
+      bool flag = _cur_data_type != 3;
+      if (_cur_data_type == 0) {
+        requestUrl = "/user/getMediaWorks"; //作品
+      } else if (_cur_data_type == 1) {
+        requestUrl = "/resume/getMediaResume"; //简历
+      } else if (_cur_data_type == 2) {
+        requestUrl = "/company/getMediaResume"; //岗位
       } else {
-        requestUrl = "/company/getMediaResume";
-        flag = false;
+        requestUrl = "/company/getPromo"; //企宣
       }
+
+      // if (g_accountManager.currentUser.typeId != 1) {
+      //   requestUrl = "/resume/getMediaResume";
+      // } else {
+      //   requestUrl = "/company/getMediaResume";
+      //   flag = false;
+      // }
       if (searchParam == null) {
         searchParam = SearchParameters();
       }
@@ -150,25 +161,50 @@ class SearchManager extends ChangeNotifier {
     });
   }
 
-  getProjects() {
+  getProjects(SearchParameters searchParameters) {
     //查作品
-  }
-
-  getCompanyShow(SearchParameters searchParameters) {
-    //企宣
     if (searchParameters.industryNo != 0) {
       searchParameters.cityNo = nowCityId;
     }
-    BotToast.showLoading();
-    DioUtil.request("/company/getPromo",parameters: searchParam.toParam())
-    .then((value) => {
-      if(DioUtil.checkRequestResult(value,showToast: false)){
+    searchParam = searchParameters;
+    DioUtil.request("/user/getMediaWorks", parameters: searchParam.toParam())
+        .then((value) {
+//      DioUtil.request("/resume/getMediaResume").then((value){
+      if (DioUtil.checkRequestResult(value, showToast: false)) {
+        List<dynamic> dataList = value['data'];
+        if (dataList != null) {
+          modelListRes = dataList.map((json) {
+            return HomeResumeModel.fromJson(json);
+          }).toList();
+        } else {
+          modelListRes = [];
+        }
+        print("完成");
+        notifyListeners();
+      }
+    });
+  }
 
-      }else{
-        modelListCom = []
+//企宣
+  getCompanyShow(SearchParameters searchParameters) {
+    if (searchParameters.industryNo != 0) {
+      searchParameters.cityNo = nowCityId;
+    }
+    searchParam = searchParameters;
+    BotToast.showLoading();
+    DioUtil.request("/company/getPromo", parameters: searchParam.toParam())
+        .then((value) {
+      if (DioUtil.checkRequestResult(value, showToast: false)) {
+        List<dynamic> dataList = value["data"];
+        if (dataList != null) {
+          modelListCom = dataList.map((json) {
+            return HomeCompanyModel.fromJson(json);
+          }).toList();
+        }
+      } else {
+        modelListCom = [];
       }
     }).whenComplete(() => BotToast.closeAllLoading());
-
   }
 
   getUseSimpleIntr() {
@@ -179,7 +215,7 @@ class SearchManager extends ChangeNotifier {
     //岗位
   }
 
-  //查公司
+  //岗位
   getRefreshListCompany(SearchParameters searchParameters) {
     if (searchParameters.industryNo != 0) {
       searchParameters.cityNo = nowCityId;
@@ -187,7 +223,7 @@ class SearchManager extends ChangeNotifier {
     searchParam = searchParameters;
     BotToast.showLoading();
     DioUtil.request("/company/getMediaResume",
-            parameters: searchParameters.toParam())
+            parameters: searchParam.toParam())
         .then((value) {
       if (DioUtil.checkRequestResult(value, showToast: false)) {
         List<dynamic> dataList = value['data'];
@@ -203,15 +239,14 @@ class SearchManager extends ChangeNotifier {
     }).whenComplete(() => BotToast.closeAllLoading());
   }
 
-  //查个人
+  //查简历
   getRefreshListResume(SearchParameters searchParameters) {
     if (searchParameters.industryNo != 0) {
       searchParameters.cityNo = nowCityId ??= null;
     }
     searchParam = searchParameters;
     BotToast.showLoading();
-    DioUtil.request("/resume/getMediaResume",
-            parameters: searchParameters.toParam())
+    DioUtil.request("/resume/getMediaResume", parameters: searchParam.toParam())
         .then((value) {
       if (DioUtil.checkRequestResult(value, showToast: false)) {
         List<dynamic> dataList = value['data'];
