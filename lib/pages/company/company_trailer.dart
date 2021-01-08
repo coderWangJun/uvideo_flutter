@@ -1,18 +1,10 @@
 import 'package:awsome_video_player/awsome_video_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:path/path.dart';
-import 'package:youpinapp/app/account.dart';
-import 'package:youpinapp/app/imProvider.dart';
 import 'package:youpinapp/global/color_constants.dart';
-import 'package:youpinapp/models/company_page_model.dart';
+import 'package:youpinapp/models/company_trailer_model.dart';
 import 'package:youpinapp/models/index.dart';
 import 'package:youpinapp/pages/common/app_bar_white.dart';
-import 'package:youpinapp/pages/person/user_detail_route.dart';
-import 'package:youpinapp/utils/assets_util.dart';
-import 'package:youpinapp/utils/dataTime_string.dart';
 import 'package:youpinapp/utils/dio_util.dart';
 
 class CompanyTrailer extends StatefulWidget {
@@ -31,7 +23,8 @@ class _CompanyTrailerState extends State<CompanyTrailer> {
     this.companyModel = companyModel;
   }
 
-  CompanyPageModel companyPageModel = CompanyPageModel();
+  CompanyTrilerModel companyPageModel = CompanyTrilerModel();
+  String url="";
 
   @override
   void initState() {
@@ -44,8 +37,8 @@ class _CompanyTrailerState extends State<CompanyTrailer> {
     DioUtil.request("/company/getPromoDetail", parameters: {"id": companyModel.id}).then((value) {
       if (DioUtil.checkRequestResult(value, showToast: false)) {
         setState(() {
-          companyPageModel = CompanyPageModel.fromJson(value["data"]);
-          companyPageModel.details;
+          companyPageModel = CompanyTrilerModel.fromJson(value["data"]);
+          url=companyPageModel.worksUrl;
         });
       }
     });
@@ -85,7 +78,7 @@ class _CompanyTrailerState extends State<CompanyTrailer> {
               alignment: Alignment.center,
               children: <Widget>[
                 AwsomeVideoPlayer(
-                  this.companyPageModel.worksUrl,
+                  companyPageModel.worksUrl??"",
                   playOptions: VideoPlayOptions(loop: true),
                   videoStyle: VideoStyle(videoTopBarStyle: VideoTopBarStyle(show: false)),
                 )
@@ -118,7 +111,7 @@ class _CompanyTrailerState extends State<CompanyTrailer> {
           padding: EdgeInsets.only(top: 10, bottom: 10,left: 15),
           child: Text(companyPageModel.details ?? "" ,
               style: TextStyle(
-                  fontSize: 17, color: ColorConstants.textColor51, fontWeight: FontWeight.bold)),
+                  fontSize: 15, color: ColorConstants.textColor51)),
         ),
       ],
     );
