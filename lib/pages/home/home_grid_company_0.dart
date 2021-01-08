@@ -173,8 +173,10 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
                 // 点击格格
                 //判断类型
 
-
-                Get.to(CompanyTrailer(companyModel));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                  return CompanyTrailer(companyModel);
+                }));
               },
             );
           }).toList(),

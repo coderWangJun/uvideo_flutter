@@ -65,7 +65,8 @@ class _CompanyTrailerState extends State<CompanyTrailer> {
   }
   // 视频播放组件
   Widget _buildVideo() {
-    return Column(
+    return companyPageModel.worksUrl.isEmpty? Container():
+      Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         FlatButton(
