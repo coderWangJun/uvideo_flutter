@@ -8,7 +8,7 @@ import 'account_company_model.dart';
 class CompanyPageModel {
   CompanyPageModel();
 
-  String id;
+  int id;
   String companyName;
   String financingStageName;
   String staffScaleName;
@@ -20,7 +20,7 @@ class CompanyPageModel {
 
 
   factory CompanyPageModel.fromJson(Map<String, dynamic> json) => CompanyPageModel()
-    ..id = json['id'] as String
+    ..id = json['id'] as int
     ..financingStageName = json['financingStageName'] as String
     ..staffScaleName = json['staffScaleName'] as String
     ..companyName = json['companyName'] as String

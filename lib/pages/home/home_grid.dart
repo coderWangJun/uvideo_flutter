@@ -127,7 +127,7 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
   // 导航栏中间的tabbar
   Widget _buildAppBarTitle(SearchManager model) {
     return Container(
-        width: 240,
+        width: 180,
         child: TabBar(
           controller: _navTabController,
           labelPadding: EdgeInsets.zero,

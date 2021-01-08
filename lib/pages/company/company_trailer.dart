@@ -24,7 +24,8 @@ class _CompanyTrailerState extends State<CompanyTrailer> {
   }
 
   CompanyTrilerModel companyPageModel = CompanyTrilerModel();
-  String url="";
+  String url = "";
+  String _title = "";
 
   @override
   void initState() {
@@ -32,13 +33,14 @@ class _CompanyTrailerState extends State<CompanyTrailer> {
     _netWorkCompanyDetail();
   }
 
-
   _netWorkCompanyDetail() async {
-    DioUtil.request("/company/getPromoDetail", parameters: {"id": companyModel.id}).then((value) {
+    DioUtil.request("/company/getPromoDetail",
+        parameters: {"id": companyModel.id}).then((value) {
       if (DioUtil.checkRequestResult(value, showToast: false)) {
         setState(() {
           companyPageModel = CompanyTrilerModel.fromJson(value["data"]);
-          url=companyPageModel.worksUrl;
+          url = companyPageModel.worksUrl;
+          _title = companyPageModel.companyName;
         });
       }
     });
@@ -48,71 +50,83 @@ class _CompanyTrailerState extends State<CompanyTrailer> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color(0xFFFFFFFF),
-        appBar: AppBarWhite(),
+        appBar: AppBarWhite(
+          title: _title,
+        ),
         body: ConstrainedBox(
           constraints: BoxConstraints.expand(),
           child: SingleChildScrollView(
             padding: EdgeInsets.only(bottom: 60),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildVideo(),
-                _buildDetail()
-              ],
+              children: <Widget>[_buildVideo(), _buildDetail()],
             ),
           ),
         ));
   }
+
   // 视频播放组件
   Widget _buildVideo() {
-    return companyPageModel.worksUrl.isEmpty? Container():
-      Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        FlatButton(
-          padding: EdgeInsets.all(0),
-          child: Container(
-            width: double.infinity,
-            color: Colors.black,
-            constraints: BoxConstraints(minHeight: 200),
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                AwsomeVideoPlayer(
-                  companyPageModel.worksUrl??"",
-                  playOptions: VideoPlayOptions(loop: true),
-                  videoStyle: VideoStyle(videoTopBarStyle: VideoTopBarStyle(show: false)),
-                )
-              ],
-            ),
-          ),
-          onPressed: () async {},
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 10, bottom: 10,left: 15),
-          child: Text(companyPageModel.companyName ??"",
-              style: TextStyle(
-                  fontSize: 17, color: ColorConstants.textColor51, fontWeight: FontWeight.bold)),
-        )
-      ],
-    );
+    return companyPageModel == null ||
+            companyPageModel.worksUrl == null ||
+            companyPageModel.worksUrl.isEmpty
+        ? Container()
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              FlatButton(
+                padding: EdgeInsets.all(0),
+                child: Container(
+                  width: double.infinity,
+                  color: Colors.black,
+                  constraints: BoxConstraints(minHeight: 200),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      AwsomeVideoPlayer(
+                        companyPageModel.worksUrl ?? "",
+                        playOptions: VideoPlayOptions(loop: true),
+                        videoStyle: VideoStyle(
+                            videoTopBarStyle: VideoTopBarStyle(show: false)),
+                      )
+                    ],
+                  ),
+                ),
+                onPressed: () async {},
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10, bottom: 10, left: 15),
+                child: Text(companyPageModel.companyName ?? "",
+                    style: TextStyle(
+                        fontSize: 17,
+                        color: ColorConstants.textColor51,
+                        fontWeight: FontWeight.bold)),
+              )
+            ],
+          );
   }
+
   // 简介
   Widget _buildDetail() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(top: 10, bottom: 10,left: 15),
+          padding: EdgeInsets.only(top: 10, bottom: 10, left: 15),
           child: Text('简介',
               style: TextStyle(
-                  fontSize: 17, color: ColorConstants.textColor51, fontWeight: FontWeight.bold)),
+                  fontSize: 17,
+                  color: ColorConstants.textColor51,
+                  fontWeight: FontWeight.bold)),
         ),
         Padding(
-          padding: EdgeInsets.only(top: 10, bottom: 10,left: 15),
-          child: Text(companyPageModel.details ?? "" ,
-              style: TextStyle(
-                  fontSize: 15, color: ColorConstants.textColor51)),
+          padding: EdgeInsets.only(top: 10, bottom: 10, left: 15),
+          child: Text(
+              companyPageModel.details == null || companyPageModel.details == ""
+                  ? "该公司很懒，什么也没留下"
+                  : companyPageModel.details,
+              style:
+                  TextStyle(fontSize: 15, color: ColorConstants.textColor51)),
         ),
       ],
     );

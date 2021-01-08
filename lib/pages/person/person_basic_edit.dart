@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+// import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -372,13 +372,13 @@ class _PersonBasicEditState extends State<PersonBasicEdit> {
         ),
       ),
       onTap: () {
-        DatePicker.showDatePicker(parentContext,
-            maxDateTime: DateTime.now(),
-            dateFormat: 'yyyy-MM-dd',
-            locale: DateTimePickerLocale.zh_cn,
-            onConfirm: (DateTime dateTime, List<int> selectedIndex) {
-          _birthdayController.text = DateFormat('yyyy-MM-dd').format(dateTime);
-        });
+        // DatePicker.showDatePicker(parentContext,
+        //     maxDateTime: DateTime.now(),
+        //     dateFormat: 'yyyy-MM-dd',
+        //     locale: DateTimePickerLocale.zh_cn,
+        //     onConfirm: (DateTime dateTime, List<int> selectedIndex) {
+        //   _birthdayController.text = DateFormat('yyyy-MM-dd').format(dateTime);
+        // });
       },
     );
   }
@@ -422,13 +422,13 @@ class _PersonBasicEditState extends State<PersonBasicEdit> {
         ),
       ),
       onTap: () {
-        DatePicker.showDatePicker(parentContext,
-            maxDateTime: DateTime.now(),
-            dateFormat: 'yyyy-MM-dd',
-            locale: DateTimePickerLocale.zh_cn,
-            onConfirm: (DateTime dateTime, List<int> selectedIndex) {
-          _workTimeController.text = DateFormat('yyyy-MM-dd').format(dateTime);
-        });
+        // DatePicker.showDatePicker(parentContext,
+        //     maxDateTime: DateTime.now(),
+        //     dateFormat: 'yyyy-MM-dd',
+        //     locale: DateTimePickerLocale.zh_cn,
+        //     onConfirm: (DateTime dateTime, List<int> selectedIndex) {
+        //   _workTimeController.text = DateFormat('yyyy-MM-dd').format(dateTime);
+        // });
       },
     );
   }

@@ -12,14 +12,14 @@ class DioUtil {
   // 服务器响应结果码：成功
   static final String HTTP_RESP_CODE_SUCCESS = '1';
 
-//  static final String SERVER_URL = 'https://47.108.196.26:2020';
-  static final String SERVER_URL = 'https://47.104.105.255:2020';
-  // static final String SERVER_URL = 'https://www.im.com:2020';
-
   // static final String SERVER_URL = 'https://47.104.105.255:2020';
+
   // static final String SERVER_URL = 'https://127.0.0.1:2020';
   // static final String SERVER_URL = 'https://huangque.tech:2020';
 //  static final String ERVER_URL = 'https://192.168.2.149:2020';
+  // static final String SERVER_URL = 'https://www.im.com:2020';
+//  static final String SERVER_URL = 'https://47.108.196.26:2020';
+  static final String SERVER_URL = 'https://47.104.105.255:2020';
 
   // 单例对象
   static Dio _dio;

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
+// import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:youpinapp/global/color_constants.dart';
 import 'package:youpinapp/models/index.dart';
@@ -70,18 +70,18 @@ class _UcoinDetailRouteState extends State<UcoinDetailRoute> {
               ),
             ),
             onTap: () {
-              DatePicker.showDatePicker(
-                parentContext,
-                maxDateTime: DateTime.now(),
-                dateFormat: "yyyy-MM",
-                locale: DateTimePickerLocale.zh_cn,
-                onConfirm: (DateTime dateTime, List<int> selectedIndex) {
-                  _monthString = DateFormat("yyyy-MM").format(dateTime);
-                  _loadUcoinDetailList();
-
-                  setState(() { });
-                }
-              );
+              // DatePicker.showDatePicker(
+              //   parentContext,
+              //   maxDateTime: DateTime.now(),
+              //   dateFormat: "yyyy-MM",
+              //   locale: DateTimePickerLocale.zh_cn,
+              //   onConfirm: (DateTime dateTime, List<int> selectedIndex) {
+              //     _monthString = DateFormat("yyyy-MM").format(dateTime);
+              //     _loadUcoinDetailList();
+              //
+              //     setState(() { });
+              //   }
+              // );
             },
           ),
           Text.rich(TextSpan(
