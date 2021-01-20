@@ -46,38 +46,43 @@ class _VerifyCodeRouteState extends State<VerifyCodeRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ModalProgressHUD(
-        inAsyncCall: _isCalling,
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _buildAppBar(),
-              Expanded(
+        body: ModalProgressHUD(
+      inAsyncCall: _isCalling,
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _buildAppBar(),
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(top: 35, left: 25, right: 25),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.only(top: 35, left: 25, right: 25),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text('输入短信验证码', style: TextStyle(fontSize: 24, color: ColorConstants.textColor51, fontWeight: FontWeight.bold)),
-                            Text('已向您的手机${widget.phone}发送验证码', style: TextStyle(fontSize: 13, color: Color.fromRGBO(101, 101, 101, 1))),
-                          ],
-                        ),
-                      ),
-                      _buildVerifyBox(context),
-                      _buildCountDownWidget(),
-//                      _buildNextButton()
+                      Text('输入短信验证码',
+                          style: TextStyle(
+                              fontSize: 24,
+                              color: ColorConstants.textColor51,
+                              fontWeight: FontWeight.bold)),
+                      Text('已向您的手机${widget.phone}发送验证码',
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: Color.fromRGBO(101, 101, 101, 1))),
                     ],
-                  )
-              )
-            ],
-          ),
+                  ),
+                ),
+                _buildVerifyBox(context),
+                _buildCountDownWidget(),
+//                      _buildNextButton()
+              ],
+            ))
+          ],
         ),
-      )
-    );
+      ),
+    ));
   }
 
   void _startTimer() {
@@ -93,7 +98,7 @@ class _VerifyCodeRouteState extends State<VerifyCodeRoute> {
           _timerButtonTitle = '重新发送($currentTimerSeconds)';
         }
 
-        setState(() { });
+        setState(() {});
       });
     }
   }
@@ -105,7 +110,8 @@ class _VerifyCodeRouteState extends State<VerifyCodeRoute> {
       child: Row(
         children: <Widget>[
           IconButton(
-            icon: Image.asset(join(AssetsUtil.assetsDirectoryCommon, 'nav_back_black.png')),
+            icon: Image.asset(
+                join(AssetsUtil.assetsDirectoryCommon, 'nav_back_black.png')),
             onPressed: () {
               Get.back();
             },
@@ -134,7 +140,7 @@ class _VerifyCodeRouteState extends State<VerifyCodeRoute> {
       margin: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
       child: PinCodeTextField(
         length: 4,
-        appContext: parentContext,
+        // appContext: parentContext,
         animationType: AnimationType.fade,
         pinTheme: PinTheme(
           shape: PinCodeFieldShape.underline,
@@ -162,7 +168,12 @@ class _VerifyCodeRouteState extends State<VerifyCodeRoute> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         FlatButton(
-          child: Text(_timerButtonTitle, style: TextStyle(fontSize: 13, color: _countDownTimer != null ? ColorConstants.textColor153 : ColorConstants.themeColorBlue)),
+          child: Text(_timerButtonTitle,
+              style: TextStyle(
+                  fontSize: 13,
+                  color: _countDownTimer != null
+                      ? ColorConstants.textColor153
+                      : ColorConstants.themeColorBlue)),
           onPressed: () {
             if (_countDownTimer == null) {
               _requestSmsCode();
@@ -182,11 +193,14 @@ class _VerifyCodeRouteState extends State<VerifyCodeRoute> {
         height: 44,
         decoration: BoxDecoration(
 //        color: ColorConstants.themeColorBlue.withOpacity(0.5),
-          color: ColorConstants.themeColorBlue.withOpacity(1),
-          borderRadius: BorderRadius.circular(6)
-        ),
+            color: ColorConstants.themeColorBlue.withOpacity(1),
+            borderRadius: BorderRadius.circular(6)),
         child: Center(
-          child: Text('下一步', style: TextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold)),
+          child: Text('下一步',
+              style: TextStyle(
+                  fontSize: 17,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold)),
         ),
       ),
       onTap: () {
@@ -194,9 +208,11 @@ class _VerifyCodeRouteState extends State<VerifyCodeRoute> {
       },
     );
   }
-  
+
   void _requestSmsCode() {
-    setState(() { _isCalling = true; });
+    setState(() {
+      _isCalling = true;
+    });
 
     var params = {'phonenumber': widget.phone};
     DioUtil.request('/user/sendVcode', parameters: params).then((reponseData) {
@@ -204,13 +220,16 @@ class _VerifyCodeRouteState extends State<VerifyCodeRoute> {
       if (success) {
         _startTimer();
       }
-    }).whenComplete(() => setState(() { _isCalling = false; }));
+    }).whenComplete(() => setState(() {
+          _isCalling = false;
+        }));
   }
 
   void _loginWithVerifyCode(vcode) {
     var params = {'vcode': vcode, 'phonenumber': widget.phone};
     BotToast.showLoading();
-    DioUtil.request('/user/login', parameters: params).then((responseData) async {
+    DioUtil.request('/user/login', parameters: params)
+        .then((responseData) async {
       bool success = DioUtil.checkRequestResult(responseData, showToast: true);
       if (success) {
         await g_accountManager.refreshLocalUser(responseData['data']);

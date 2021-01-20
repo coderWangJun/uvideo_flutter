@@ -15,7 +15,6 @@ import io.flutter.embedding.engine.plugins.shim.ShimPluginRegistry;
 public final class GeneratedPluginRegistrant {
   public static void registerWith(@NonNull FlutterEngine flutterEngine) {
     ShimPluginRegistry shimPluginRegistry = new ShimPluginRegistry(flutterEngine);
-      com.example.flutter_drag_scale.FlutterDragScalePlugin.registerWith(shimPluginRegistry.registrarFor("com.example.flutter_drag_scale.FlutterDragScalePlugin"));
       io.agora.agorartcengine.AgoraRtcEnginePlugin.registerWith(shimPluginRegistry.registrarFor("io.agora.agorartcengine.AgoraRtcEnginePlugin"));
     flutterEngine.getPlugins().add(new com.example.awsome_video_player.AwsomeVideoPlayerPlugin());
     flutterEngine.getPlugins().add(new io.flutter.plugins.connectivity.ConnectivityPlugin());
@@ -24,6 +23,7 @@ public final class GeneratedPluginRegistrant {
       com.baidu.bdmap_location_flutter_plugin.LocationFlutterPlugin.registerWith(shimPluginRegistry.registrarFor("com.baidu.bdmap_location_flutter_plugin.LocationFlutterPlugin"));
     flutterEngine.getPlugins().add(new com.baidu.flutter_bmfmap.FlutterBmfmapPlugin());
     flutterEngine.getPlugins().add(new com.baidu.flutter_bmfutils.FlutterBmfutilsPlugin());
+      com.example.flutter_drag_scale.FlutterDragScalePlugin.registerWith(shimPluginRegistry.registrarFor("com.example.flutter_drag_scale.FlutterDragScalePlugin"));
       com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin.registerWith(shimPluginRegistry.registrarFor("com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin"));
     flutterEngine.getPlugins().add(new io.flutter.plugins.flutter_plugin_android_lifecycle.FlutterAndroidLifecyclePlugin());
       com.dooboolab.fluttersound.FlutterSoundPlugin.registerWith(shimPluginRegistry.registrarFor("com.dooboolab.fluttersound.FlutterSoundPlugin"));

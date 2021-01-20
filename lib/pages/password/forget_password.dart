@@ -99,8 +99,8 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
   void _settingPassWord(BuildContext context) {
     String pass = _passController.text;
     String pass1 = _passController1.text;
-    String phone =_phoneController.text;
-    String code=_codeController.text;
+    String phone = _phoneController.text;
+    String code = _codeController.text;
     if (phone == '') {
       BotToast.showText(text: '请输入手机号');
       return;
@@ -131,7 +131,7 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
     var params = {
       'phonenumber': phone,
       'password': pass,
-      'vcode':code,
+      'vcode': code,
     };
     BotToast.showLoading();
     DioUtil.request('/user/updatePasswordByPhonenumber', parameters: params)
@@ -143,8 +143,9 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
       }
     }).whenComplete(() => BotToast.closeAllLoading());
   }
+
   void _requestSmsCode() {
-    String phone =_phoneController.text;
+    String phone = _phoneController.text;
     if (phone == '') {
       BotToast.showText(text: '请输入手机号');
       return;
@@ -165,12 +166,13 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
               _timerButtonTitle = '重新发送($currentTimerSeconds)';
             }
 
-            setState(() { });
+            setState(() {});
           });
         }
       }
     }).whenComplete(() => setState(() {}));
   }
+
   Widget _buildPassInputWidgets() {
     return Container(
         child: Column(children: <Widget>[
@@ -214,7 +216,7 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
                         color: Color.fromRGBO(153, 153, 153, 1),
                         fontWeight: FontWeight.w500),
                     hintText: '请输入验证码',
-                    prefixIcon: Icon(Icons.textsms_rounded,
+                    prefixIcon: Icon(Icons.code,
                         color: Color.fromRGBO(153, 153, 153, 1))),
               ),
             ),
@@ -226,7 +228,8 @@ class _ForgetPassWordState extends State<ForgetPassWord> {
                     color: Color.fromRGBO(153, 153, 153, 1),
                     fontWeight: FontWeight.w500),
               ),
-              onTap:()=>_timerButtonTitle=='获取验证码'? _requestSmsCode():null,
+              onTap: () =>
+                  _timerButtonTitle == '获取验证码' ? _requestSmsCode() : null,
             ),
             Padding(padding: EdgeInsets.only(right: 10))
           ],
