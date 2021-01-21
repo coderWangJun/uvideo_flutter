@@ -452,8 +452,8 @@ class _MineIndexState extends State<MineIndex>
                     onPressed: () {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (BuildContext context) {
-                            return HomeVideoWidget();
-                          }));
+                        return HomeVideoWidget();
+                      }));
                     },
                     child: Column(
                       children: <Widget>[
@@ -582,22 +582,28 @@ class _MineIndexState extends State<MineIndex>
               ),
             ),
           ),
-
-//            ButtonTheme(
-//              minWidth: 0,
-//              child: FlatButton(
-//                padding: EdgeInsets.all(0),
-//                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-//                child: Column(
-//                  mainAxisAlignment: MainAxisAlignment.center,
-//                  children: <Widget>[
-//                    Text('${_statisticModel.honestyScore ?? 0}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: ColorConstants.textColor51)),
-//                    Text('诚信分', style: TextStyle(fontSize: 13, color: Color.fromRGBO(101, 101, 101, 1))),
-//                  ],
-//                ),
-//              ),
-//            ),
-
+          ButtonTheme(
+            minWidth: 0,
+            child: FlatButton(
+              onPressed: () => {},
+              padding: EdgeInsets.all(0),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('${_statisticModel.honestyScore ?? 0}',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: ColorConstants.textColor51)),
+                  Text('诚信分数',
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: Color.fromRGBO(101, 101, 101, 1))),
+                ],
+              ),
+            ),
+          ),
           ButtonTheme(
             minWidth: 0,
             child: FlatButton(
