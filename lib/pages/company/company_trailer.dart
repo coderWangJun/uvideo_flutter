@@ -59,10 +59,469 @@ class _CompanyTrailerState extends State<CompanyTrailer> {
             padding: EdgeInsets.only(bottom: 60),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[_buildVideo(), _buildDetail()],
+              children: <Widget>[
+                _buildVideo(),
+                _buildCompanyGroup(),
+                _buildDetail(),
+              ],
             ),
           ),
         ));
+  }
+
+  // 公司成员
+  Widget _buildCompanyGroup() {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(
+              left: 10,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: 20,
+                  height: 20,
+                  child: Icon(
+                    Icons.grade,
+                    color: Color.fromRGBO(255, 104, 32, 1),
+                    size: 21,
+                  ),
+                ),
+                Container(
+                  width: 20,
+                  height: 20,
+                  child: Icon(
+                    Icons.grade,
+                    color: Color.fromRGBO(255, 104, 32, 1),
+                    size: 21,
+                  ),
+                ),
+                Container(
+                  width: 20,
+                  height: 20,
+                  child: Icon(
+                    Icons.grade,
+                    color: Color.fromRGBO(255, 104, 32, 1),
+                    size: 21,
+                  ),
+                ),
+                Container(
+                  width: 20,
+                  height: 20,
+                  child: Icon(
+                    Icons.grade,
+                    color: Color.fromRGBO(255, 104, 32, 1),
+                    size: 21,
+                  ),
+                ),
+                Container(
+                  width: 20,
+                  height: 20,
+                  child: Icon(
+                    Icons.grade,
+                    color: Color.fromRGBO(0, 0, 0, 0.3),
+                    size: 21,
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(
+                    top: 4,
+                    left: 15,
+                  ),
+                  child: Text(
+                    '7.7',
+                    style: TextStyle(
+                      color: Color.fromRGBO(255, 104, 32, 1),
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(
+              left: 5,
+              top: 20,
+              bottom: 20,
+            ),
+            child: Text(
+              '【公司成员】',
+              style: TextStyle(
+                color: Color.fromRGBO(0, 0, 0, 0.6),
+                fontSize: 16,
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(
+              left: 10,
+              right: 10,
+              bottom: 40,
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(
+                      right: 20,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          child: Stack(
+                            children: <Widget>[
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(0, 0, 0, 0.4),
+                                  borderRadius: BorderRadius.circular(80),
+                                ),
+                              ),
+                              Positioned(
+                                right: 5,
+                                bottom: 0,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 2,
+                                    horizontal: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(45, 45, 45, 1),
+                                    borderRadius: BorderRadius.horizontal(
+                                      left: Radius.circular(20),
+                                      right: Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    '制片人',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            '梁静',
+                            style: TextStyle(
+                              color: Color.fromRGBO(0, 0, 0, 0.6),
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                      right: 20,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          child: Stack(
+                            children: <Widget>[
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(0, 0, 0, 0.4),
+                                  borderRadius: BorderRadius.circular(80),
+                                ),
+                              ),
+                              Positioned(
+                                right: 5,
+                                bottom: 0,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 2,
+                                    horizontal: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(45, 45, 45, 1),
+                                    borderRadius: BorderRadius.horizontal(
+                                      left: Radius.circular(20),
+                                      right: Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    '制片人',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            '管虎',
+                            style: TextStyle(
+                              color: Color.fromRGBO(0, 0, 0, 0.6),
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                      right: 20,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          child: Stack(
+                            children: <Widget>[
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(0, 0, 0, 0.4),
+                                  borderRadius: BorderRadius.circular(80),
+                                ),
+                              ),
+                              Positioned(
+                                right: 5,
+                                bottom: 0,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 2,
+                                    horizontal: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(45, 45, 45, 1),
+                                    borderRadius: BorderRadius.horizontal(
+                                      left: Radius.circular(20),
+                                      right: Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    '制片人',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            '管虎',
+                            style: TextStyle(
+                              color: Color.fromRGBO(0, 0, 0, 0.6),
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                      right: 20,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          child: Stack(
+                            children: <Widget>[
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(0, 0, 0, 0.4),
+                                  borderRadius: BorderRadius.circular(80),
+                                ),
+                              ),
+                              Positioned(
+                                right: 5,
+                                bottom: 0,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 2,
+                                    horizontal: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(45, 45, 45, 1),
+                                    borderRadius: BorderRadius.horizontal(
+                                      left: Radius.circular(20),
+                                      right: Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    '制片人',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            '管虎',
+                            style: TextStyle(
+                              color: Color.fromRGBO(0, 0, 0, 0.6),
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                      right: 20,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          child: Stack(
+                            children: <Widget>[
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(0, 0, 0, 0.4),
+                                  borderRadius: BorderRadius.circular(80),
+                                ),
+                              ),
+                              Positioned(
+                                right: 5,
+                                bottom: 0,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 2,
+                                    horizontal: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(45, 45, 45, 1),
+                                    borderRadius: BorderRadius.horizontal(
+                                      left: Radius.circular(20),
+                                      right: Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    '导演',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            '路阳',
+                            style: TextStyle(
+                              color: Color.fromRGBO(0, 0, 0, 0.6),
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                      right: 20,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          child: Stack(
+                            children: <Widget>[
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(0, 0, 0, 0.4),
+                                  borderRadius: BorderRadius.circular(80),
+                                ),
+                              ),
+                              Positioned(
+                                right: 5,
+                                bottom: 0,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 2,
+                                    horizontal: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(45, 45, 45, 1),
+                                    borderRadius: BorderRadius.horizontal(
+                                      left: Radius.circular(20),
+                                      right: Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    '导演',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            '赵宁宇',
+                            style: TextStyle(
+                              color: Color.fromRGBO(0, 0, 0, 0.6),
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   // 视频播放组件
@@ -96,11 +555,25 @@ class _CompanyTrailerState extends State<CompanyTrailer> {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10, left: 15),
-                child: Text(companyPageModel.companyName ?? "",
-                    style: TextStyle(
-                        fontSize: 17,
-                        color: ColorConstants.textColor51,
-                        fontWeight: FontWeight.bold)),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(companyPageModel.companyName ?? "",
+                          style: TextStyle(
+                              fontSize: 17,
+                              color: ColorConstants.textColor51,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    FlatButton(
+                      onPressed: () {},
+                      child: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Color.fromRGBO(0, 0, 0, 0.3),
+                        size: 28,
+                      ),
+                    ),
+                  ],
+                ),
               )
             ],
           );

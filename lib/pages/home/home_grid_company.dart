@@ -39,11 +39,9 @@ class _HomeGridCompanyState extends State<HomeGridCompany> {
     super.initState();
     _scrollController = new ScrollController();
     _scrollController.addListener(() {
-      if(_scrollController.position.pixels>=_scrollController.position.maxScrollExtent){
-
-      }
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent) {}
     });
-
   }
 
   @override
@@ -63,15 +61,14 @@ class _HomeGridCompanyState extends State<HomeGridCompany> {
             maxCrossAxisExtent: gridWidth,
             mainAxisSpacing: 15,
             crossAxisSpacing: 15,
-            childAspectRatio: widthScale
-        ),
+            childAspectRatio: widthScale),
         children: _companyList.map((companyModel) {
           return GestureDetector(
             child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: Color.fromRGBO(239, 239, 239, 1), width: 1)
-              ),
+                  border: Border.all(
+                      color: Color.fromRGBO(239, 239, 239, 1), width: 1)),
               child: Column(
                 children: <Widget>[
                   Expanded(
@@ -79,15 +76,21 @@ class _HomeGridCompanyState extends State<HomeGridCompany> {
                       alignment: Alignment.center,
                       children: <Widget>[
                         ClipRRect(
-                            borderRadius: BorderRadius.only(topLeft: Radius.circular(6), topRight: Radius.circular(6)),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(6),
+                                topRight: Radius.circular(6)),
                             child: CachedNetworkImage(
                                 imageUrl: companyModel.coverUrl,
-                                width: (ScreenUtil.mediaQueryData.size.width - 55) / 2,
+                                width: (ScreenUtil.mediaQueryData.size.width -
+                                        55) /
+                                    2,
                                 height: gridHeight - 70,
-                                fit: BoxFit.cover ?? ""
-                            )
-                        ),
-                        Image.asset(join(AssetsUtil.assetsDirectoryCommon, 'video_play.png'), width: 80.w, height: 80.h)
+                                fit: BoxFit.cover ?? "")),
+                        Image.asset(
+                            join(AssetsUtil.assetsDirectoryCommon,
+                                'video_play.png'),
+                            width: 80.w,
+                            height: 80.h)
                       ],
                     ),
                   ),
@@ -95,17 +98,31 @@ class _HomeGridCompanyState extends State<HomeGridCompany> {
                     height: 70,
                     padding: EdgeInsets.only(left: 10, right: 10),
                     decoration: BoxDecoration(
-                      border: Border(top: BorderSide(color: Color.fromRGBO(239, 239, 239, 1), width: 1))
-                    ),
+                        border: Border(
+                            top: BorderSide(
+                                color: Color.fromRGBO(239, 239, 239, 1),
+                                width: 1))),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text(companyModel.title ?? "", overflow: TextOverflow.ellipsis, style: TextStyle(color: Color.fromRGBO(51, 51, 51, 1), fontSize: 30.w, fontWeight: FontWeight.w900)),
+                            Text(companyModel.title ?? "",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: Color.fromRGBO(51, 51, 51, 1),
+                                    fontSize: 30.w,
+                                    fontWeight: FontWeight.w900)),
                             Expanded(
-                              child: Text(companyModel.salaryTreatmentString ?? "", textAlign: TextAlign.right, overflow: TextOverflow.ellipsis, style: TextStyle(color: Color.fromRGBO(79, 154, 247, 1), fontSize: 25.w, fontWeight: FontWeight.w600)),
+                              child: Text(
+                                  companyModel.salaryTreatmentString ?? "",
+                                  textAlign: TextAlign.right,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(79, 154, 247, 1),
+                                      fontSize: 25.w,
+                                      fontWeight: FontWeight.w600)),
                             ),
                           ],
                         ),
@@ -120,12 +137,18 @@ class _HomeGridCompanyState extends State<HomeGridCompany> {
                                   width: 24,
                                   height: 24,
                                   placeholder: (context, imageProvider) {
-                                    return Image.asset(join(AssetsUtil.assetsDirectoryHome, 'company_avatar_circle.png'), width: 24, height: 24);
-                                  }
-                              ),
+                                    return Image.asset(
+                                        join(AssetsUtil.assetsDirectoryHome,
+                                            'company_avatar_circle.png'),
+                                        width: 24,
+                                        height: 24);
+                                  }),
                             ),
                             SizedBox(width: 10.w),
-                            Text(companyModel.companyName ?? "", style: TextStyle(fontSize: 22.w, color: Color.fromRGBO(102, 102, 102, 1)))
+                            Text(companyModel.companyName ?? "",
+                                style: TextStyle(
+                                    fontSize: 22.w,
+                                    color: Color.fromRGBO(102, 102, 102, 1)))
                           ],
                         )
                       ],
@@ -136,7 +159,8 @@ class _HomeGridCompanyState extends State<HomeGridCompany> {
             ),
             onTap: () {
               // 点击格格
-              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
                 return CompanyDetail(companyModel);
               }));
             },
@@ -146,7 +170,9 @@ class _HomeGridCompanyState extends State<HomeGridCompany> {
     } else {
       return Container(
         constraints: BoxConstraints.expand(),
-        child: EmptyWidget(showTitle: "空空如也",),
+        child: EmptyWidget(
+          showTitle: "空空如也",
+        ),
       );
     }
   }
@@ -159,7 +185,8 @@ class _HomeGridCompanyState extends State<HomeGridCompany> {
     }
     print(params);
 
-    DioUtil.request('/company/getMediaResume', parameters: params).then((responseData) {
+    DioUtil.request('/company/getMediaResume', parameters: params)
+        .then((responseData) {
       _companyList.clear();
 
       bool success = DioUtil.checkRequestResult(responseData, showToast: false);
@@ -172,7 +199,7 @@ class _HomeGridCompanyState extends State<HomeGridCompany> {
         _companyList.addAll(modelList);
       }
 
-      setState(() { });
+      setState(() {});
     });
   }
 }

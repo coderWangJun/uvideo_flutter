@@ -53,7 +53,6 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
   @override
   Widget build(BuildContext context) {
 //    searchManager = Provider.of<SearchManager>(context);
-
     // 调试时模拟器的宽度是178
     double gridWidth = (ScreenUtil.mediaQueryData.size.width - 55) / 2;
     double gridHeight = 190;
@@ -64,7 +63,7 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
         child: GridView(
           controller: _scrollController,
           physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.only(top: 0, bottom: 20, left: 20, right: 20),
+          padding: EdgeInsets.only(top: 0, bottom: 10, left: 20, right: 20),
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: gridWidth,
               mainAxisSpacing: 15,
@@ -113,54 +112,79 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(companyModel.title ?? "",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      color: Color.fromRGBO(51, 51, 51, 1),
-                                      fontSize: 30.w,
-                                      fontWeight: FontWeight.w900)),
-                              Expanded(
-                                child: Text(
-                                    companyModel.salaryTreatmentString ?? "",
-                                    textAlign: TextAlign.right,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(79, 154, 247, 1),
-                                        fontSize: 25.w,
-                                        fontWeight: FontWeight.w600)),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10.h),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   children: <Widget>[
+                          //     Text(companyModel.title ?? "",
+                          //         overflow: TextOverflow.ellipsis,
+                          //         style: TextStyle(
+                          //             color: Color.fromRGBO(51, 51, 51, 1),
+                          //             fontSize: 30.w,
+                          //             fontWeight: FontWeight.w900)),
+                          //     Expanded(
+                          //       child: Text(
+                          //           companyModel.salaryTreatmentString ?? "",
+                          //           textAlign: TextAlign.right,
+                          //           overflow: TextOverflow.ellipsis,
+                          //           style: TextStyle(
+                          //               color: Color.fromRGBO(79, 154, 247, 1),
+                          //               fontSize: 25.w,
+                          //               fontWeight: FontWeight.w600)),
+                          //     ),
+                          //   ],
+                          // ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: CachedNetworkImage(
-                                    imageUrl: companyModel.logoUrl ?? "",
-                                    width: 24,
-                                    height: 24,
-                                    placeholder: (context, imageProvider) {
-                                      return Image.asset(
-                                          join(AssetsUtil.assetsDirectoryHome,
-                                              'company_avatar_circle.png'),
-                                          width: 24,
-                                          height: 24);
-                                    }),
-                              ),
-                              SizedBox(width: 10.w),
                               Expanded(
-                                  child: Text(
-                                companyModel.companyName ?? "",
-                                style: TextStyle(
-                                    fontSize: 22.w,
-                                    color: Color.fromRGBO(102, 102, 102, 1)),
-                                overflow: TextOverflow.ellipsis,
-                              ))
+                                child: Row(
+                                  children: <Widget>[
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: CachedNetworkImage(
+                                          imageUrl: companyModel.logoUrl ?? "",
+                                          width: 24,
+                                          height: 24,
+                                          placeholder:
+                                              (context, imageProvider) {
+                                            return Image.asset(
+                                                join(
+                                                    AssetsUtil
+                                                        .assetsDirectoryHome,
+                                                    'company_avatar_circle.png'),
+                                                width: 24,
+                                                height: 24);
+                                          }),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                          left: 10,
+                                          right: 5,
+                                        ),
+                                        child: Text(
+                                          companyModel.companyName ?? "",
+                                          style: TextStyle(
+                                              fontSize: 26.w,
+                                              color: Color.fromRGBO(
+                                                  102, 102, 102, 1)),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                child: Text(
+                                  '10km',
+                                  style: TextStyle(
+                                    fontSize: 24.w,
+                                    color: Color.fromRGBO(0, 0, 0, 0.4),
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
                             ],
                           )
                         ],

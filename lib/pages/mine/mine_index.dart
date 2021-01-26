@@ -64,6 +64,9 @@ class _MineIndexState extends State<MineIndex>
 
   List<MarketPostModel> postModel = [];
 
+  /// 判断是否是个人还是企业账户，1=个人，2=企业
+  bool _isUserPerson = false;
+
   _MineIndexState() {
     _scrollController = ScrollController();
     _tabController = TabController(length: _tabBarTitles.length, vsync: this);
@@ -72,6 +75,7 @@ class _MineIndexState extends State<MineIndex>
   @override
   void initState() {
     super.initState();
+    _isUserPerson = g_accountManager.currentUser.typeId == 1;
     _refreshData();
     g_accountManager.refreshRemoteUser().then((value) {
       setState(() {});
@@ -122,11 +126,11 @@ class _MineIndexState extends State<MineIndex>
                               Stack(
                                 children: <Widget>[
                                   _buildNameAndHeader(context),
-                                  _buildCountRow(context)
+                                  _buildCountRow(context),
                                 ],
                               ),
                               _buildOnlineJobRow(),
-                              _buildMyVideoList()
+                              _buildMyVideoList(),
                             ],
                           ),
                         ),
@@ -297,7 +301,7 @@ class _MineIndexState extends State<MineIndex>
   Widget _buildNameAndHeader(BuildContext context) {
     return Container(
         width: double.infinity,
-        height: 190,
+        height: 200,
         padding: EdgeInsets.only(top: 10, bottom: 10, left: 40, right: 40),
         color: ColorConstants.themeColorBlue,
         child: Column(
@@ -506,9 +510,42 @@ class _MineIndexState extends State<MineIndex>
                 //   ),
                 // )
               ],
-            )
+            ),
+            _isUserPerson ? _buildPersonalTotal() : Container(),
           ],
         ));
+  }
+
+  // 847天，2个经验
+  Widget _buildPersonalTotal() {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        vertical: 10,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            '847天，2个经验',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(
+              top: 3,
+              left: 6,
+            ),
+            child: Icon(
+              Icons.keyboard_arrow_down,
+              color: Colors.white,
+              size: 20,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   // 投递、圈子、诚信分、我的资产
@@ -516,7 +553,7 @@ class _MineIndexState extends State<MineIndex>
     return Container(
       height: 60,
       padding: EdgeInsets.only(left: 15, right: 15),
-      margin: EdgeInsets.only(top: 160, left: 22.5, right: 22.5),
+      margin: EdgeInsets.only(top: 176, left: 22.5, right: 22.5),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(5),
