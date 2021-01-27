@@ -33,7 +33,7 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
   List<dynamic> _categoryList = [
     {'index': -1, 'name': '全部'}
   ];
-  List<String> _tabbarTitles = ['作品', '企宣'];
+  List<String> _tabbarTitles = ['作品', '附近'];
 
   void _initData() async {
     AccountManager.instance.isLogin.then((isLogin) {
@@ -42,16 +42,16 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
         int typeId = g_accountManager.currentUser.typeId;
         //区分是否开启求职铃
         if (typeId == 1) {
-          _tabbarTitles = ['作品', '岗位', '企宣'];
+          _tabbarTitles = ['企宣', '岗位', '附近'];
           _curListType = 2;
           _loadIndustryCategory();
         } else {
-          _tabbarTitles = ['作品', '简历', '企宣'];
+          _tabbarTitles = ['作品', '简历', '附近'];
           _curListType = 1;
           _loadIndustryCategory();
         }
       } else {
-        _tabbarTitles = ['作品', '企宣'];
+        _tabbarTitles = ['作品', '附近'];
         _curListType = 3;
         // // 企业
         _loadJobCategory();
@@ -132,14 +132,17 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
           controller: _navTabController,
           labelPadding: EdgeInsets.zero,
           labelStyle: TextStyle(
-              fontSize: 30.sp, color: Color.fromRGBO(255, 255, 255, 1)),
+              fontSize: 34.sp, color: Color.fromRGBO(255, 255, 255, 1)),
           unselectedLabelStyle: TextStyle(
-              fontSize: 25.sp,
+              fontSize: 30.sp,
               fontWeight: FontWeight.bold,
               color: Color.fromRGBO(255, 255, 255, 0.5)),
           indicatorSize: TabBarIndicatorSize.label,
           indicatorColor: Colors.white,
-          indicatorPadding: EdgeInsets.only(bottom: 10.h),
+          indicatorPadding: EdgeInsets.symmetric(
+            vertical: 10.h,
+            horizontal: 8,
+          ),
           tabs: _tabbarTitles.map((title) {
             return Tab(
               text: title,
@@ -148,17 +151,17 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
           }).toList(),
           onTap: (index) {
             if (index == 0) {
-              //作品
-              _curListType = 0;
-              // model.getProjects();
-              //职位分类
-              _loadJobCategory();
-            } else if (index == 2) {
               //企宣
               _curListType = 3;
               // 企业分类
               _loadIndustryCategory();
               // model.getCompanyShow(SearchParameters());
+            } else if (index == 2) {
+              //作品
+              _curListType = 0;
+              // model.getProjects();
+              //职位分类
+              _loadJobCategory();
             } else {
               //index=1 岗位 简历 企宣
 
@@ -219,13 +222,18 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
   // 导航栏右边的按钮
   List _buildAppBarActions(SearchManager model) {
     return <Widget>[
-      IconButton(
-        icon: Image.asset(
-            join(AssetsUtil.assetsDirectoryCommon, 'icon_search.png')),
-        onPressed: () {
-          Get.to(TapIconSearch(model));
-        },
-      )
+      Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 10,
+        ),
+        child: IconButton(
+          icon: Image.asset(
+              join(AssetsUtil.assetsDirectoryCommon, 'icon_search.png')),
+          onPressed: () {
+            Get.to(TapIconSearch(model));
+          },
+        ),
+      ),
     ];
   }
 

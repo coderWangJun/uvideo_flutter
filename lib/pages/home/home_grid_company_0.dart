@@ -13,6 +13,7 @@ import 'package:youpinapp/pages/home/home_video_widget.dart';
 import 'package:youpinapp/utils/assets_util.dart';
 import 'package:youpinapp/utils/dio_util.dart';
 import 'package:youpinapp/widgets/empty_widget.dart';
+import 'package:youpinapp/app/account.dart';
 
 class HomeGridCompanyNew extends StatefulWidget {
   SearchManager model;
@@ -38,9 +39,13 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
 
   ScrollController _scrollController;
 
+  /// 判断是否是个人还是企业账户，1=个人，2=企业
+  bool _isUserPerson = false;
+
   @override
   void initState() {
     super.initState();
+    _isUserPerson = g_accountManager.currentUser.typeId == 1;
     _scrollController = new ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -55,7 +60,7 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
 //    searchManager = Provider.of<SearchManager>(context);
     // 调试时模拟器的宽度是178
     double gridWidth = (ScreenUtil.mediaQueryData.size.width - 55) / 2;
-    double gridHeight = 190;
+    double gridHeight = _isUserPerson ? 170 : 260;
     double widthScale = gridWidth / gridHeight;
 //    double gridHeight = 220 * widthScale; // 图片110，下边的文字80，加起来是190
     if (widget.model.modelListCom.length > 0) {
@@ -63,135 +68,37 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
         child: GridView(
           controller: _scrollController,
           physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.only(top: 0, bottom: 10, left: 20, right: 20),
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+          ),
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: gridWidth,
               mainAxisSpacing: 15,
               crossAxisSpacing: 15,
               childAspectRatio: widthScale),
-          children: widget.model.modelListCom.map((companyModel) {
+          children: widget.model.modelListCom.asMap().keys.map((index) {
+            HomeCompanyModel companyModel = widget.model.modelListCom[index];
+
             return GestureDetector(
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(
                         color: Color.fromRGBO(239, 239, 239, 1), width: 1)),
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: <Widget>[
-                          ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(6),
-                                  topRight: Radius.circular(6)),
-                              child: CachedNetworkImage(
-                                  imageUrl: companyModel.coverUrl ?? "",
-                                  width: (ScreenUtil.mediaQueryData.size.width -
-                                          55) /
-                                      2,
-                                  height: gridHeight - 70,
-                                  fit: BoxFit.cover)),
-                          Image.asset(
-                              join(AssetsUtil.assetsDirectoryCommon,
-                                  'video_play.png'),
-                              width: 80.w,
-                              height: 80.h)
-                        ],
+                child: _isUserPerson
+                    ? _userPerson(
+                        index: index,
+                        gridWidth: gridWidth,
+                        gridHeight: gridHeight,
+                        widthScale: widthScale,
+                      )
+                    : _userCompany(
+                        index: index,
+                        gridWidth: gridWidth,
+                        gridHeight: gridHeight,
+                        widthScale: widthScale,
                       ),
-                    ),
-                    Container(
-                      height: 70,
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      decoration: BoxDecoration(
-                          border: Border(
-                              top: BorderSide(
-                                  color: Color.fromRGBO(239, 239, 239, 1),
-                                  width: 1))),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //   children: <Widget>[
-                          //     Text(companyModel.title ?? "",
-                          //         overflow: TextOverflow.ellipsis,
-                          //         style: TextStyle(
-                          //             color: Color.fromRGBO(51, 51, 51, 1),
-                          //             fontSize: 30.w,
-                          //             fontWeight: FontWeight.w900)),
-                          //     Expanded(
-                          //       child: Text(
-                          //           companyModel.salaryTreatmentString ?? "",
-                          //           textAlign: TextAlign.right,
-                          //           overflow: TextOverflow.ellipsis,
-                          //           style: TextStyle(
-                          //               color: Color.fromRGBO(79, 154, 247, 1),
-                          //               fontSize: 25.w,
-                          //               fontWeight: FontWeight.w600)),
-                          //     ),
-                          //   ],
-                          // ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Expanded(
-                                child: Row(
-                                  children: <Widget>[
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: CachedNetworkImage(
-                                          imageUrl: companyModel.logoUrl ?? "",
-                                          width: 24,
-                                          height: 24,
-                                          placeholder:
-                                              (context, imageProvider) {
-                                            return Image.asset(
-                                                join(
-                                                    AssetsUtil
-                                                        .assetsDirectoryHome,
-                                                    'company_avatar_circle.png'),
-                                                width: 24,
-                                                height: 24);
-                                          }),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        padding: EdgeInsets.only(
-                                          left: 10,
-                                          right: 5,
-                                        ),
-                                        child: Text(
-                                          companyModel.companyName ?? "",
-                                          style: TextStyle(
-                                              fontSize: 26.w,
-                                              color: Color.fromRGBO(
-                                                  102, 102, 102, 1)),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                child: Text(
-                                  '10km',
-                                  style: TextStyle(
-                                    fontSize: 24.w,
-                                    color: Color.fromRGBO(0, 0, 0, 0.4),
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
               ),
               onTap: () {
                 // 点击格格
@@ -217,5 +124,188 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
         ),
       );
     }
+  }
+
+  /// 个人账户
+  Widget _userPerson({
+    @required int index,
+    @required double gridWidth,
+    @required double gridHeight,
+    @required double widthScale,
+  }) {
+    HomeCompanyModel companyModel = widget.model.modelListCom[index];
+
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(6),
+                      topRight: Radius.circular(6)),
+                  child: CachedNetworkImage(
+                      imageUrl: companyModel.coverUrl ?? "",
+                      width: (ScreenUtil.mediaQueryData.size.width - 55) / 2,
+                      height: gridHeight - 50,
+                      fit: BoxFit.cover)),
+              Image.asset(
+                  join(AssetsUtil.assetsDirectoryCommon, 'video_play.png'),
+                  width: 80.w,
+                  height: 80.h)
+            ],
+          ),
+        ),
+        Container(
+          height: 70,
+          padding: EdgeInsets.only(left: 10, right: 10),
+          decoration: BoxDecoration(
+              border: Border(
+                  top: BorderSide(
+                      color: Color.fromRGBO(239, 239, 239, 1), width: 1))),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: companyModel.logoUrl != null &&
+                                  companyModel.logoUrl.isNotEmpty
+                              ? CachedNetworkImage(
+                                  imageUrl: companyModel.logoUrl,
+                                  width: 24,
+                                  height: 24,
+                                  placeholder: (context, imageProvider) {
+                                    return Image.asset(
+                                        join(AssetsUtil.assetsDirectoryHome,
+                                            'company_avatar_circle.png'),
+                                        width: 24,
+                                        height: 24);
+                                  })
+                              : Container(
+                                  width: 24,
+                                  height: 24,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(0, 0, 0, 0.2),
+                                    borderRadius: BorderRadius.circular(24),
+                                  ),
+                                ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 5,
+                            ),
+                            child: Text(
+                              companyModel.companyName ?? "云达科技",
+                              style: TextStyle(
+                                  fontSize: 24.w,
+                                  color: Color.fromRGBO(102, 102, 102, 1)),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      '10km',
+                      style: TextStyle(
+                        fontSize: 24.w,
+                        color: Color.fromRGBO(0, 0, 0, 0.4),
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  /// 企业账户
+  Widget _userCompany({
+    @required int index,
+    @required double gridWidth,
+    @required double gridHeight,
+    @required double widthScale,
+  }) {
+    HomeCompanyModel companyModel = widget.model.modelListCom[index];
+
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              ClipRRect(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(6),
+                      topRight: Radius.circular(6)),
+                  child: CachedNetworkImage(
+                      imageUrl: companyModel.coverUrl ?? "",
+                      width: (ScreenUtil.mediaQueryData.size.width - 55) / 2,
+                      height: gridHeight - 50,
+                      fit: BoxFit.cover)),
+              Image.asset(
+                  join(AssetsUtil.assetsDirectoryCommon, 'video_play.png'),
+                  width: 80.w,
+                  height: 80.h)
+            ],
+          ),
+        ),
+        Container(
+          alignment: Alignment.centerLeft,
+          height: 70,
+          padding: EdgeInsets.only(left: 10, right: 10),
+          decoration: BoxDecoration(
+              border: Border(
+                  top: BorderSide(
+                      color: Color.fromRGBO(239, 239, 239, 1), width: 1))),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(
+                  left: 5,
+                  right: 5,
+                  bottom: 5,
+                ),
+                child: Text(
+                  "@ 米微... 1小时前",
+                  // companyModel.companyName ?? "云达科技",
+                  style: TextStyle(
+                      fontSize: 24.w, color: Color.fromRGBO(102, 102, 102, 1)),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 5,
+                ),
+                child: Text(
+                  "作品简单描述",
+                  // companyModel.companyName ?? "云达科技",
+                  style: TextStyle(
+                      fontSize: 24.w, color: Color.fromRGBO(102, 102, 102, 1)),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
   }
 }

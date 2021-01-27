@@ -48,7 +48,7 @@ class _HomeGridCompanyState extends State<HomeGridCompany> {
   Widget build(BuildContext context) {
     // 调试时模拟器的宽度是178
     double gridWidth = (ScreenUtil.mediaQueryData.size.width - 55) / 2;
-    double gridHeight = 190;
+    double gridHeight = 170;
     double widthScale = gridWidth / gridHeight;
 //    double gridHeight = 220 * widthScale; // 图片110，下边的文字80，加起来是190
 
@@ -144,8 +144,8 @@ class _HomeGridCompanyState extends State<HomeGridCompany> {
                                         height: 24);
                                   }),
                             ),
-                            SizedBox(width: 10.w),
-                            Text(companyModel.companyName ?? "",
+                            SizedBox(width: 5.w),
+                            Text(companyModel.companyName ?? "云达科技",
                                 style: TextStyle(
                                     fontSize: 22.w,
                                     color: Color.fromRGBO(102, 102, 102, 1)))
