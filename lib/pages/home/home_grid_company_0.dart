@@ -45,7 +45,8 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
   @override
   void initState() {
     super.initState();
-    _isUserPerson = g_accountManager.currentUser.typeId == 1;
+    print('typeId========${g_accountManager.currentUser}');
+    _isUserPerson = g_accountManager.currentUser != null && g_accountManager.currentUser.typeId == 1;
     _scrollController = new ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=

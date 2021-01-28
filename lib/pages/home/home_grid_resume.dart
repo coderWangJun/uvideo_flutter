@@ -9,7 +9,7 @@ import 'package:youpinapp/global/color_constants.dart';
 import 'package:youpinapp/models/index.dart';
 import 'package:youpinapp/pages/player/player_state_provider.dart';
 import 'package:youpinapp/pages/player/resume_video_vert_container.dart';
-import 'package:youpinapp/pages/player/video_player_hori_container.dart';
+import 'package:youpinapp/pages/player/video_player_hori_resume.dart';
 import 'package:youpinapp/pages/home/personal_position.dart';
 import 'package:youpinapp/utils/assets_util.dart';
 import 'package:youpinapp/widgets/empty_widget.dart';
@@ -93,7 +93,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
                     currentResumeModel: resumeModel,
                   ));
                 } else {
-                  Get.to(VideoPlayerHoriContainer(VideoPlayType.resumeVideo,
+                  Get.to(VideoPlayerHoriResume(VideoPlayType.resumeVideo,
                       currentResumeModel: resumeModel));
                 }
 
