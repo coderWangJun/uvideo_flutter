@@ -354,6 +354,7 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
   // 列表
   Widget _buildGridView(SearchManager model) {
     //绘制当前列表 根据tab和用户身份
+    print('_curListType============= $_curListType');
     if (_curListType == 0) {
       return Expanded(
 //          child: HomeGridCompany(_currentCategoryMap)

@@ -10,6 +10,7 @@ enum VideoPlayType {
 class PlayerStateProvider extends ChangeNotifier {
   VideoPlayType playType; // 视频播放类型
   HomeResumeModel currentResumeModel; // 当前将要播放的简历视频
+  HomeCompanyModel companyModel; // 当前将要播放的简历视频
 
   int _currentVideoType; // 0 关注；1 推荐
   bool _stopPlay; // 停止播放
@@ -22,7 +23,7 @@ class PlayerStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int get currentVideoType =>_currentVideoType;
+  int get currentVideoType => _currentVideoType;
 
   set currentVideoType(videoType) {
     _currentVideoType = videoType;

@@ -370,6 +370,15 @@ class _MarketListDetailState extends State<MarketListDetail>
                     },
                   ),
                   actions: <Widget>[
+                    Container(
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.more_vert,
+                        ),
+                        color: Color.fromRGBO(0, 0, 0, 0.6),
+                        onPressed: () {},
+                      ),
+                    ),
                     _isMySender
                         ? GestureDetector(
                             child: Center(
@@ -405,9 +414,6 @@ class _MarketListDetailState extends State<MarketListDetail>
                             },
                           )
                         : SizedBox.shrink(),
-                    SizedBox(
-                      width: 20.0,
-                    )
                   ],
                 ),
               ),
@@ -447,68 +453,124 @@ class _MarketListDetailState extends State<MarketListDetail>
                                 child: Column(
                                   children: <Widget>[
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
-                                        GestureDetector(
-                                          behavior: HitTestBehavior.opaque,
-                                          child: Container(
-                                            width: 55.0,
-                                            height: 55.0,
-                                            decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    image: NetworkImage(model
-                                                            .marketModel
-                                                            .headPortraitUrl ??=
-                                                        ImProvider
-                                                            .DEF_HEAD_IMAGE_URL)),
-                                                shape: BoxShape.circle),
-                                          ),
-                                          onTap: () {
-                                            Get.to(UserDetailRoute(
-                                                userId: widget
-                                                    .marketPostModel.userid));
-                                          },
-                                        ),
-                                        SizedBox(
-                                          width: 10.0,
-                                        ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                        Expanded(
+                                            child: Row(
                                           children: <Widget>[
-                                            Row(
+                                            GestureDetector(
+                                              behavior: HitTestBehavior.opaque,
+                                              child: Container(
+                                                width: 55.0,
+                                                height: 55.0,
+                                                decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                        image: NetworkImage(model
+                                                                .marketModel
+                                                                .headPortraitUrl ??=
+                                                            ImProvider
+                                                                .DEF_HEAD_IMAGE_URL)),
+                                                    shape: BoxShape.circle),
+                                              ),
+                                              onTap: () {
+                                                Get.to(UserDetailRoute(
+                                                    userId: widget
+                                                        .marketPostModel
+                                                        .userid));
+                                              },
+                                            ),
+                                            SizedBox(
+                                              width: 10.0,
+                                            ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: <Widget>[
-                                                Text(
-                                                  "${model.marketModel.name ??= ''}",
-                                                  style: TextStyle(
-                                                      color: Color.fromRGBO(
-                                                          51, 51, 51, 1),
-                                                      fontSize: 15.0,
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                                Row(
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "${model.marketModel.name ??= ''}",
+                                                      style: TextStyle(
+                                                          color: Color.fromRGBO(
+                                                              51, 51, 51, 1),
+                                                          fontSize: 15.0,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10.0,
+                                                    ),
+                                                    Text(
+                                                      "${model.marketModel.companyName ??= ''}",
+                                                      style: TextStyle(
+                                                          color: Color.fromRGBO(
+                                                              153, 153, 153, 1),
+                                                          fontSize: 13.0),
+                                                    ),
+                                                  ],
                                                 ),
-                                                SizedBox(
-                                                  width: 10.0,
-                                                ),
-                                                Text(
-                                                  "${model.marketModel.companyName ??= ''}",
-                                                  style: TextStyle(
-                                                      color: Color.fromRGBO(
-                                                          153, 153, 153, 1),
-                                                      fontSize: 13.0),
+                                                Container(
+                                                  padding: EdgeInsets.only(
+                                                    top: 5,
+                                                  ),
+                                                  child: Text(
+                                                    "${DataTimeToString.toTextString(DateTime.parse(model.marketModel.createdTime))}  ${model.marketModel.marketCircleName ??= ""}",
+                                                    style: TextStyle(
+                                                        color: Color.fromRGBO(
+                                                            153, 153, 153, 1),
+                                                        fontSize: 13.0),
+                                                  ),
                                                 ),
                                               ],
                                             ),
-                                            Text(
-                                              "${DataTimeToString.toTextString(DateTime.parse(model.marketModel.createdTime))}  ${model.marketModel.marketCircleName ??= ""}",
-                                              style: TextStyle(
-                                                  color: Color.fromRGBO(
-                                                      153, 153, 153, 1),
-                                                  fontSize: 13.0),
-                                            ),
                                           ],
-                                        )
+                                        )),
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          child: Container(
+                                            width: 65,
+                                            padding: EdgeInsets.only(
+                                              top: 1,
+                                              bottom: 3,
+                                            ),
+                                            color: Color.fromRGBO(
+                                                0, 127, 255, 0.9),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                Container(
+                                                  padding: EdgeInsets.only(
+                                                    top: 2,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.add,
+                                                    size: 16,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  padding: EdgeInsets.only(
+                                                    left: 2,
+                                                  ),
+                                                  child: Text(
+                                                    '关注',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                     SizedBox(
@@ -538,7 +600,44 @@ class _MarketListDetailState extends State<MarketListDetail>
                                           MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         Expanded(
-                                          child: Container(),
+                                          child: GestureDetector(
+                                            behavior: HitTestBehavior.opaque,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                SizedBox(
+                                                  width: 20,
+                                                ),
+                                                Image.asset(
+                                                  join(
+                                                      AssetsUtil
+                                                          .assetsDirectoryMarket,
+                                                      'market_share.png'),
+                                                  color: Color.fromRGBO(
+                                                      141, 141, 141, 1),
+                                                  // color: model.marketState[
+                                                  //     "praiseColor"],
+                                                ),
+                                                SizedBox(
+                                                  width: 8.0,
+                                                ),
+                                                Text(
+                                                  "0",
+                                                  style: TextStyle(
+                                                      color: Color.fromRGBO(
+                                                          141, 141, 141, 1),
+                                                      fontSize: 15.0),
+                                                ),
+                                              ],
+                                            ),
+                                            onTap: () {
+                                              // model.changePraise(
+                                              //     0, model.marketModel.id);
+                                            },
+                                          ),
                                         ),
                                         Expanded(
                                           child: GestureDetector(
@@ -604,6 +703,9 @@ class _MarketListDetailState extends State<MarketListDetail>
                                                           141, 141, 141, 1),
                                                       fontSize: 15.0),
                                                 ),
+                                                SizedBox(
+                                                  width: 20,
+                                                ),
                                               ],
                                             ),
                                             onTap: () {
@@ -631,12 +733,36 @@ class _MarketListDetailState extends State<MarketListDetail>
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text(
-                                    "全部回复",
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(51, 51, 51, 1),
-                                        fontSize: 17.0,
-                                        fontWeight: FontWeight.bold),
+                                  Row(
+                                    children: <Widget>[
+                                      Container(
+                                        child: Text(
+                                          "全部回复",
+                                          style: TextStyle(
+                                              color:
+                                                  Color.fromRGBO(51, 51, 51, 1),
+                                              fontSize: 17.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(
+                                          left: 30,
+                                          top: 4,
+                                        ),
+                                        child: InkWell(
+                                          onTap: () {},
+                                          child: Text(
+                                            "只看楼主",
+                                            style: TextStyle(
+                                                color: Color.fromRGBO(
+                                                    51, 51, 51, 0.5),
+                                                fontSize: 12.0,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   SizedBox(
                                     height: 20.0,

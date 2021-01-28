@@ -93,6 +93,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
                     currentResumeModel: resumeModel,
                   ));
                 } else {
+                  print('cur_index_type========== ${widget.cur_index_type}');
                   Get.to(VideoPlayerHoriResume(VideoPlayType.resumeVideo,
                       currentResumeModel: resumeModel));
                 }

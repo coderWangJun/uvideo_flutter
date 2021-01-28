@@ -49,13 +49,16 @@ class VideoPlayerHoriResume extends StatefulWidget {
   final VideoPlayType playType;
   final HomeResumeModel currentResumeModel;
   final int _showType = 0;
+  final bool isProduction;
 
-  VideoPlayerHoriResume(this.playType,
-      {this.currentResumeModel});
+  VideoPlayerHoriResume(
+    this.playType, {
+    this.currentResumeModel,
+    this.isProduction,
+  });
 
   @override
-  _VideoPlayerHoriResumeState createState() =>
-      _VideoPlayerHoriResumeState();
+  _VideoPlayerHoriResumeState createState() => _VideoPlayerHoriResumeState();
 }
 
 class _VideoPlayerHoriResumeState extends State<VideoPlayerHoriResume>
@@ -273,7 +276,8 @@ class _VideoPlayerHoriResumeState extends State<VideoPlayerHoriResume>
                       g_eventBus.emit(GlobalEvent.stopPlayEvent);
 
                       if (index != 2) {
-                        parentContext.read<AppProvider>().bottomTabBarIndex = index;
+                        parentContext.read<AppProvider>().bottomTabBarIndex =
+                            index;
                         _flipToHomeListRoute();
                       } else {
                         AccountManager.instance.checkLogin().then((isLogin) {
@@ -314,7 +318,11 @@ class _VideoPlayerHoriResumeState extends State<VideoPlayerHoriResume>
 
         return false;
       },
-      child: UserDetailRoute(userId: userId, showMode: UserDetailShowMode.dark),
+      child: UserDetailRoute(
+        userId: userId,
+        showMode: UserDetailShowMode.dark,
+        isProduction: widget.isProduction,
+      ),
     );
   }
 

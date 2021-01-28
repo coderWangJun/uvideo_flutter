@@ -15,6 +15,10 @@ import 'package:youpinapp/utils/dio_util.dart';
 import 'package:youpinapp/widgets/empty_widget.dart';
 import 'package:youpinapp/app/account.dart';
 
+import 'package:youpinapp/models/index.dart';
+import 'package:youpinapp/pages/player/player_state_provider.dart';
+import 'package:youpinapp/pages/player/video_player_hori_resume.dart';
+
 class HomeGridCompanyNew extends StatefulWidget {
   SearchManager model;
 
@@ -45,8 +49,8 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
   @override
   void initState() {
     super.initState();
-    print('typeId========${g_accountManager.currentUser}');
-    _isUserPerson = g_accountManager.currentUser != null && g_accountManager.currentUser.typeId == 1;
+    _isUserPerson = g_accountManager.currentUser != null &&
+        g_accountManager.currentUser.typeId == 1;
     _scrollController = new ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -104,11 +108,21 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
               onTap: () {
                 // 点击格格
                 //判断类型
-
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (BuildContext context) {
-                  return CompanyTrailer(companyModel);
-                }));
+                if (_isUserPerson) {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (BuildContext context) {
+                    return CompanyTrailer(companyModel);
+                  }));
+                } else {
+                  /// 企业 === 作品名称
+                  HomeResumeModel resumeModel =
+                      widget.model.modelListRes[index];
+                  Get.to(VideoPlayerHoriResume(
+                    VideoPlayType.resumeVideo,
+                    currentResumeModel: resumeModel,
+                    isProduction: true, // 是否是作品
+                  ));
+                }
               },
             );
           }).toList(),

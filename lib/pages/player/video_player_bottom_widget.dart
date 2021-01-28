@@ -17,7 +17,8 @@ class VideoPlayerBottomWidget extends StatefulWidget {
   VideoPlayerBottomWidget(this.dataModel);
 
   @override
-  _VideoPlayerBottomWidgetState createState() => _VideoPlayerBottomWidgetState();
+  _VideoPlayerBottomWidgetState createState() =>
+      _VideoPlayerBottomWidgetState();
 }
 
 class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
@@ -50,8 +51,8 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
               _buildAvatar(),
               _buildPraiseButton(),
               _buildCommentButton(context),
-//              _buildShareButton(),
-//              _buildLocationButton(),
+              _buildShareButton(),
+              _buildLocationButton(),
             ],
           ),
         ),
@@ -73,26 +74,30 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
 
     return InkWell(
       child: Container(
-        width: 42,
-        height: 42,
-        margin: EdgeInsets.only(bottom: 18),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(21)
-        ),
-        //child: Image.asset(AssetsUtil.pathForAsset(AssetsUtil.assetsDirectoryCommon, 'def_avatar.png')),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(21),
-          child: (avatarUrl != null && avatarUrl != "") ? CachedNetworkImage(
-            width: 42,
-            height: 42,
-            imageUrl: avatarUrl ?? "",
-            fit: BoxFit.cover,
-            placeholder: (BuildContext context, String url) {
-              return Image.asset(AssetsUtil.pathForAsset(AssetsUtil.assetsDirectoryCommon, 'def_avatar.png'), width: 42, height: 42);
-            },
-          ) : SizedBox.shrink(),
-        )
-      ),
+          width: 42,
+          height: 42,
+          margin: EdgeInsets.only(bottom: 18),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(21)),
+          //child: Image.asset(AssetsUtil.pathForAsset(AssetsUtil.assetsDirectoryCommon, 'def_avatar.png')),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(21),
+            child: (avatarUrl != null && avatarUrl != "")
+                ? CachedNetworkImage(
+                    width: 42,
+                    height: 42,
+                    imageUrl: avatarUrl ?? "",
+                    fit: BoxFit.cover,
+                    placeholder: (BuildContext context, String url) {
+                      return Image.asset(
+                          AssetsUtil.pathForAsset(
+                              AssetsUtil.assetsDirectoryCommon,
+                              'def_avatar.png'),
+                          width: 42,
+                          height: 42);
+                    },
+                  )
+                : SizedBox.shrink(),
+          )),
       onTap: () {
         g_eventBus.emit(GlobalEvent.videoPageEvent, 1);
       },
@@ -104,7 +109,8 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
     int praiseCount = 0;
     int isPraise = 0; // 0 未赞；1 已赞
 
-    if (widget.dataModel is ShortVideoModel) { // 个人作品视频
+    if (widget.dataModel is ShortVideoModel) {
+      // 个人作品视频
       ShortVideoModel videoModel = widget.dataModel as ShortVideoModel;
       isPraise = videoModel.isLiked ?? 0;
       praiseCount = videoModel.likes ?? 0;
@@ -118,18 +124,29 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
       padding: EdgeInsets.zero,
       minWidth: 0,
       child: FlatButton(
-        child: Column(
-          children: <Widget>[
-            Image.asset(AssetsUtil.pathForAsset(AssetsUtil.assetsDirectoryHome, isPraise == 1 ? "home_praise_red.png" : "home_praise_gray.png")),
-            Text("$praiseCount", style: TextStyle(color: Colors.white, fontSize: 22.sp))
-          ],
+        child: Opacity(
+          opacity: 0.5,
+          child: Column(
+            children: <Widget>[
+              Image.asset(AssetsUtil.pathForAsset(
+                  AssetsUtil.assetsDirectoryHome,
+                  isPraise == 1
+                      ? "home_praise_red.png"
+                      : "home_praise_gray.png")),
+              Text("${praiseCount}k",
+                  style: TextStyle(color: Colors.white, fontSize: 22.sp))
+            ],
+          ),
         ),
         onPressed: () {
-          if (widget.dataModel is ShortVideoModel) { // 短视频
+          if (widget.dataModel is ShortVideoModel) {
+            // 短视频
             var shortVideoModel = widget.dataModel as ShortVideoModel;
-            if (shortVideoModel.isLiked == 1) { // 已赞
+            if (shortVideoModel.isLiked == 1) {
+              // 已赞
               _addOrRemovePraiseRequest(2);
-            } else { // 未赞
+            } else {
+              // 未赞
               _addOrRemovePraiseRequest(1);
             }
           }
@@ -156,11 +173,16 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
         minWidth: 0,
         height: 0,
         child: FlatButton(
-          child: Column(
-            children: <Widget>[
-              Image.asset(AssetsUtil.pathForAsset(AssetsUtil.assetsDirectoryHome, 'home_comment.png')),
-              Text("$commentCount", style: TextStyle(color: Colors.white, fontSize: 11))
-            ],
+          child: Opacity(
+            opacity: 0.5,
+            child: Column(
+              children: <Widget>[
+                Image.asset(AssetsUtil.pathForAsset(
+                    AssetsUtil.assetsDirectoryHome, 'home_comment.png')),
+                Text("$commentCount",
+                    style: TextStyle(color: Colors.white, fontSize: 11))
+              ],
+            ),
           ),
           onPressed: () {
             if (_videoModel != null) {
@@ -190,11 +212,16 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
         minWidth: 0,
         height: 0,
         child: FlatButton(
-          child: Column(
-            children: <Widget>[
-              Image.asset(AssetsUtil.pathForAsset(AssetsUtil.assetsDirectoryHome, 'home_share.png')),
-              Text("$shareCount", style: TextStyle(color: Colors.white, fontSize: 22.sp))
-            ],
+          child: Opacity(
+            opacity: 0.5,
+            child: Column(
+              children: <Widget>[
+                Image.asset(AssetsUtil.pathForAsset(
+                    AssetsUtil.assetsDirectoryHome, 'home_share.png')),
+                Text("$shareCount",
+                    style: TextStyle(color: Colors.white, fontSize: 22.sp))
+              ],
+            ),
           ),
           onPressed: () {
             print('开始分享');
@@ -222,11 +249,16 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
         minWidth: 0,
         height: 0,
         child: FlatButton(
-          child: Column(
-            children: <Widget>[
-              Image.asset(AssetsUtil.pathForAsset(AssetsUtil.assetsDirectoryHome, 'home_locator.png')),
-              Text("$distance", style: TextStyle(color: Colors.white, fontSize: 22.sp))
-            ],
+          child: Opacity(
+            opacity: 0.5,
+            child: Column(
+              children: <Widget>[
+                Image.asset(AssetsUtil.pathForAsset(
+                    AssetsUtil.assetsDirectoryHome, 'home_locator.png')),
+                Text("${distance}m",
+                    style: TextStyle(color: Colors.white, fontSize: 22.sp))
+              ],
+            ),
           ),
           onPressed: () {
             print('显示位置');
@@ -254,36 +286,82 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
     }
 
     return Container(
-      margin: EdgeInsets.only(top: 30.h, left: 18),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text('@$nickName', style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.8), fontSize: 30.sp, fontWeight: FontWeight.w600)),
-              needCoin == 2 ? Container(
-                width: 40,
-                height: 18,
-                margin: EdgeInsets.only(left: 5),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: ColorConstants.themeColorBlue,
-                  borderRadius: BorderRadius.circular(9)
+        margin: EdgeInsets.only(top: 30.h, left: 18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(
+                    top: 3,
+                    right: 15,
+                  ),
+                  child: Text(
+                    '@${nickName ?? '--'}',
+                    style: TextStyle(
+                      color: Color.fromRGBO(255, 255, 255, 0.8),
+                      fontSize: 30.sp,
+                    ),
+                  ),
                 ),
-                child: Text("付费", style: TextStyle(fontSize: 11, color: Colors.white)),
-              ) : SizedBox.shrink(),
-            ],
-          ),
-          _buildTagList(),
-          (content != null && content != "") ? Container(
-            margin: EdgeInsets.only(top: 15.h, bottom: 15.h),
-            child: Text(content, style: TextStyle(color: Color.fromRGBO(255, 255, 255, 0.8), fontSize: 28.sp, fontWeight: FontWeight.w500)),
-          ) : SizedBox.shrink(),
-        ],
-      )
-    );
+                Container(
+                  padding: EdgeInsets.only(
+                    top: 3,
+                    right: 15,
+                  ),
+                  child: Text(
+                    '10-12k',
+                    style: TextStyle(
+                      color: Color.fromRGBO(255, 255, 255, 0.8),
+                      fontSize: 32.sp,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(
+                    right: 15,
+                  ),
+                  child: Text(
+                    '9年',
+                    style: TextStyle(
+                      color: Color.fromRGBO(255, 255, 255, 0.8),
+                      fontSize: 34.sp,
+                    ),
+                  ),
+                ),
+                // needCoin == 2
+                //     ? Container(
+                //         width: 40,
+                //         height: 18,
+                //         margin: EdgeInsets.only(left: 5),
+                //         alignment: Alignment.center,
+                //         decoration: BoxDecoration(
+                //             color: ColorConstants.themeColorBlue,
+                //             borderRadius: BorderRadius.circular(9)),
+                //         child: Text("付费",
+                //             style:
+                //                 TextStyle(fontSize: 11, color: Colors.white)),
+                //       )
+                //     : SizedBox.shrink(),
+              ],
+            ),
+            _buildTagList(),
+            (content != null && content != "")
+                ? Container(
+                    margin: EdgeInsets.only(top: 15.h, bottom: 15.h),
+                    child: Text(content,
+                        style: TextStyle(
+                            color: Color.fromRGBO(255, 255, 255, 0.8),
+                            fontSize: 28.sp,
+                            fontWeight: FontWeight.w500)),
+                  )
+                : SizedBox.shrink(),
+          ],
+        ));
   }
+
   Widget _buildTagList() {
     String skillTags; // 技能标签
 
@@ -309,9 +387,9 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
               padding: EdgeInsets.symmetric(horizontal: 9),
               decoration: BoxDecoration(
                   color: Color.fromRGBO(35, 35, 35, 0.5),
-                  borderRadius: BorderRadius.circular(11)
-              ),
-              child: Text(tag, style: TextStyle(fontSize: 11, color: Colors.white)),
+                  borderRadius: BorderRadius.circular(11)),
+              child: Text(tag,
+                  style: TextStyle(fontSize: 11, color: Colors.white)),
             );
           }).toList(),
         ),
@@ -329,16 +407,18 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
       DioUtil.request("/user/updateLikes", parameters: params).then((response) {
         bool success = DioUtil.checkRequestResult(response);
         if (success) {
-          if (shortVideoModel.isLiked == 1) { // 已赞
+          if (shortVideoModel.isLiked == 1) {
+            // 已赞
             shortVideoModel.isLiked = 0;
             shortVideoModel.likes--;
-          } else { // 未赞
+          } else {
+            // 未赞
             shortVideoModel.isLiked = 1;
             shortVideoModel.likes++;
           }
         }
 
-        setState(() { });
+        setState(() {});
       });
     }
   }
