@@ -380,38 +380,43 @@ class _MarketListDetailState extends State<MarketListDetail>
                       ),
                     ),
                     _isMySender
-                        ? GestureDetector(
-                            child: Center(
-                              child: Text(
-                                "删 除",
-                                style: TextStyle(
-                                    fontSize: 15.0,
-                                    color: Color.fromRGBO(51, 51, 51, 1)),
-                                textAlign: TextAlign.center,
-                              ),
+                        ? Container(
+                            padding: EdgeInsets.only(
+                              right: 20,
                             ),
-                            onTap: () {
-                              //点击保存
-                              showDialog(
-                                  context: context,
-                                  builder: (_) {
-                                    return UiUtil.getOkButtonCon(
-                                        MediaQuery.of(context).size.width -
-                                            100.0,
-                                        120.0,
-                                        "你确定要删除吗", () {
-                                      Get.back(result: true);
-                                    }, () {
-                                      Get.back(result: false);
-                                    });
-                                  }).then((value) {
-                                if (value != null) {
-                                  if (value) {
-                                    model.delete(widget.marketPostModel.id);
+                            child: GestureDetector(
+                              child: Center(
+                                child: Text(
+                                  "删 除",
+                                  style: TextStyle(
+                                      fontSize: 15.0,
+                                      color: Color.fromRGBO(51, 51, 51, 1)),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              onTap: () {
+                                //点击保存
+                                showDialog(
+                                    context: context,
+                                    builder: (_) {
+                                      return UiUtil.getOkButtonCon(
+                                          MediaQuery.of(context).size.width -
+                                              100.0,
+                                          120.0,
+                                          "你确定要删除吗", () {
+                                        Get.back(result: true);
+                                      }, () {
+                                        Get.back(result: false);
+                                      });
+                                    }).then((value) {
+                                  if (value != null) {
+                                    if (value) {
+                                      model.delete(widget.marketPostModel.id);
+                                    }
                                   }
-                                }
-                              });
-                            },
+                                });
+                              },
+                            ),
                           )
                         : SizedBox.shrink(),
                   ],
@@ -798,10 +803,15 @@ class _MarketListDetailState extends State<MarketListDetail>
                           offset: Offset(2.0, 2.0),
                           blurRadius: 4.0)
                     ]),
+                    alignment: Alignment.center,
                     width: double.infinity,
                     height: 50.0,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    padding: EdgeInsets.fromLTRB(
+                      20.0,
+                      10.0,
+                      0,
+                      10.0,
+                    ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -810,10 +820,14 @@ class _MarketListDetailState extends State<MarketListDetail>
                           child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             child: Container(
+                                alignment: Alignment.center,
                                 padding: EdgeInsets.only(left: 20.0),
-                                height: 26.0,
+                                margin: EdgeInsets.only(
+                                  right: 15,
+                                ),
+                                height: 40.0,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(13.0),
+                                  borderRadius: BorderRadius.circular(50.0),
                                   color: Color.fromRGBO(238, 238, 238, 1),
                                 ),
                                 child: Row(
@@ -837,7 +851,7 @@ class _MarketListDetailState extends State<MarketListDetail>
                                   model.marketModel.name ?? "", model);
                             },
                           ),
-                          flex: 5,
+                          flex: 6,
                         ),
                         Expanded(
                           child: GestureDetector(
@@ -1379,7 +1393,8 @@ class _MarketListDetailState extends State<MarketListDetail>
       List<MarketPostMediaModel> mediaList = postModel.marketWorksList;
       if (mediaList.length > 0) {
         MarketPostMediaModel mediaItem = mediaList[0];
-
+        print(mediaItem.coverUrl);
+        print(mediaItem.worksUrl);
         return Container(
           alignment: Alignment.centerLeft,
           child: MarketListPlayer(

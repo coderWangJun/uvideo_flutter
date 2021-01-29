@@ -16,8 +16,10 @@ class ChooseMarketPriv extends StatefulWidget {
 class _ChooseMarketPrivState extends State<ChooseMarketPriv> {
   int _selectedIndex = -1;
   List<Map<String, dynamic>> _items = [
-    {"index": 0, "title": "公开", "subTitle": "所有圈集可见"},
-    {"index": 1, "title": "私密", "subTitle": "仅添加的圈集可见"},
+    {"index": 0, 'title': '公开', 'subTitle': '所有圈集可见'},
+    {"index": 1, 'title': '私密', 'subTitle': '仅自己可见'},
+    {"index": 2, 'title': '部分可见', 'subTitle': '选中的行业可看'},
+    {"index": 3, 'title': '不给谁看', 'subTitle': '选中的行业不可看'},
   ];
 
   @override
@@ -34,7 +36,9 @@ class _ChooseMarketPrivState extends State<ChooseMarketPriv> {
         title: "谁可以看",
         actions: [
           FlatButton(
-            child: Text("完成", style: TextStyle(fontSize: 17, color: Color.fromRGBO(52, 52, 52, 1))),
+            child: Text("完成",
+                style: TextStyle(
+                    fontSize: 17, color: Color.fromRGBO(52, 52, 52, 1))),
             onPressed: () {
               if (_selectedIndex != -1) {
                 Get.back(result: _items[_selectedIndex]);
@@ -48,42 +52,54 @@ class _ChooseMarketPrivState extends State<ChooseMarketPriv> {
       body: Container(
         color: Colors.white,
         child: ListView.builder(
-          itemCount: _items.length,
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          itemBuilder: (BuildContext context, int index) {
-            Map<String, dynamic> itemMap = _items[index];
+            itemCount: _items.length,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            itemBuilder: (BuildContext context, int index) {
+              Map<String, dynamic> itemMap = _items[index];
 
-            return InkWell(
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Color.fromRGBO(238, 238, 238, 0.5), width: 1))
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(itemMap["title"], style: TextStyle(fontSize: 15, color: Color.fromRGBO(52, 52, 52, 1), fontWeight: FontWeight.bold)),
-                          Text(itemMap["subTitle"], style: TextStyle(fontSize: 12, color: Color.fromRGBO(154, 154, 154, 1))),
-                        ],
+              return InkWell(
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(
+                              color: Color.fromRGBO(238, 238, 238, 0.5),
+                              width: 1))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(itemMap["title"],
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color.fromRGBO(52, 52, 52, 1),
+                                    fontWeight: FontWeight.bold)),
+                            Text(itemMap["subTitle"],
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color.fromRGBO(154, 154, 154, 1))),
+                          ],
+                        ),
                       ),
-                    ),
-                    _selectedIndex == index ? Image.asset(imagePath("common", "icon_selected.png")) : SizedBox.shrink()
-                  ],
+                      _selectedIndex == index
+                          ? Image.asset(
+                              imagePath("common", "icon_selected.png"))
+                          : SizedBox.shrink()
+                    ],
+                  ),
                 ),
-              ),
-              onTap: () {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-            );
-        }),
+                onTap: () {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                },
+              );
+            }),
       ),
     );
   }

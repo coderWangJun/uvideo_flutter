@@ -34,7 +34,8 @@ class _HomeGridResumeState extends State<HomeGridResume> {
   @override
   void initState() {
     super.initState();
-    _isUserPerson = g_accountManager.currentUser.typeId == 1;
+    _isUserPerson = g_accountManager.currentUser != null &&
+        g_accountManager.currentUser.typeId == 1;
     _scrollController = new ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=

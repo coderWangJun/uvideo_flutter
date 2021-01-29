@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +11,16 @@ import 'package:youpinapp/app/imProvider.dart';
 import 'package:youpinapp/pages/market/add_market/market_edit.dart';
 import 'package:youpinapp/pages/market/circle_home.dart';
 import 'package:youpinapp/pages/market/circle_members.dart';
+import 'package:youpinapp/pages/market/market_list_player.dart';
 import 'package:youpinapp/provider/baseView.dart';
 import 'package:youpinapp/utils/assets_util.dart';
 import 'package:youpinapp/utils/dio_util.dart';
 import 'package:youpinapp/utils/uiUtil.dart';
 import 'package:youpinapp/widgets/empty_widget.dart';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class CircleDetailProvider extends ChangeNotifier {
   ///懂得都懂，不懂的说了也不懂，你也别问，
@@ -39,6 +45,8 @@ class CircleDetailProvider extends ChangeNotifier {
       if (DioUtil.checkRequestResult(value)) {
         if (value['data'] != null) {
           dataCircle = value['data'];
+          print('====================');
+          print(dataCircle);
           isFlag = (dataCircle['isJoined'] ??= false) as bool;
           if (isFlag && !isMineCircle) {
             showTitle = "退圈";
@@ -190,285 +198,342 @@ class _CircleDetailState extends State<CircleDetail> {
         ? Container(
             width: double.infinity,
             height: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: Column(
               children: <Widget>[
+                Container(
+                  width: double.infinity,
+                  // height: 150,
+                  color: Colors.black,
+                  child: Expanded(
+                    child: MarketListPlayer(
+                      // mediaItem.coverUrl,
+                      // mediaItem.worksUrl,
+                      'http://mingyankeji.oss-cn-chengdu.aliyuncs.com/market-cover/2020115k12ctlptw.png',
+                      'http://mingyankeji.oss-cn-chengdu.aliyuncs.com/market/2020115pf81sz8s1.jpg',
+                      widthFlag: true,
+                    ),
+                  ),
+                ),
                 Expanded(
-                    child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      model.dataCircle['worksUrl'] != "" &&
-                              model.dataCircle['worksUrl'] != null
-                          ?
-//                  _buildVideo(model.dataCircle['worksUrl'] as String)
-                          _buildImage(
-                              model.dataCircle['worksUrl'] as String, context)
-                          : SizedBox.shrink(),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                            child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              UiUtil.getHeadImage(
-                                  model.dataCircle['logoUrl'] ??=
-                                      ImProvider.DEF_HEAD_IMAGE_URL,
-                                  60.0),
+                              model.dataCircle['worksUrl'] != "" &&
+                                      model.dataCircle['worksUrl'] != null
+                                  ?
+//                  _buildVideo(model.dataCircle['worksUrl'] as String)
+                                  _buildImage(
+                                      model.dataCircle['worksUrl'] as String,
+                                      context)
+                                  : SizedBox.shrink(),
                               SizedBox(
-                                width: 10.0,
+                                height: 20.0,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      UiUtil.getHeadImage(
+                                          model.dataCircle['logoUrl'] ??=
+                                              ImProvider.DEF_HEAD_IMAGE_URL,
+                                          60.0),
+                                      SizedBox(
+                                        width: 10.0,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            model.dataCircle['circleName'] ??=
+                                                "",
+                                            style: UiUtil.getTextStyle(52, 20.0,
+                                                isBold: true),
+                                          ),
+                                          Text.rich(
+                                            TextSpan(children: [
+                                              TextSpan(
+                                                  text: "关注: ",
+                                                  style: UiUtil.getTextStyle(
+                                                      154, 13.0,
+                                                      isBold: true)),
+                                              TextSpan(
+                                                  text:
+                                                      "${model.dataCircle['countOfPeople'] ??= 0}",
+                                                  style: UiUtil.getTextStyle(
+                                                      0, 13.0,
+                                                      isBold: true,
+                                                      c: UiUtil.getColor(76,
+                                                          num1: 152,
+                                                          num2: 244))),
+                                              TextSpan(
+                                                  text: "     帖子: ",
+                                                  style: UiUtil.getTextStyle(
+                                                      154, 13.0,
+                                                      isBold: true)),
+                                              TextSpan(
+                                                  text:
+                                                      "${model.dataCircle['countOfMarket'] ??= 0}",
+                                                  style: UiUtil.getTextStyle(
+                                                      0, 13.0,
+                                                      isBold: true,
+                                                      c: UiUtil.getColor(76,
+                                                          num1: 152,
+                                                          num2: 244)))
+                                            ]),
+                                          ),
+                                          SizedBox(
+                                            width: 20.0,
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      model.dataCircle['cityName'] != null &&
+                                              model.dataCircle['cityName'] != ""
+                                          ? Image.asset(
+                                              join(
+                                                  AssetsUtil
+                                                      .assetsDirectoryChat,
+                                                  'icon_chat_lolcation.png'),
+                                            )
+                                          : SizedBox.shrink(),
+                                      SizedBox(
+                                        width: 2.0,
+                                      ),
+                                      Text(
+                                        model.dataCircle['cityName'] ??= "",
+                                        style: UiUtil.getTextStyle(154, 13.0),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 18.0,
+                              ),
+                              Text(
+                                "本圈简介",
+                                style: UiUtil.getTextStyle(52, 15.0),
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              Text(
+                                "创建时间:  ${(model.dataCircle['createdTime'] as String).substring(0, 10)}",
+                                style: UiUtil.getTextStyle(154, 13.0),
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              Text(
+                                "${model.dataCircle['shortContent'] ??= model.dataCircle['content'] ??= ""}",
+                                style: UiUtil.getTextStyle(52, 13.0),
+                                softWrap: true,
+                              ),
+                              SizedBox(
+                                height: 24.0,
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Text.rich(TextSpan(children: [
+                                    TextSpan(
+                                        text: "本圈成员",
+                                        style: UiUtil.getTextStyle(52, 15.0)),
+                                  ])),
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  Text.rich(TextSpan(children: [
+                                    TextSpan(
+                                        text: "(",
+                                        style: UiUtil.getTextStyle(52, 15.0)),
+                                    TextSpan(
+                                        text: "70",
+                                        style: UiUtil.getTextStyle(0, 15.0,
+                                            c: UiUtil.getColor(76,
+                                                num1: 152, num2: 244))),
+                                    TextSpan(
+                                        text: "/405)",
+                                        style: UiUtil.getTextStyle(52, 15.0)),
+                                  ])),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 20.0,
                               ),
                               Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    model.dataCircle['circleName'] ??= "",
-                                    style: UiUtil.getTextStyle(52, 20.0,
-                                        isBold: true),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(children: [
-                                      TextSpan(
-                                          text: "关注: ",
-                                          style: UiUtil.getTextStyle(154, 13.0,
-                                              isBold: true)),
-                                      TextSpan(
-                                          text:
-                                              "${model.dataCircle['countOfPeople'] ??= 0}",
-                                          style: UiUtil.getTextStyle(0, 13.0,
-                                              isBold: true,
-                                              c: UiUtil.getColor(76,
-                                                  num1: 152, num2: 244))),
-                                      TextSpan(
-                                          text: "     帖子: ",
-                                          style: UiUtil.getTextStyle(154, 13.0,
-                                              isBold: true)),
-                                      TextSpan(
-                                          text:
-                                              "${model.dataCircle['countOfMarket'] ??= 0}",
-                                          style: UiUtil.getTextStyle(0, 13.0,
-                                              isBold: true,
-                                              c: UiUtil.getColor(76,
-                                                  num1: 152, num2: 244)))
-                                    ]),
-                                  ),
-                                  SizedBox(
-                                    width: 20.0,
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: <Widget>[
-                              model.dataCircle['cityName'] != null &&
-                                      model.dataCircle['cityName'] != ""
-                                  ? Image.asset(
-                                      join(AssetsUtil.assetsDirectoryChat,
-                                          'icon_chat_lolcation.png'),
+                                  children: model.circlePerson.length > 0
+                                      ? model.circlePerson.map((e) {
+                                          bool isMineFlag = false;
+                                          if (i == 0) {
+                                            isMineFlag = true;
+                                            i++;
+                                          }
+                                          return _getBodyItems(
+                                              context, e, isMineFlag);
+                                        }).toList()
+                                      : [SizedBox.shrink()]),
+                              model.circlePerson.length >= model.personNum
+                                  ? Container(
+                                      padding: EdgeInsets.only(
+                                        top: 20,
+                                      ),
+                                      child: GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
+                                        child: Center(
+                                          child: Text(
+                                            "查看更多圈成员 >",
+                                            style:
+                                                UiUtil.getTextStyle(154, 13.0),
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          //查看更多圈成员
+                                          playStop();
+                                          Get.to(CircleMembers(id));
+                                        },
+                                      ),
                                     )
                                   : SizedBox.shrink(),
                               SizedBox(
-                                width: 2.0,
-                              ),
-                              Text(
-                                model.dataCircle['cityName'] ??= "",
-                                style: UiUtil.getTextStyle(154, 13.0),
+                                height: 20.0,
                               ),
                             ],
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 18.0,
-                      ),
-                      Text(
-                        "本圈简介",
-                        style: UiUtil.getTextStyle(52, 15.0),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        "创建时间:  ${(model.dataCircle['createdTime'] as String).substring(0, 10)}",
-                        style: UiUtil.getTextStyle(154, 13.0),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        "${model.dataCircle['shortContent'] ??= model.dataCircle['content'] ??= ""}",
-                        style: UiUtil.getTextStyle(52, 13.0),
-                        softWrap: true,
-                      ),
-                      SizedBox(
-                        height: 24.0,
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Text.rich(TextSpan(children: [
-                            TextSpan(
-                                text: "本圈成员",
-                                style: UiUtil.getTextStyle(52, 15.0)),
-                          ])),
-                          SizedBox(
-                            width: 10.0,
                           ),
-                          Text.rich(TextSpan(children: [
-                            TextSpan(
-                                text: "(",
-                                style: UiUtil.getTextStyle(52, 15.0)),
-                            TextSpan(
-                                text: "70",
-                                style: UiUtil.getTextStyle(0, 15.0,
-                                    c: UiUtil.getColor(76,
-                                        num1: 152, num2: 244))),
-                            TextSpan(
-                                text: "/405)",
-                                style: UiUtil.getTextStyle(52, 15.0)),
-                          ])),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Column(
-                          children: model.circlePerson.length > 0
-                              ? model.circlePerson.map((e) {
-                                  bool isMineFlag = false;
-                                  if (i == 0) {
-                                    isMineFlag = true;
-                                    i++;
-                                  }
-                                  return _getBodyItems(context, e, isMineFlag);
-                                }).toList()
-                              : [SizedBox.shrink()]),
-                      model.circlePerson.length >= model.personNum
-                          ? GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              child: Center(
-                                child: Text(
-                                  "查看更多圈成员 >",
-                                  style: UiUtil.getTextStyle(154, 13.0),
-                                ),
-                              ),
-                              onTap: () {
-                                //查看更多圈成员
-                                playStop();
-                                Get.to(CircleMembers(id));
-                              },
-                            )
-                          : SizedBox.shrink(),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                    ],
-                  ),
-                )),
-                Container(
-                  width: double.infinity,
-                  height: 70.0,
-                  child: Row(
+                        )),
+                        Container(
+                          width: double.infinity,
+                          height: 70.0,
+                          child: Row(
 //              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        child: UiUtil.getContainer(
-                            36.0,
-                            15.0,
-                            UiUtil.getColor(76, num1: 152, num2: 244),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Image.asset(
-                                  join(AssetsUtil.assetsDirectoryMarket,
-                                      "qz.png"),
-                                  width: 17.0,
-                                  height: 17.0,
-                                  fit: BoxFit.cover,
-                                ),
-                                SizedBox(
-                                  width: 10.0,
-                                ),
-                                Text(
-                                  "进入圈集",
-                                  style: UiUtil.getTextStyle(255, 17.0,
-                                      isBold: true),
-                                ),
-                              ],
-                            ),
-                            mWidth: 150.0),
-                        onTap: () {
-                          //进入圈集
-                          playStop();
-                          Get.to(CircleHome(id, model.dataCircle['id'] as int));
-                        },
-                      ),
-                      GestureDetector(
-                        child: UiUtil.getContainer(
-                            36.0,
-                            15.0,
-                            model.colorButton,
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Image.asset(
-                                  join(AssetsUtil.assetsDirectoryMarket,
-                                      "fx.png"),
-                                  width: 17.0,
-                                  height: 17.0,
-                                  fit: BoxFit.cover,
-                                ),
-                                SizedBox(
-                                  width: 10.0,
-                                ),
-                                Text(
-                                  model.showTitle,
-                                  style: UiUtil.getTextStyle(255, 17.0,
-                                      isBold: true),
-                                ),
-                              ],
-                            ),
-                            mWidth: 150.0),
-                        onTap: () {
-                          if (model.isMineCircle) {
-                            showDialog(
-                                context: context,
-                                builder: (_) {
-                                  return UiUtil.getOkButtonCon(
-                                      MediaQuery.of(context).size.width - 100.0,
-                                      120.0,
-                                      "你确定要解散吗", () {
-                                    Get.back(result: true);
-                                  }, () {
-                                    Get.back(result: false);
-                                  });
-                                }).then((value) {
-                              if (value != null) {
-                                if (value) {
-                                  model.addIntoMarketCircle();
-                                }
-                              }
-                            });
-                          } else {
-                            model.addIntoMarketCircle();
-                          }
-                        },
-                      ),
-                    ],
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                child: UiUtil.getContainer(
+                                    36.0,
+                                    15.0,
+                                    UiUtil.getColor(76, num1: 152, num2: 244),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Image.asset(
+                                          join(AssetsUtil.assetsDirectoryMarket,
+                                              "qz.png"),
+                                          width: 17.0,
+                                          height: 17.0,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        SizedBox(
+                                          width: 10.0,
+                                        ),
+                                        Text(
+                                          "进入圈集",
+                                          style: UiUtil.getTextStyle(255, 17.0,
+                                              isBold: true),
+                                        ),
+                                      ],
+                                    ),
+                                    mWidth: 150.0),
+                                onTap: () {
+                                  //进入圈集
+                                  playStop();
+                                  Get.to(CircleHome(
+                                      id, model.dataCircle['id'] as int));
+                                },
+                              ),
+                              GestureDetector(
+                                child: UiUtil.getContainer(
+                                    36.0,
+                                    15.0,
+                                    model.colorButton,
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        // Image.asset(
+                                        //   join(AssetsUtil.assetsDirectoryMarket,
+                                        //       "icon_circle_add.png"),
+                                        //   width: 17.0,
+                                        //   height: 17.0,
+                                        //   fit: BoxFit.cover,
+                                        // ),
+                                        Container(
+                                          child: Icon(
+                                            Icons.control_point,
+                                            color: Colors.white,
+                                            size: 21,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 10.0,
+                                        ),
+                                        Text(
+                                          model.showTitle,
+                                          style: UiUtil.getTextStyle(255, 17.0,
+                                              isBold: true),
+                                        ),
+                                      ],
+                                    ),
+                                    mWidth: 150.0),
+                                onTap: () {
+                                  if (model.isMineCircle) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) {
+                                          return UiUtil.getOkButtonCon(
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  100.0,
+                                              120.0,
+                                              "你确定要解散吗", () {
+                                            Get.back(result: true);
+                                          }, () {
+                                            Get.back(result: false);
+                                          });
+                                        }).then((value) {
+                                      if (value != null) {
+                                        if (value) {
+                                          model.addIntoMarketCircle();
+                                        }
+                                      }
+                                    });
+                                  } else {
+                                    model.addIntoMarketCircle();
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                )
+                ),
               ],
             ),
           )
@@ -530,13 +595,18 @@ class _CircleDetailState extends State<CircleDetail> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               Text(
-                map['memberLevel'] ??= "Lv1",
+                map['memberLevel'] ?? "Lv1",
                 style: UiUtil.getTextStyle(0, 12.0,
                     c: UiUtil.getColor(76, num1: 152, num2: 244)),
               ),
-              Text(
-                map['distanceString'] ??= '',
-                style: UiUtil.getTextStyle(154, 12.0),
+              Container(
+                padding: EdgeInsets.only(
+                  top: 5,
+                ),
+                child: Text(
+                  map['distanceString'] ?? '0.3km',
+                  style: UiUtil.getTextStyle(154, 12.0),
+                ),
               ),
             ],
           )

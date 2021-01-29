@@ -249,10 +249,10 @@ class _CircleHomeState extends State<CircleHome> with TickerProviderStateMixin {
           ClipRRect(
             borderRadius: BorderRadius.circular(30),
             child: Container(
-              width: 70,
+              width: 80,
               padding: EdgeInsets.only(
-                top: 1,
-                bottom: 3,
+                top: 4,
+                bottom: 6,
               ),
               color: Color.fromRGBO(0, 0, 0, 0.1),
               child: Row(

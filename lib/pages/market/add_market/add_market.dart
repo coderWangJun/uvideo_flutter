@@ -76,7 +76,7 @@ class _AddMarketState extends State<AddMarket> {
       builder: (context, model, child) {
         return Scaffold(
           backgroundColor: Colors.white,
-          appBar: UiUtil.getAppBar("创建圈集"),
+          appBar: UiUtil.getAppBar("创建集圈"),
           body: _getBody(context, model),
         );
       },

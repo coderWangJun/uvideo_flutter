@@ -52,8 +52,8 @@ class _CircleSwitchWidgetState extends State<CircleSwitchWidget> {
                 Text('圈外',
                     textAlign: TextAlign.center,
                     style: !selectCircle
-                        ? UiUtil.getTextStyle(20, 11.0)
-                        : UiUtil.getTextStyle(10, 11.0)),
+                        ? UiUtil.getTextStyle(120, 11.0)
+                        : UiUtil.getTextStyle(110, 11.0)),
                 mWidth: 40.0),
             onTap: () {
               if (selectCircle) {
@@ -78,8 +78,8 @@ class _CircleSwitchWidgetState extends State<CircleSwitchWidget> {
                 Text('圈内',
                     textAlign: TextAlign.center,
                     style: selectCircle
-                        ? UiUtil.getTextStyle(20, 11.0)
-                        : UiUtil.getTextStyle(10, 11.0)),
+                        ? UiUtil.getTextStyle(120, 11.0)
+                        : UiUtil.getTextStyle(110, 11.0)),
                 mWidth: 40.0),
             onTap: () {
               if (!selectCircle) {
