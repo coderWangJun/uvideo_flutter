@@ -200,20 +200,20 @@ class _CircleDetailState extends State<CircleDetail> {
             height: double.infinity,
             child: Column(
               children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  // height: 150,
-                  color: Colors.black,
-                  child: Expanded(
-                    child: MarketListPlayer(
-                      // mediaItem.coverUrl,
-                      // mediaItem.worksUrl,
-                      'http://mingyankeji.oss-cn-chengdu.aliyuncs.com/market-cover/2020115k12ctlptw.png',
-                      'http://mingyankeji.oss-cn-chengdu.aliyuncs.com/market/2020115pf81sz8s1.jpg',
-                      widthFlag: true,
-                    ),
-                  ),
-                ),
+                // Container(
+                //   width: double.infinity,
+                //   // height: 150,
+                //   color: Colors.black,
+                //   child: Expanded(
+                //     child: MarketListPlayer(
+                //       // mediaItem.coverUrl,
+                //       // mediaItem.worksUrl,
+                //       'http://mingyankeji.oss-cn-chengdu.aliyuncs.com/market-cover/2020115k12ctlptw.png',
+                //       'http://mingyankeji.oss-cn-chengdu.aliyuncs.com/market/2020115pf81sz8s1.jpg',
+                //       widthFlag: true,
+                //     ),
+                //   ),
+                // ),
                 Expanded(
                   child: Container(
                     padding:
