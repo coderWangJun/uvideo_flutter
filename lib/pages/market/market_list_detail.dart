@@ -533,11 +533,46 @@ class _MarketListDetailState extends State<MarketListDetail>
                                             ),
                                           ],
                                         )),
+                                        widget.marketPostModel.ucoinAmount !=
+                                                    null &&
+                                                widget.marketPostModel
+                                                        .ucoinAmount !=
+                                                    0.0
+                                            ? Container(
+                                                margin: EdgeInsets.only(
+                                                  right: 5,
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Image.asset(join(
+                                                        AssetsUtil
+                                                            .assetsDirectoryMarket,
+                                                        'market_coin.png')),
+                                                    Divider(
+                                                        color:
+                                                            Colors.transparent,
+                                                        height: 2),
+                                                    Text(
+                                                        '${widget.marketPostModel.ucoinAmount}优币',
+                                                        style: TextStyle(
+                                                            fontSize: 10,
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    255,
+                                                                    221,
+                                                                    61,
+                                                                    1)))
+                                                  ],
+                                                ),
+                                              )
+                                            : SizedBox.shrink(),
                                         ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(30),
                                           child: Container(
-                                            width: 65,
+                                            width: 60,
                                             padding: EdgeInsets.only(
                                               top: 1,
                                               bottom: 3,
@@ -556,7 +591,7 @@ class _MarketListDetailState extends State<MarketListDetail>
                                                   ),
                                                   child: Icon(
                                                     Icons.add,
-                                                    size: 16,
+                                                    size: 14,
                                                     color: Colors.white,
                                                   ),
                                                 ),
@@ -568,7 +603,7 @@ class _MarketListDetailState extends State<MarketListDetail>
                                                     '关注',
                                                     style: TextStyle(
                                                       color: Colors.white,
-                                                      fontSize: 16,
+                                                      fontSize: 12,
                                                     ),
                                                   ),
                                                 ),

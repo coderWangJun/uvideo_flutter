@@ -36,7 +36,7 @@ class _LoginRouteState extends State<LoginRoute> {
       _userNameInputFinished = false;
     }
 
-    setState(() { });
+    setState(() {});
   }
 
   _LoginRouteState() {
@@ -44,7 +44,7 @@ class _LoginRouteState extends State<LoginRoute> {
     _phoneController1 = TextEditingController();
     _passController = TextEditingController();
 
-   // _phoneController.text = '18602335806';
+    // _phoneController.text = '18602335806';
 //    _phoneController1.text = 'user1';
 //    _passController.text = '123456';
 
@@ -80,20 +80,26 @@ class _LoginRouteState extends State<LoginRoute> {
       ),
       resizeToAvoidBottomPadding: false,
       body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.only(left: 25, right: 25, top: 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text('手机号注册/登录', style: TextStyle(fontSize: 24, color: ColorConstants.textColor51, fontWeight: FontWeight.bold)),
-              Expanded(
-                child: _loginType == 1 ? _buildPhoneLoginInputWidgets() : _buildPassLoginInputWidgets(),
-              ),
-              _buildBottomWidgets()
-            ],
-          ),
-        )
-      ),
+          child: Container(
+        padding: EdgeInsets.only(left: 25, right: 25, top: 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text('手机号注册/登录',
+                style: TextStyle(
+                    fontSize: 24,
+                    color: ColorConstants.textColor51,
+                    fontWeight: FontWeight.bold)),
+            Expanded(
+              child: _loginType == 1
+                  ? _buildPhoneLoginInputWidgets()
+                  : _buildPassLoginInputWidgets(),
+            ),
+            _weixinLogin(),
+            _buildBottomWidgets()
+          ],
+        ),
+      )),
     );
   }
 
@@ -106,9 +112,8 @@ class _LoginRouteState extends State<LoginRoute> {
             width: double.infinity,
             margin: EdgeInsets.only(top: 40),
             decoration: BoxDecoration(
-              color: Color.fromRGBO(237, 237, 237, 0.5),
-              borderRadius: BorderRadius.circular(6)
-            ),
+                color: Color.fromRGBO(237, 237, 237, 0.5),
+                borderRadius: BorderRadius.circular(6)),
             child: TextField(
               keyboardType: TextInputType.phone,
               controller: _phoneController,
@@ -118,8 +123,47 @@ class _LoginRouteState extends State<LoginRoute> {
                 counterText: '',
                 border: InputBorder.none,
                 hintText: '请输入手机号',
-                hintStyle: TextStyle(fontSize: 13, color: Color.fromRGBO(153, 153, 153, 1)),
-                prefixIcon: Icon(Icons.phone_android, color: Color.fromRGBO(153, 153, 153, 1))
+                hintStyle: TextStyle(
+                    fontSize: 13, color: Color.fromRGBO(153, 153, 153, 1)),
+                prefixIcon: Container(
+                  width: 90,
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              '+86',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: ColorConstants.themeColorBlue,
+                              ),
+                            ),
+                            Icon(
+                              Icons.keyboard_arrow_down,
+                              size: 24,
+                              color: ColorConstants.themeColorBlue,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: 1,
+                        height: 12,
+                        margin: EdgeInsets.only(
+                          right: 14,
+                        ),
+                        color: Color.fromRGBO(0, 0, 0, 0.1),
+                      ),
+                    ],
+                  ),
+                ),
+                // prefixIcon: Icon(
+                //   Icons.phone_android,
+                //   color: Color.fromRGBO(153, 153, 153, 1),
+                // ),
               ),
             ),
           ),
@@ -131,14 +175,20 @@ class _LoginRouteState extends State<LoginRoute> {
               margin: EdgeInsets.only(top: 10),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: _phoneInputFinished ? ColorConstants.themeColorBlue : ColorConstants.themeColorBlue.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(6)
-              ),
-              child: Text('下一步', style: TextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold)),
+                  color: _phoneInputFinished
+                      ? ColorConstants.themeColorBlue
+                      : ColorConstants.themeColorBlue.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(6)),
+              child: Text('下一步',
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold)),
             ),
             onTap: () {
               if (_phoneInputFinished) {
-                Get.to(VerifyCodeRoute(VerifyCodeOperType.loginOrRegister, phone: _phoneController.text));
+                Get.to(VerifyCodeRoute(VerifyCodeOperType.loginOrRegister,
+                    phone: _phoneController.text));
               }
             },
           ),
@@ -147,7 +197,11 @@ class _LoginRouteState extends State<LoginRoute> {
             child: FlatButton(
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               padding: EdgeInsets.only(left: 0, right: 0),
-              child: Text('账号密码登录', style: TextStyle(fontSize: 12, color: ColorConstants.textColor51, fontWeight: FontWeight.w500)),
+              child: Text('账号密码登录',
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: ColorConstants.textColor51,
+                      fontWeight: FontWeight.w500)),
               onPressed: () {
                 setState(() {
                   _loginType = 2;
@@ -167,27 +221,64 @@ class _LoginRouteState extends State<LoginRoute> {
           Container(
             margin: EdgeInsets.only(top: 40),
             decoration: BoxDecoration(
-              color: Color.fromRGBO(237, 237, 237, 0.5),
-              borderRadius: BorderRadius.circular(6)
-            ),
+                color: Color.fromRGBO(237, 237, 237, 0.5),
+                borderRadius: BorderRadius.circular(6)),
             child: TextField(
               controller: _phoneController1,
               maxLength: 20,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 counterText: '',
-                hintStyle: TextStyle(fontSize: 13, color: Color.fromRGBO(153, 153, 153, 1), fontWeight: FontWeight.w500),
+                hintStyle: TextStyle(
+                    fontSize: 13,
+                    color: Color.fromRGBO(153, 153, 153, 1),
+                    fontWeight: FontWeight.w500),
                 hintText: '请输入手机号',
-                prefixIcon: Icon(Icons.phone_android, color: Color.fromRGBO(153, 153, 153, 1))
+                prefixIcon: Container(
+                  width: 90,
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              '+86',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: ColorConstants.themeColorBlue,
+                              ),
+                            ),
+                            Icon(
+                              Icons.keyboard_arrow_down,
+                              size: 24,
+                              color: ColorConstants.themeColorBlue,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: 1,
+                        height: 12,
+                        margin: EdgeInsets.only(
+                          right: 14,
+                        ),
+                        color: Color.fromRGBO(0, 0, 0, 0.1),
+                      ),
+                    ],
+                  ),
+                ),
               ),
+              // prefixIcon: Icon(Icons.phone_android,
+              //     color: Color.fromRGBO(153, 153, 153, 1))),
             ),
           ),
           Container(
             margin: EdgeInsets.only(top: 10),
             decoration: BoxDecoration(
-              color: Color.fromRGBO(237, 237, 237, 0.5),
-              borderRadius: BorderRadius.circular(6)
-            ),
+                color: Color.fromRGBO(237, 237, 237, 0.5),
+                borderRadius: BorderRadius.circular(6)),
             child: TextField(
               controller: _passController,
               obscureText: true,
@@ -195,9 +286,39 @@ class _LoginRouteState extends State<LoginRoute> {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 counterText: '',
-                hintStyle: TextStyle(fontSize: 13, color: Color.fromRGBO(153, 153, 153, 1), fontWeight: FontWeight.w500),
+                hintStyle: TextStyle(
+                    fontSize: 13,
+                    color: Color.fromRGBO(153, 153, 153, 1),
+                    fontWeight: FontWeight.w500),
                 hintText: '请输入密码',
-                prefixIcon: Icon(Icons.lock_outline, color: Color.fromRGBO(153, 153, 153, 1))
+                prefixIcon: Container(
+                  width: 90,
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.lock_outline,
+                              size: 24,
+                              color: Color.fromRGBO(153, 153, 153, 1),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: 1,
+                        height: 12,
+                        margin: EdgeInsets.only(
+                          right: 14,
+                        ),
+                        color: Color.fromRGBO(0, 0, 0, 0.1),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -208,10 +329,15 @@ class _LoginRouteState extends State<LoginRoute> {
               width: double.infinity,
               height: 48,
               decoration: BoxDecoration(
-                  color: _userNameInputFinished ? ColorConstants.themeColorBlue : ColorConstants.themeColorBlue.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(6)
-              ),
-              child: Text('登录', style: TextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold)),
+                  color: _userNameInputFinished
+                      ? ColorConstants.themeColorBlue
+                      : ColorConstants.themeColorBlue.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(6)),
+              child: Text('登录',
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold)),
             ),
             onTap: () {
               if (_userNameInputFinished) {
@@ -227,7 +353,9 @@ class _LoginRouteState extends State<LoginRoute> {
                 child: FlatButton(
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   padding: EdgeInsets.all(0),
-                  child: Text('短信登录', style: TextStyle(fontSize: 12, color: ColorConstants.textColor51)),
+                  child: Text('短信登录',
+                      style: TextStyle(
+                          fontSize: 12, color: ColorConstants.textColor51)),
                   onPressed: () {
                     setState(() {
                       _loginType = 1;
@@ -240,7 +368,9 @@ class _LoginRouteState extends State<LoginRoute> {
                 child: FlatButton(
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   padding: EdgeInsets.all(0),
-                  child: Text('忘记密码？', style: TextStyle(fontSize: 12, color: ColorConstants.themeColorBlue)),
+                  child: Text('忘记密码？',
+                      style: TextStyle(
+                          fontSize: 12, color: ColorConstants.themeColorBlue)),
                   onPressed: () {
                     Get.to(ForgetPassWord());
                   },
@@ -248,6 +378,45 @@ class _LoginRouteState extends State<LoginRoute> {
               )
             ],
           )
+        ],
+      ),
+    );
+  }
+
+  Widget _weixinLogin() {
+    return Container(
+      alignment: Alignment.center,
+      padding: EdgeInsets.only(
+        bottom: 50,
+      ),
+      child: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(
+              bottom: 20,
+            ),
+            child: Text(
+              '或通过以下方式登录',
+              style: TextStyle(
+                color: Color.fromRGBO(0, 0, 0, 0.3),
+                fontSize: 13,
+              ),
+            ),
+          ),
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(60),
+            ),
+            child: InkWell(
+              onTap: () {},
+              child: Image.asset(
+                'assets/images/login/weixin.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -261,18 +430,28 @@ class _LoginRouteState extends State<LoginRoute> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text.rich(TextSpan(
-            children: [
-              TextSpan(text: '阅读', style: TextStyle(fontSize: 13, color: ColorConstants.textColor153)),
-              TextSpan(text: '《用户协议', style: TextStyle(fontSize: 13, color: ColorConstants.themeColorBlue), recognizer: TapGestureRecognizer()..onTap = () {
-                Get.to(AgreementServiceRoute());
-              }),
-              TextSpan(text: '及', style: TextStyle(fontSize: 13, color: ColorConstants.textColor153)),
-              TextSpan(text: '隐私政策》', style: TextStyle(fontSize: 13, color: ColorConstants.themeColorBlue), recognizer: TapGestureRecognizer()..onTap = () {
-                Get.to(AgreementPolicyRoute());
-              }),
-            ]
-          ))
+          Text.rich(TextSpan(children: [
+            TextSpan(
+                text: '阅读',
+                style: TextStyle(
+                    fontSize: 13, color: ColorConstants.textColor153)),
+            TextSpan(
+                text: '《用户协议及',
+                style: TextStyle(
+                    fontSize: 13, color: ColorConstants.themeColorBlue),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    Get.to(AgreementServiceRoute());
+                  }),
+            TextSpan(
+                text: '隐私政策》',
+                style: TextStyle(
+                    fontSize: 13, color: ColorConstants.themeColorBlue),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    Get.to(AgreementPolicyRoute());
+                  }),
+          ]))
         ],
       ),
     );
@@ -294,7 +473,7 @@ class _LoginRouteState extends State<LoginRoute> {
 
     g_accountManager.clearLocalUser();
 
-    var params = { 'username': phone, 'password': pass};
+    var params = {'username': phone, 'password': pass};
     BotToast.showLoading();
     DioUtil.request('/user/login', parameters: params).then((responseData) {
       bool success = DioUtil.checkRequestResult(responseData, showToast: true);

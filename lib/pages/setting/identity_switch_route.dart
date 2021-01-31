@@ -27,14 +27,16 @@ class _IdentitySwitchRouteState extends State<IdentitySwitchRoute> {
     AccountModel currentUser = g_accountManager.currentUser;
     typeId = currentUser.typeId;
     if (typeId == 1) {
-      _identityString = "个人";
+      _identityString = "牛人";
+      // _identityString = "个人";
       _reverseIdentityString = "企业";
     } else if (typeId == 2) {
       _identityString = "企业";
-      _reverseIdentityString = "个人";
+      _reverseIdentityString = "牛人";
+      // _reverseIdentityString = "个人";
     }
 
-    setState(() { });
+    setState(() {});
   }
 
   @override
@@ -64,9 +66,14 @@ class _IdentitySwitchRouteState extends State<IdentitySwitchRoute> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Image.asset(join(AssetsUtil.assetsDirectorySetting, "switch_identity_img.png")),
+        Image.asset(
+            join(AssetsUtil.assetsDirectorySetting, "switch_identity_img.png")),
         SizedBox(height: 60),
-        Text("您当前的身份是“$_identityString”", style: TextStyle(fontSize: 17, color: ColorConstants.themeColorBlue, fontWeight: FontWeight.bold))
+        Text("您当前的身份是“$_identityString”",
+            style: TextStyle(
+                fontSize: 17,
+                color: ColorConstants.themeColorBlue,
+                fontWeight: FontWeight.bold))
       ],
     );
   }
@@ -83,16 +90,23 @@ class _IdentitySwitchRouteState extends State<IdentitySwitchRoute> {
               margin: EdgeInsets.only(left: 32.5, right: 32.5),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: ColorConstants.themeColorBlue,
-                borderRadius: BorderRadius.circular(6)
-              ),
-              child: Text("切换为“$_reverseIdentityString”身份", style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold)),
+                  color: ColorConstants.themeColorBlue,
+                  borderRadius: BorderRadius.circular(6)),
+              child: Text("切换为“$_reverseIdentityString”身份",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold)),
             ),
             onTap: () {
-              if(typeId==1){
-                Get.off(CompanyBasicEdit01(changeTypeId: true,));
-              }else{
-                Get.off(PersonBasicEdit(changeTypeId: true,));
+              if (typeId == 1) {
+                Get.off(CompanyBasicEdit01(
+                  changeTypeId: true,
+                ));
+              } else {
+                Get.off(PersonBasicEdit(
+                  changeTypeId: true,
+                ));
               }
 
 //              showDialog(
@@ -117,8 +131,6 @@ class _IdentitySwitchRouteState extends State<IdentitySwitchRoute> {
 //                  ],
 //                )
 //              );
-
-
             },
           )
         ],
@@ -136,7 +148,8 @@ class _IdentitySwitchRouteState extends State<IdentitySwitchRoute> {
 
     var params = {"typeId": newTypeId};
     BotToast.showLoading();
-    DioUtil.request("/user/switchIdentities", parameters: params).then((responseData) {
+    DioUtil.request("/user/switchIdentities", parameters: params)
+        .then((responseData) {
       bool success = DioUtil.checkRequestResult(responseData);
       if (success) {
         g_accountManager.refreshRemoteUser().then((value) {

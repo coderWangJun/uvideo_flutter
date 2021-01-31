@@ -11,11 +11,11 @@ class ChatMessage extends StatefulWidget {
   _ChatMessageState createState() => _ChatMessageState();
 }
 
-class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStateMixin {
+class _ChatMessageState extends State<ChatMessage>
+    with SingleTickerProviderStateMixin {
   TabController _tabController;
 
-//  List<String> _tabBarTitles = ['集市', '谁看了我', '求职铃'];
-  List<String> _tabBarTitles = ['集市', '求职铃'];
+  List<String> _tabBarTitles = ['集市', '谁看了我', '求职铃'];
 
   _ChatMessageState() {
     _tabController = TabController(length: _tabBarTitles.length, vsync: this);
@@ -29,9 +29,7 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
       children: <Widget>[
         SearchBar('消息搜索'),
         _buildTabBar(),
-        Expanded(
-          child: _buildTabBarView()
-        )
+        Expanded(child: _buildTabBarView())
       ],
     );
   }
@@ -48,7 +46,8 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
         labelColor: ColorConstants.textColor51,
         labelStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
         unselectedLabelColor: ColorConstants.textColor153,
-        unselectedLabelStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+        unselectedLabelStyle:
+            TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
         tabs: _tabBarTitles.map((title) {
           return Tab(text: title);
         }).toList(),
@@ -61,9 +60,9 @@ class _ChatMessageState extends State<ChatMessage> with SingleTickerProviderStat
       controller: _tabController,
       children: <Widget>[
         ChatMessageMarket(),
+        ChatMessageLook(),
         ChatMessageRing(),
-//        ChatMessageLook(),
-      ]
+      ],
     );
   }
 }

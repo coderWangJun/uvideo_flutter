@@ -35,15 +35,16 @@ class _SettingIndexState extends State<SettingIndex> {
   void _refreshData() {
     AccountModel currentUser = g_accountManager.currentUser;
     int typeId = currentUser.typeId;
-    isSetPwd=currentUser.isSetPwd;
+    isSetPwd = currentUser.isSetPwd;
 
     if (typeId == 1) {
-      _identityString = "个人";
+      _identityString = "牛人";
+      // _identityString = "个人";
     } else {
       _identityString = "企业";
     }
 
-    setState(() { });
+    setState(() {});
   }
 
   @override
@@ -68,32 +69,54 @@ class _SettingIndexState extends State<SettingIndex> {
       padding: EdgeInsets.only(left: 20, right: 20),
       itemExtent: 50,
       children: <Widget>[
-        _buildMenuListRow("身份切换", menuIndex: 0, value: _identityString, forwardWidget: IdentitySwitchRoute()),
-        _buildMenuListRow("银行卡绑定", menuIndex: 1,forwardWidget: BankCardMain()),
-         Offstage(
-           offstage: isSetPwd==1,
-           child:  _buildMenuListRow("设置密码", menuIndex: 7,forwardWidget: SettingPassWord()),
-         ),
-//        _buildMenuListRow("通知与提醒", menuIndex: 2),
-        _buildMenuListRow("隐私政策 | 服务协议", menuIndex: 3,forwardWidget: AgreementDetailRoute("隐私政策 | 服务协议",index: 3,)),
-        _buildMenuListRow("帮助与反馈", menuIndex: 4,forwardWidget: UserHelp()),
-        _buildMenuListRow("检查更新", menuIndex: 5, value: "1.1.0",forwardWidget: UpDataApp()),
-//        _buildMenuListRow("开发票", menuIndex: 6),
+        _buildMenuListRow("身份切换",
+            menuIndex: 0,
+            value: _identityString,
+            forwardWidget: IdentitySwitchRoute()),
+        _buildMenuListRow("账号与绑定", menuIndex: 1, forwardWidget: BankCardMain()),
+        // _buildMenuListRow("银行卡绑定", menuIndex: 1, forwardWidget: BankCardMain()),
+        // Offstage(
+        //   offstage: isSetPwd == 1,
+        //   child: _buildMenuListRow("设置密码",
+        //       menuIndex: 7, forwardWidget: SettingPassWord()),
+        // ),
+        _buildMenuListRow("通知与提醒", menuIndex: 2),
+        _buildMenuListRow(
+          "隐私设置",
+          menuIndex: 3,
+          // forwardWidget: AgreementDetailRoute(
+          //   "隐私政策 | 服务协议",
+          //   index: 3,
+          // ),
+        ),
+        _buildMenuListRow("帮助与反馈", menuIndex: 4, forwardWidget: UserHelp()),
+        _buildMenuListRow("检查更新",
+            menuIndex: 5, value: "1.1.0", forwardWidget: UpDataApp()),
+        _buildMenuListRow("开发票", menuIndex: 6),
       ],
     );
   }
 
-  Widget _buildMenuListRow(String title, {String value = "", int menuIndex, bool canForward = true, Widget forwardWidget}) {
+  Widget _buildMenuListRow(String title,
+      {String value = "",
+      int menuIndex,
+      bool canForward = true,
+      Widget forwardWidget}) {
     return InkWell(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(title, style: TextStyle(fontSize: 15, color: ColorConstants.textColor51)),
+          Text(title,
+              style:
+                  TextStyle(fontSize: 15, color: ColorConstants.textColor51)),
           Row(
             children: <Widget>[
-              Text(value, style: TextStyle(fontSize: 13, color: Color.fromRGBO(102, 102, 102, 1))),
+              Text(value,
+                  style: TextStyle(
+                      fontSize: 13, color: Color.fromRGBO(102, 102, 102, 1))),
               SizedBox(width: 10),
-              Image.asset(join(AssetsUtil.assetsDirectoryCommon, "icon_forward_small.png"))
+              Image.asset(join(
+                  AssetsUtil.assetsDirectoryCommon, "icon_forward_small.png"))
             ],
           )
         ],
@@ -110,49 +133,50 @@ class _SettingIndexState extends State<SettingIndex> {
 
   Widget _buildLogoutButton(BuildContext parentContext) {
     return Container(
-      height: 134,
-      child: UnconstrainedBox(
-        child: Container(
-          width: (ScreenUtil.mediaQueryData.size.width - 65),
-          height: 44,
-          decoration: BoxDecoration(
-              color: Color.fromRGBO(238, 238, 238, 0.5),
-              borderRadius: BorderRadius.circular(5)
+        height: 134,
+        child: UnconstrainedBox(
+          child: Container(
+            width: (ScreenUtil.mediaQueryData.size.width - 65),
+            height: 44,
+            decoration: BoxDecoration(
+                color: Color.fromRGBO(238, 238, 238, 0.5),
+                borderRadius: BorderRadius.circular(5)),
+            child: FlatButton(
+              child: Text("退出登录",
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Color.fromRGBO(102, 102, 102, 1),
+                      fontWeight: FontWeight.bold)),
+              onPressed: () {
+                showDialog(
+                    context: parentContext,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("温馨提示"),
+                        content: Text("确定要退出吗？"),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text("取消"),
+                            onPressed: () => Navigator.of(parentContext).pop(),
+                          ),
+                          FlatButton(
+                            child: Text("确定"),
+                            onPressed: () {
+                              g_accountManager.clearLocalUser();
+                              TencentImPlugin.logout().then((value) {
+                                Get.offAll(LoginRoute());
+                              }).catchError((e) {
+                                Get.offAll(LoginRoute());
+                              });
+                            },
+                          )
+                        ],
+                      );
+                    });
+              },
+            ),
           ),
-          child: FlatButton(
-            child: Text("退出登录", style: TextStyle(fontSize: 15, color: Color.fromRGBO(102, 102, 102, 1), fontWeight: FontWeight.bold)),
-            onPressed: () {
-              showDialog(
-                  context: parentContext,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("温馨提示"),
-                      content: Text("确定要退出吗？"),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Text("取消"),
-                          onPressed: () => Navigator.of(parentContext).pop(),
-                        ),
-                        FlatButton(
-                          child: Text("确定"),
-                          onPressed: () {
-                            g_accountManager.clearLocalUser();
-                            TencentImPlugin.logout().then((value){
-                              Get.offAll(LoginRoute());
-                            }).catchError((e){
-                              Get.offAll(LoginRoute());
-                            });
-                          },
-                        )
-                      ],
-                    );
-                  }
-              );
-            },
-          ),
-        ),
-      )
-    );
+        ));
   }
 }
