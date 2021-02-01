@@ -135,6 +135,8 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                   _positionInfo(),
                   // 公司详情
                   _companyInfo(),
+                  // 立即沟通
+                  _immediatelyCommunicate(),
                 ],
               ),
             ),
@@ -536,6 +538,31 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
           ),
         ),
       ],
+    );
+  }
+
+  Widget _immediatelyCommunicate() {
+    return Container(
+      alignment: Alignment.center,
+      margin: EdgeInsets.symmetric(
+        vertical: 30,
+      ),
+      child: FlatButton(
+        onPressed: () {},
+        color: Colors.blue,
+        padding: EdgeInsets.symmetric(
+          vertical: 15,
+        ),
+        child: Container(
+          alignment: Alignment.center,
+          child: Text(
+            '立即沟通',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

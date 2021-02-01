@@ -17,7 +17,7 @@ import 'package:youpinapp/app/account.dart';
 
 class HomeGridResume extends StatefulWidget {
   SearchManager model;
-  int cur_index_type; // 0 作品 1 简历 附近
+  int cur_index_type; // 3 作品 1 简历  0 附近
 
   HomeGridResume(this.model, this.cur_index_type);
 
@@ -259,29 +259,71 @@ class _HomeGridResumeState extends State<HomeGridResume> {
     HomeResumeModel resumeModel = widget.model.modelListRes[index];
     return Column(children: <Widget>[
       Expanded(
-        child: Stack(alignment: Alignment.center, children: <Widget>[
-          ClipRRect(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(6), topRight: Radius.circular(6)),
-              child:
-                  resumeModel.coverUrl == null || resumeModel.coverUrl.isEmpty
-                      ? Container(
-                          width: 24,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(0, 0, 0, 0.2),
-                            borderRadius: BorderRadius.circular(24),
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            ClipRRect(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(6), topRight: Radius.circular(6)),
+                child:
+                    resumeModel.coverUrl == null || resumeModel.coverUrl.isEmpty
+                        ? Container(
+                            width: 24,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(0, 0, 0, 0.2),
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          )
+                        : CachedNetworkImage(
+                            width: gridWidth,
+                            height: gridHeight - 70,
+                            fit: BoxFit.cover,
+                            imageUrl: resumeModel.coverUrl ?? "",
+                          )),
+            Image.asset(
+                join(AssetsUtil.assetsDirectoryCommon, 'video_play.png'),
+                width: 80.w,
+                height: 80.h),
+
+            /// 企业账户的位置
+            widget.cur_index_type == 0
+                ? Positioned(
+                    left: 10,
+                    bottom: 10,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 3,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Color(0xff6610e0),
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            child: Icon(
+                              Icons.place,
+                              size: 12,
+                              color: Colors.white,
+                            ),
                           ),
-                        )
-                      : CachedNetworkImage(
-                          width: gridWidth,
-                          height: gridHeight - 70,
-                          fit: BoxFit.cover,
-                          imageUrl: resumeModel.coverUrl ?? "",
-                        )),
-          Image.asset(join(AssetsUtil.assetsDirectoryCommon, 'video_play.png'),
-              width: 80.w, height: 80.h)
-        ]),
+                          Container(
+                            child: Text(
+                              '10km',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : Container(),
+          ],
+        ),
       ),
       Container(
         height: 70,
