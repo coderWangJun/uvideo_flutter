@@ -223,49 +223,106 @@ class _MineIndexState extends State<MineIndex>
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          InkWell(
-            child: Row(
-              children: <Widget>[
-                Image.asset(imagePath("mine", "bell_switch.png")),
-                SizedBox(width: 10),
-                Container(
-                  width: 62,
-                  height: 20,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.white, width: 1)),
-                  child: Text(
-                      AccountManager.instance.ringSwitch ? "关闭求职铃" : "开启求职铃",
-                      style: TextStyle(
-                          fontSize: 9,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold)),
-                )
-              ],
-            ),
-            onTap: () async {
-              AccountManager.instance.ringSwitch =
-                  !AccountManager.instance.ringSwitch;
-              g_storageManager.setStorage(StorageManager.RTC_SWITCH,
-                  AccountManager.instance.ringSwitch);
-              if (AccountManager.instance.ringSwitch) {
-                if (await Permission.locationWhenInUse.request().isGranted &&
-                    await Permission.location.request().isGranted) {
-                  debugPrint("我是有权限的");
-                }
-                webSocketProvide.isOpen = true;
-                webSocketProvide.init();
-                BotToast.showText(text: "求职铃已打开");
-              } else {
-                webSocketProvide.isOpen = false;
-                webSocketProvide.closes();
-                BotToast.showText(text: "求职铃已关闭");
-              }
+          Row(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.center,
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(34),
+                ),
+                child: Text(
+                  '求职铃',
+                  style: TextStyle(
+                    color: ColorConstants.themeColorBlue,
+                    fontSize: 8,
+                  ),
+                ),
+              ),
+              Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.only(
+                  left: 5,
+                ),
+                child: Transform.scale(
+                  scale: 0.9,
+                  child: CupertinoSwitch(
+                    value: AccountManager.instance.ringSwitch,
+                    activeColor: Color.fromRGBO(255, 255, 255, 0.8),
+                    trackColor: Color.fromRGBO(255, 255, 255, 0.3),
+                    onChanged: (bool isActive) async {
+                      AccountManager.instance.ringSwitch =
+                          !AccountManager.instance.ringSwitch;
+                      g_storageManager.setStorage(StorageManager.RTC_SWITCH,
+                          AccountManager.instance.ringSwitch);
+                      if (AccountManager.instance.ringSwitch) {
+                        if (await Permission.locationWhenInUse
+                                .request()
+                                .isGranted &&
+                            await Permission.location.request().isGranted) {
+                          debugPrint("我是有权限的");
+                        }
+                        webSocketProvide.isOpen = true;
+                        webSocketProvide.init();
+                        BotToast.showText(text: "求职铃已打开");
+                      } else {
+                        webSocketProvide.isOpen = false;
+                        webSocketProvide.closes();
+                        BotToast.showText(text: "求职铃已关闭");
+                      }
 
-              setState(() {});
-            },
+                      setState(() {});
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
+          // InkWell(
+          //   child: Row(
+          //     children: <Widget>[
+          //       Image.asset(imagePath("mine", "bell_switch.png")),
+          //       SizedBox(width: 10),
+          //       Container(
+          //         width: 62,
+          //         height: 20,
+          //         alignment: Alignment.center,
+          //         decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.circular(10),
+          //             border: Border.all(color: Colors.white, width: 1)),
+          //         child: Text(
+          //             AccountManager.instance.ringSwitch ? "关闭求职铃" : "开启求职铃",
+          //             style: TextStyle(
+          //                 fontSize: 9,
+          //                 color: Colors.white,
+          //                 fontWeight: FontWeight.bold)),
+          //       )
+          //     ],
+          //   ),
+          //   onTap: () async {
+          //     AccountManager.instance.ringSwitch =
+          //         !AccountManager.instance.ringSwitch;
+          //     g_storageManager.setStorage(StorageManager.RTC_SWITCH,
+          //         AccountManager.instance.ringSwitch);
+          //     if (AccountManager.instance.ringSwitch) {
+          //       if (await Permission.locationWhenInUse.request().isGranted &&
+          //           await Permission.location.request().isGranted) {
+          //         debugPrint("我是有权限的");
+          //       }
+          //       webSocketProvide.isOpen = true;
+          //       webSocketProvide.init();
+          //       BotToast.showText(text: "求职铃已打开");
+          //     } else {
+          //       webSocketProvide.isOpen = false;
+          //       webSocketProvide.closes();
+          //       BotToast.showText(text: "求职铃已关闭");
+          //     }
+
+          //     setState(() {});
+          //   },
+          // ),
           Row(
             children: <Widget>[
 //              InkWell(
@@ -364,42 +421,68 @@ class _MineIndexState extends State<MineIndex>
                     ],
                   ),
                 ),
-                GestureDetector(
-                  child:
+                Stack(
+                  children: <Widget>[
+                    GestureDetector(
+                      child:
 //                Image.asset(join(AssetsUtil.assetsDirectoryCommon, 'def_company_avatar.png')),
-                      ClipOval(
-                    child: Container(
-                      width: 65.0,
-                      height: 65.0,
-                      child: Image.network(
-                        _headImgUrl,
-                        fit: BoxFit.cover,
+                          ClipOval(
+                        child: Container(
+                          width: 65.0,
+                          height: 65.0,
+                          child: Image.network(
+                            _headImgUrl,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  onTap: () {
-                    int typeId = g_accountManager.currentUser.typeId;
-                    if (typeId == 1) {
-                      Get.to(PersonBasicEdit()).then((value) {
-                        if (value != null) {
-                          g_accountManager.refreshRemoteUser().then((value) {
-                            setState(() {
-                              _refreshData();
+                      onTap: () {
+                        int typeId = g_accountManager.currentUser.typeId;
+                        if (typeId == 1) {
+                          Get.to(PersonBasicEdit()).then((value) {
+                            if (value != null) {
+                              g_accountManager
+                                  .refreshRemoteUser()
+                                  .then((value) {
+                                setState(() {
+                                  _refreshData();
+                                });
+                              });
+                            }
+                          });
+                        } else if (typeId == 2) {
+                          Get.to(CompanyEditAll()).then((value) {
+                            g_accountManager.refreshRemoteUser().then((value) {
+                              setState(() {
+                                _refreshData();
+                              });
                             });
                           });
                         }
-                      });
-                    } else if (typeId == 2) {
-                      Get.to(CompanyEditAll()).then((value) {
-                        g_accountManager.refreshRemoteUser().then((value) {
-                          setState(() {
-                            _refreshData();
-                          });
-                        });
-                      });
-                    }
-                  },
-                )
+                      },
+                    ),
+                    AccountManager.instance.ringSwitch
+                        ? Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Color(0xFF29B674),
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Icon(
+                                Icons.notifications,
+                                size: 21,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : Container(),
+                  ],
+                ),
               ],
             ),
             SizedBox(height: 10),
