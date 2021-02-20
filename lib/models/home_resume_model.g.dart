@@ -35,6 +35,7 @@ HomeResumeModel _$HomeResumeModelFromJson(Map<String, dynamic> json) {
     ..distanceDouble = (json['distanceDouble'] as num)?.toDouble()
     ..distanceString = json['distanceString'] as String
     ..locked = json['locked'] as int
+    ..isCollect = json['isCollect'] as int
     ..isLiked = json['isLiked'] as int
     ..likes = json['likes'] as int
     ..numberOfComments = json['numberOfComments'] as int
@@ -78,6 +79,7 @@ Map<String, dynamic> _$HomeResumeModelToJson(HomeResumeModel instance) =>
       'distanceDouble': instance.distanceDouble,
       'distanceString': instance.distanceString,
       'locked': instance.locked,
+      'isCollect': instance.isCollect,
       'isLiked': instance.isLiked,
       'likes': instance.likes,
       'numberOfComments': instance.numberOfComments,

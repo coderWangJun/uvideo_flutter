@@ -65,6 +65,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
               childAspectRatio: widthScale),
           children: widget.model.modelListRes.asMap().keys.map((index) {
             HomeResumeModel resumeModel = widget.model.modelListRes[index];
+            print('================ ${resumeModel.isCollect}');
 
             return GestureDetector(
               child: Container(

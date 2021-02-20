@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -55,6 +56,44 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
   int _bottomSelectedIndex = 0;
   PlayerStateProvider _playerStateProvider = new PlayerStateProvider();
 
+  bool _isCollect = false; // 是否收藏
+
+  @override
+  void initState() {
+    super.initState();
+    _initFn();
+  }
+
+  void _initFn() {
+    setState(() {
+      // 1-收藏 2-取消收藏
+      _isCollect = widget.currentResumeModel.isCollect == 1;
+    });
+  }
+
+  void _changeCollectStatusFn() async {
+    HomeResumeModel _currentResumeModel = widget.currentResumeModel;
+
+    DioUtil.request(
+      "/user/setCollect",
+      parameters: {
+        "companyMediaResumeId": "${_currentResumeModel.id}",
+        "type": _currentResumeModel.isCollect,
+      },
+    ).then((value) {
+      if (DioUtil.checkRequestResult(value, showToast: true)) {
+        // BotToast.showText(
+        //   text: _isCollect ? '已取消收藏' : '已成功收藏',
+        //   align: Alignment.topCenter,
+        // );
+        setState(() {
+          _currentResumeModel.isCollect = _isCollect ? 2 : 1;
+          _isCollect = !_isCollect;
+        });
+      }
+    });
+  }
+
   @override
   bool get wantKeepAlive => true;
 
@@ -75,12 +114,10 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                     padding: EdgeInsets.all(0),
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     child: Icon(
-                      Icons.star_border,
+                      _isCollect ? Icons.star : Icons.star_border,
                       color: Color.fromRGBO(0, 0, 0, 0.5),
                     ),
-                    onPressed: () {
-                      print('收藏');
-                    },
+                    onPressed: _changeCollectStatusFn,
                   ),
                 ),
                 Container(
