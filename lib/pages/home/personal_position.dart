@@ -1,5 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:youpinapp/app/account.dart';
+import 'package:youpinapp/app/app.dart';
+import 'package:youpinapp/app/storage.dart';
 import 'package:youpinapp/pages/common/app_bar_white.dart';
 import 'package:youpinapp/models/home_resume_model.dart';
 import 'package:youpinapp/pages/player/player_state_provider.dart';
@@ -37,12 +45,15 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
     homeCompanyDetailedModel.companyStaffEntity = CompanyStaffEntity();
     super.initState();
     _netWorkCompanyDetail();
+    _initFn();
   }
 
   void _netWorkCompanyDetail() async {
     /// 职位详情
-    DioUtil.request("/company/getMediaResumeDetails",
-        parameters: {"id": "${widget.currentResumeModel.id}"}).then((value) {
+    DioUtil.request(
+      "/company/getMediaResumeDetails",
+      parameters: {"id": "${widget.currentResumeModel.id}"},
+    ).then((value) {
       if (DioUtil.checkRequestResult(value, showToast: false)) {
         setState(() {
           homeCompanyDetailedModel =
@@ -54,6 +65,38 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
           if (homeCompanyDetailedModel.companyStaffEntity == null) {
             homeCompanyDetailedModel.companyStaffEntity = CompanyStaffEntity();
           }
+        });
+      }
+    });
+  }
+
+  bool _isCollect = false; // 是否收藏
+
+  void _initFn() {
+    setState(() {
+      // 1-收藏 2-取消收藏
+      _isCollect = widget.currentResumeModel.isCollect == 1;
+    });
+  }
+
+  void _changeCollectStatusFn() async {
+    HomeResumeModel _currentResumeModel = widget.currentResumeModel;
+
+    DioUtil.request(
+      "/user/setCollect",
+      parameters: {
+        "companyMediaResumeId": "${_currentResumeModel.id}",
+        "type": _currentResumeModel.isCollect,
+      },
+    ).then((value) {
+      if (DioUtil.checkRequestResult(value, showToast: true)) {
+        // BotToast.showText(
+        //   text: _isCollect ? '已取消收藏' : '已成功收藏',
+        //   align: Alignment.topCenter,
+        // );
+        setState(() {
+          _currentResumeModel.isCollect = _isCollect ? 2 : 1;
+          _isCollect = !_isCollect;
         });
       }
     });
@@ -79,12 +122,10 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                     padding: EdgeInsets.all(0),
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     child: Icon(
-                      Icons.star_border,
+                      _isCollect ? Icons.star : Icons.star_border,
                       color: Color.fromRGBO(0, 0, 0, 0.5),
                     ),
-                    onPressed: () {
-                      print('收藏');
-                    },
+                    onPressed: _changeCollectStatusFn,
                   ),
                 ),
                 Container(

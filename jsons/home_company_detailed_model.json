@@ -32,6 +32,7 @@
   "status": 1,
   "distanceDouble": 0.0,
   "distanceString": "",
+  "isCollect": 2, 
   "isLiked": "",
   "likes": 0,
   "numberOfComments": 0,

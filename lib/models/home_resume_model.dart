@@ -34,6 +34,7 @@ class HomeResumeModel {
   double distanceDouble;
   String distanceString;
   int locked;
+  int isCollect;
   int isLiked;
   int likes;
   int numberOfComments;
