@@ -218,7 +218,7 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
                               horizontal: 5,
                             ),
                             child: Text(
-                              companyModel.companyName ?? "云达科技",
+                              companyModel.companyName ?? '',
                               style: TextStyle(
                                   fontSize: 24.w,
                                   color: Color.fromRGBO(102, 102, 102, 1)),
@@ -231,7 +231,7 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
                   ),
                   Container(
                     child: Text(
-                      '10km',
+                      companyModel.distanceString ?? '暂无',
                       style: TextStyle(
                         fontSize: 24.w,
                         color: Color.fromRGBO(0, 0, 0, 0.4),
@@ -298,8 +298,7 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
                   bottom: 5,
                 ),
                 child: Text(
-                  "@ 米微... 1小时前",
-                  // companyModel.companyName ?? "云达科技",
+                  "@ ${companyModel.updatedBy ?? '--'} ${companyModel.updatedTime ?? '--'}",
                   style: TextStyle(
                       fontSize: 24.w, color: Color.fromRGBO(102, 102, 102, 1)),
                   overflow: TextOverflow.ellipsis,
@@ -310,8 +309,7 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
                   horizontal: 5,
                 ),
                 child: Text(
-                  "作品简单描述",
-                  // companyModel.companyName ?? "云达科技",
+                  '${companyModel.title ?? "--"} ${companyModel.details ?? ''}',
                   style: TextStyle(
                       fontSize: 24.w, color: Color.fromRGBO(102, 102, 102, 1)),
                   overflow: TextOverflow.ellipsis,

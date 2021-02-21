@@ -22,7 +22,8 @@ class VideoPlayerWidget extends StatefulWidget {
   _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
 }
 
-class _VideoPlayerWidgetState extends State<VideoPlayerWidget> with TickerProviderStateMixin {
+class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
+    with TickerProviderStateMixin {
   BuildContext _buildContext;
 
   VideoPlayerController _playerController;
@@ -39,8 +40,10 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> with TickerProvid
   void initState() {
     super.initState();
 
-    _topTabController = new TabController(length: _tabbarTitles.length, vsync: this, initialIndex: 1);
-    _bottomTabController = new TabController(length: _bottomTabBarTitles.length, vsync: this);
+    _topTabController = new TabController(
+        length: _tabbarTitles.length, vsync: this, initialIndex: 1);
+    _bottomTabController =
+        new TabController(length: _bottomTabBarTitles.length, vsync: this);
 
     _initVideo();
   }
@@ -58,9 +61,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> with TickerProvid
       if (_playerController != null) {
         Wakelock.disable();
         _playerController.pause();
-        _playerController.removeListener(() { });
+        _playerController.removeListener(() {});
 
-        setState(() { });
+        setState(() {});
       }
     });
   }
@@ -77,11 +80,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> with TickerProvid
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            _buildVideoWidget(),  // 播放组件
+            _buildVideoWidget(), // 播放组件
 //            (widget.dataModel is ShortVideoModel) ? _buildTopLeftButton() : _buildBackButton(context),  // 左上角按钮
 //            _buildTopCenterTabBar(),  // 顶部中间的tabbar
 //            _buildTopRightButton(),  // 右上角按钮
-            _buildBottomPanel(),  // 底部区域
+            _buildBottomPanel(), // 底部区域
             _buildCenterPlayIcon(), // 屏幕中间的播放图标
             _buildIndicator(), // 构建屏幕中间加载视频的圈圈
 //            (widget.dataModel is ShowreelModel) ? _buildBottomTabBar() : SizedBox.shrink(),
@@ -130,21 +133,26 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> with TickerProvid
         }
 
         if (_playerController != null && needPay) {
-          if (!coinDialogShowed && _playerController.value.position.inSeconds > freeSeconds) {
+          if (!coinDialogShowed &&
+              _playerController.value.position.inSeconds > freeSeconds) {
             Wakelock.disable();
             coinDialogShowed = true;
             _playerController.pause();
-            _playerController.removeListener(() { });
+            _playerController.removeListener(() {});
 
             _showPayDialog();
           }
         }
 
-        if (mounted) { setState(() { }); }
+        if (mounted) {
+          setState(() {});
+        }
       });
     });
 
-    if (mounted) { setState(() { }); }
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void _startPlay() {
@@ -161,10 +169,13 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> with TickerProvid
         freeSeconds = shortVideoModel.freeSeconds;
       }
 
-      if (needUcoin == 2 && hadBought != 1 && _playerController.value.position.inSeconds > freeSeconds) {
+      if (needUcoin == 2 &&
+          hadBought != 1 &&
+          _playerController.value.position.inSeconds > freeSeconds) {
         _showPayDialog();
       } else if (_playerController.value.isPlaying == false) {
-        if (_playerController.value.position.inSeconds >= _playerController.value.duration.inSeconds) {
+        if (_playerController.value.position.inSeconds >=
+            _playerController.value.duration.inSeconds) {
           _playerController.seekTo(Duration(seconds: 0));
         }
 
@@ -172,7 +183,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> with TickerProvid
         _playerController.play();
       }
 
-      setState(() { });
+      setState(() {});
     }
   }
 
@@ -180,7 +191,12 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> with TickerProvid
     AccountManager.instance.isLogin.then((isLogin) async {
       if (isLogin) {
         ShortVideoModel shortVideoModel = widget.dataModel as ShortVideoModel;
-        bool success = await PayDialog.show(_buildContext, freeSeconds: shortVideoModel.freeSeconds, tradeFrom: 3, tradeType: 2, tradeAmount: shortVideoModel.ucoinAmount, goodsId: shortVideoModel.id);
+        bool success = await PayDialog.show(_buildContext,
+            freeSeconds: shortVideoModel.freeSeconds,
+            tradeFrom: 3,
+            tradeType: 2,
+            tradeAmount: shortVideoModel.ucoinAmount,
+            goodsId: shortVideoModel.id);
         if (success) {
           shortVideoModel.hadBought = 1;
           _startPlay();
@@ -191,29 +207,31 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> with TickerProvid
 
   // 构建视频播放器
   Widget _buildVideoWidget() {
-    return (_playerController != null && _playerController.value.initialized) ?
-      GestureDetector(
-        child: Container(
-          width: double.infinity,
-          color: Color.fromRGBO(0, 0, 0, 0.9),
-          child: AspectRatio(
-            aspectRatio: _playerController.value.aspectRatio,
-            child: VideoPlayer(_playerController),
-          ),
-        ),
-        onTap: () async {
-          if (_playerController != null && _playerController.value.initialized) {
-            if (_playerController.value.isPlaying) {
-              await _playerController.pause();
-            } else {
+    return (_playerController != null && _playerController.value.initialized)
+        ? GestureDetector(
+            child: Container(
+              width: double.infinity,
+              color: Color.fromRGBO(0, 0, 0, 0.9),
+              child: AspectRatio(
+                aspectRatio: _playerController.value.aspectRatio,
+                child: VideoPlayer(_playerController),
+              ),
+            ),
+            onTap: () async {
+              if (_playerController != null &&
+                  _playerController.value.initialized) {
+                if (_playerController.value.isPlaying) {
+                  await _playerController.pause();
+                } else {
 //              await _playerController.play();
-              _startPlay();
-            }
+                  _startPlay();
+                }
 
-            setState(() {});
-          }
-        },
-      ) : SizedBox.shrink();
+                setState(() {});
+              }
+            },
+          )
+        : SizedBox.shrink();
   }
 
   // 底部区域，包含头像、点赞、评论、分享、位置、@、文字描述、标签
@@ -227,21 +245,24 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> with TickerProvid
 
   // 屏幕中间的播放图标
   Widget _buildCenterPlayIcon() {
-    if (_playerController != null && _playerController.value.initialized && !_playerController.value.isPlaying) {
+    if (_playerController != null &&
+        _playerController.value.initialized &&
+        !_playerController.value.isPlaying) {
       return SizedBox(
-        width: 140,
-        height: 140,
-        child: IconButton(
-          icon: Image.asset(imagePath("home", "home_play.png"), width: 70, height: 70, fit: BoxFit.contain),
-          onPressed: () async {
-            if (_playerController != null && _playerController.value.initialized) {
+          width: 140,
+          height: 140,
+          child: IconButton(
+            icon: Image.asset(imagePath("home", "home_play.png"),
+                width: 70, height: 70, fit: BoxFit.contain),
+            onPressed: () async {
+              if (_playerController != null &&
+                  _playerController.value.initialized) {
 //              await _playerController.play();
 //              setState(() { });
-              _startPlay();
-            }
-          },
-        )
-      );
+                _startPlay();
+              }
+            },
+          ));
     } else {
       return SizedBox.shrink();
     }
@@ -273,7 +294,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> with TickerProvid
 //    g_eventBus.off(GlobalEvent.stopPlayEvent);
     Wakelock.disable();
 
-    _playerController.removeListener(() { });
+    _playerController.removeListener(() {});
     _topTabController.dispose();
     _bottomTabController.dispose();
     _stopPlay();

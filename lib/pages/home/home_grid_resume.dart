@@ -179,7 +179,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
                   padding: EdgeInsets.only(
                     left: 10,
                   ),
-                  child: Text(resumeModel.salaryTreatmentString ?? '3-8k',
+                  child: Text(resumeModel.salaryTreatmentString ?? '--',
                       maxLines: 1,
                       textAlign: TextAlign.right,
                       style: TextStyle(
@@ -221,7 +221,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
                     left: 5,
                   ),
                   child: Text(
-                    resumeModel.realname ?? "云达科技",
+                    resumeModel.realname ?? '',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 12,
@@ -232,7 +232,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
                 Expanded(
                   child: Container(
                     child: Text(
-                      '10km',
+                      resumeModel.distanceString ?? '暂无',
                       textAlign: TextAlign.right,
                       style: TextStyle(
                         fontSize: 24.w,
@@ -310,7 +310,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
                           ),
                           Container(
                             child: Text(
-                              '10km',
+                              resumeModel.distanceString ?? '暂无',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 10,

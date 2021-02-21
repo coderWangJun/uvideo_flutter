@@ -1,37 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:provider/provider.dart';
-import 'package:youpinapp/app/account.dart';
-import 'package:youpinapp/app/app.dart';
-import 'package:youpinapp/app/storage.dart';
 import 'package:youpinapp/pages/common/app_bar_white.dart';
 import 'package:youpinapp/models/home_resume_model.dart';
-import 'package:youpinapp/pages/common/custom_notification.dart';
-import 'package:youpinapp/pages/common/floating_button.dart';
-import 'package:youpinapp/pages/person/user_detail_route.dart';
-import 'package:youpinapp/pages/player/nearby_video_list.dart';
 import 'package:youpinapp/pages/player/player_state_provider.dart';
-import 'package:youpinapp/pages/player/video_player_vert_container.dart';
-import 'package:youpinapp/pages/publish/publish_menu.dart';
-import 'package:youpinapp/utils/assets_util.dart';
-import 'package:youpinapp/utils/event_bus.dart';
 import 'package:awsome_video_player/awsome_video_player.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:path/path.dart';
-import 'package:youpinapp/app/account.dart';
-import 'package:youpinapp/app/imProvider.dart';
-import 'package:youpinapp/global/color_constants.dart';
 import 'package:youpinapp/models/index.dart';
-import 'package:youpinapp/pages/company/company_page.dart';
-import 'package:youpinapp/pages/person/user_detail_route.dart';
-import 'package:youpinapp/utils/assets_util.dart';
-import 'package:youpinapp/utils/dataTime_string.dart';
 import 'package:youpinapp/utils/dio_util.dart';
 
 /// 个人账户的岗位页面
@@ -54,6 +27,37 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
   int _topSelectedIndex = 1;
   int _bottomSelectedIndex = 0;
   PlayerStateProvider _playerStateProvider = new PlayerStateProvider();
+
+  HomeCompanyDetailedModel homeCompanyDetailedModel =
+      HomeCompanyDetailedModel();
+
+  @override
+  void initState() {
+    homeCompanyDetailedModel.companyInDetailsSubRVO = CompanyInDetailsSubRVO();
+    homeCompanyDetailedModel.companyStaffEntity = CompanyStaffEntity();
+    super.initState();
+    _netWorkCompanyDetail();
+  }
+
+  void _netWorkCompanyDetail() async {
+    /// 职位详情
+    DioUtil.request("/company/getMediaResumeDetails",
+        parameters: {"id": "${widget.currentResumeModel.id}"}).then((value) {
+      if (DioUtil.checkRequestResult(value, showToast: false)) {
+        setState(() {
+          homeCompanyDetailedModel =
+              HomeCompanyDetailedModel.fromJson(value["data"]);
+          if (homeCompanyDetailedModel.companyInDetailsSubRVO == null) {
+            homeCompanyDetailedModel.companyInDetailsSubRVO =
+                CompanyInDetailsSubRVO();
+          }
+          if (homeCompanyDetailedModel.companyStaffEntity == null) {
+            homeCompanyDetailedModel.companyStaffEntity = CompanyStaffEntity();
+          }
+        });
+      }
+    });
+  }
 
   @override
   bool get wantKeepAlive => true;
@@ -195,7 +199,7 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
               bottom: 20,
             ),
             child: Text(
-              '重庆明艳文化传媒有限公司',
+              '${homeCompanyDetailedModel.companyName ?? '--'}',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
@@ -223,7 +227,7 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    '影视后期',
+                    '${homeCompanyDetailedModel.title ?? '--'}',
                     style: TextStyle(
                       color: Color.fromRGBO(0, 0, 0, 0.7),
                       fontWeight: FontWeight.bold,
@@ -236,7 +240,7 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                   children: <Widget>[
                     Container(
                       child: Text(
-                        '后期制作',
+                        '${homeCompanyDetailedModel.industryName ?? '--'}',
                         style: TextStyle(
                           color: Color.fromRGBO(0, 0, 0, 0.4),
                           fontSize: 12,
@@ -245,7 +249,7 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                     ),
                     Container(
                       child: Text(
-                        '5-10年',
+                        '${homeCompanyDetailedModel.yearsOfExpString ?? '--年'}',
                         style: TextStyle(
                           color: Color.fromRGBO(0, 0, 0, 0.4),
                           fontSize: 12,
@@ -254,7 +258,7 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                     ),
                     Container(
                       child: Text(
-                        '本科',
+                        '${homeCompanyDetailedModel.diploma ?? '--'}',
                         style: TextStyle(
                           color: Color.fromRGBO(0, 0, 0, 0.4),
                           fontSize: 12,
@@ -273,7 +277,7 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
               left: 20,
             ),
             child: Text(
-              'null',
+              '${homeCompanyDetailedModel.salaryTreatmentString ?? '--'}',
               style: TextStyle(
                 color: Color.fromRGBO(0, 127, 255, 1),
                 fontSize: 18,
@@ -287,6 +291,9 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
   }
 
   Widget _personalInfo() {
+    CompanyStaffEntity companyStaffEntity =
+        homeCompanyDetailedModel.companyStaffEntity;
+
     return Container(
       padding: EdgeInsets.only(
         top: 20,
@@ -320,7 +327,17 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                     color: Color.fromRGBO(0, 0, 0, 0.05),
                     borderRadius: BorderRadius.circular(50),
                   ),
-                  // child: Image.asset(),
+                  child: companyStaffEntity != null &&
+                          companyStaffEntity.headPortraitUrl != null
+                      ? ClipOval(
+                          child: Image.network(
+                            companyStaffEntity.headPortraitUrl,
+                            fit: BoxFit.fill,
+                            width: 50,
+                            height: 50,
+                          ),
+                        )
+                      : Container(),
                 ),
                 Expanded(
                   child: Column(
@@ -335,7 +352,7 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                               bottom: 2,
                             ),
                             child: Text(
-                              '影视后期',
+                              '${companyStaffEntity.name ?? '--'}',
                               style: TextStyle(
                                 color: Color.fromRGBO(0, 0, 0, 0.6),
                                 fontWeight: FontWeight.bold,
@@ -347,7 +364,7 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                             children: <Widget>[
                               Container(
                                 child: Text(
-                                  '重庆明艳文化传媒有限公司',
+                                  '${companyStaffEntity.position ?? '--'}',
                                   style: TextStyle(
                                     color: Color.fromRGBO(0, 0, 0, 0.4),
                                     fontSize: 12,
@@ -359,7 +376,7 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                                   left: 5,
                                 ),
                                 child: Text(
-                                  '无',
+                                  '${companyStaffEntity.sexName ?? ''}',
                                   style: TextStyle(
                                     color: Color.fromRGBO(0, 0, 0, 0.4),
                                     fontSize: 12,
@@ -432,7 +449,7 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                             children: <Widget>[
                               Container(
                                 child: Text(
-                                  '需要五年以上工作经验的人',
+                                  '需要${homeCompanyDetailedModel.yearsOfExpString ?? '--'}以上工作经验的人',
                                   style: TextStyle(
                                     color: Color.fromRGBO(0, 0, 0, 0.4),
                                     fontSize: 12,
@@ -452,7 +469,7 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
           Container(
             alignment: Alignment.centerRight,
             child: Text(
-              '2020-10-23 更新',
+              '${homeCompanyDetailedModel.updatedTime ?? '--'} 更新',
               style: TextStyle(
                 color: Color.fromRGBO(0, 0, 0, 0.4),
                 fontSize: 12,
@@ -479,7 +496,21 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                   color: Color.fromRGBO(0, 0, 0, 0.05),
                   borderRadius: BorderRadius.circular(50),
                 ),
-                // child: Image.asset(),
+                child:
+                    homeCompanyDetailedModel.companyInDetailsSubRVO != null &&
+                            homeCompanyDetailedModel
+                                    .companyInDetailsSubRVO.logoUrl !=
+                                null
+                        ? ClipOval(
+                            child: Image.network(
+                              homeCompanyDetailedModel
+                                  .companyInDetailsSubRVO.logoUrl,
+                              fit: BoxFit.fill,
+                              width: 50,
+                              height: 50,
+                            ),
+                          )
+                        : Container(),
               ),
               Expanded(
                 child: Column(
@@ -494,7 +525,7 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                             bottom: 2,
                           ),
                           child: Text(
-                            '重庆明艳文化传媒有限公司',
+                            '${homeCompanyDetailedModel.companyName ?? '--'}',
                             style: TextStyle(
                               color: Color.fromRGBO(0, 0, 0, 0.6),
                               fontWeight: FontWeight.bold,
@@ -506,7 +537,7 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                           children: <Widget>[
                             Container(
                               child: Text(
-                                'null',
+                                '${homeCompanyDetailedModel.cityName ?? '--'} ${homeCompanyDetailedModel.minSalary ?? ''}-${homeCompanyDetailedModel.maxSalary ?? ''}人',
                                 style: TextStyle(
                                   color: Color.fromRGBO(0, 0, 0, 0.4),
                                   fontSize: 12,

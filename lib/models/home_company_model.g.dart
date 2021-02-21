@@ -23,6 +23,7 @@ HomeCompanyModel _$HomeCompanyModelFromJson(Map<String, dynamic> json) {
     ..coverName = json['coverName'] as String
     ..coverUrl = json['coverUrl'] as String
     ..title = json['title'] as String
+    ..details = json['details'] as String
     ..companyName = json['companyName'] as String
     ..needPeople = json['needPeople'] as int
     ..minSalary = json['minSalary'] as int
@@ -67,6 +68,7 @@ Map<String, dynamic> _$HomeCompanyModelToJson(HomeCompanyModel instance) =>
       'coverName': instance.coverName,
       'coverUrl': instance.coverUrl,
       'title': instance.title,
+      'details': instance.details,
       'companyName': instance.companyName,
       'needPeople': instance.needPeople,
       'minSalary': instance.minSalary,

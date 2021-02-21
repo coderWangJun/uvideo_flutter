@@ -273,6 +273,8 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
     String nickName = '';
     String content = '';
     int needCoin = 1; // 是否需要付费(U币) 1.否 2.是
+    String salaryTreatmentString = '';
+    String workingYears = '';
 
     if (widget.dataModel is ShortVideoModel) {
       var videoModel = widget.dataModel as ShortVideoModel;
@@ -283,6 +285,13 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
       var videoModel = widget.dataModel as HomeResumeModel;
       nickName = videoModel.nickname ?? videoModel.realname;
       content = videoModel.introduction;
+      salaryTreatmentString = videoModel.salaryTreatmentString;
+      workingYears = videoModel.workingYears != null
+          ? videoModel.workingYears.toString()
+          : '';
+      print(
+          'videoModel.salaryTreatmentString9999========= ${widget.dataModel.salaryTreatmentString}');
+      print('%%%%%%%%salaryTreatmentString==== $salaryTreatmentString');
     }
 
     return Container(
@@ -312,7 +321,7 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
                     right: 15,
                   ),
                   child: Text(
-                    '10-12k',
+                    '${salaryTreatmentString ?? '--'}',
                     style: TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 0.8),
                       fontSize: 32.sp,
@@ -324,7 +333,7 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
                     right: 15,
                   ),
                   child: Text(
-                    '9年',
+                    '${workingYears ?? '--'}年',
                     style: TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 0.8),
                       fontSize: 34.sp,

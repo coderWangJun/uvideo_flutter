@@ -1,11 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
-
 part 'home_company_model.g.dart';
 
 @JsonSerializable()
 class HomeCompanyModel {
-      HomeCompanyModel();
+  HomeCompanyModel();
 
   String createdBy;
   String createdTime;
@@ -21,6 +20,7 @@ class HomeCompanyModel {
   String coverName;
   String coverUrl;
   String title;
+  String details;
   String companyName;
   int needPeople;
   int minSalary;
@@ -48,6 +48,7 @@ class HomeCompanyModel {
   String jobDetails;
   String keywordsTags;
 
-  factory HomeCompanyModel.fromJson(Map<String,dynamic> json) => _$HomeCompanyModelFromJson(json);
+  factory HomeCompanyModel.fromJson(Map<String, dynamic> json) =>
+      _$HomeCompanyModelFromJson(json);
   Map<String, dynamic> toJson() => _$HomeCompanyModelToJson(this);
 }

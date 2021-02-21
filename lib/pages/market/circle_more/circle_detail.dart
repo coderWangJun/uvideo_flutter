@@ -368,7 +368,7 @@ class _CircleDetailState extends State<CircleDetail> {
                                             c: UiUtil.getColor(76,
                                                 num1: 152, num2: 244))),
                                     TextSpan(
-                                        text: "/405)",
+                                        text: "/${model.circlePerson.length})",
                                         style: UiUtil.getTextStyle(52, 15.0)),
                                   ])),
                                 ],
@@ -604,7 +604,7 @@ class _CircleDetailState extends State<CircleDetail> {
                   top: 5,
                 ),
                 child: Text(
-                  map['distanceString'] ?? '0.3km',
+                  map['distanceString'] ?? '--',
                   style: UiUtil.getTextStyle(154, 12.0),
                 ),
               ),
