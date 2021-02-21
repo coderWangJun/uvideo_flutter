@@ -37,7 +37,6 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
 
   void _initData() async {
     AccountManager.instance.isLogin.then((isLogin) {
-      print("isLogin = $isLogin");
       if (isLogin && g_accountManager.currentUser != null) {
         int typeId = g_accountManager.currentUser.typeId;
         //区分是否开启求职铃
@@ -58,6 +57,7 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
       }
       _navTabController = TabController(
           initialIndex: 1, length: _tabbarTitles.length, vsync: this);
+
       g_eventBus.on(GlobalEvent.accountInitialized, (arg) {
         _initData();
       });
@@ -69,10 +69,6 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
-    // if (g_accountManager.currentUser != null) {
-    //
-    // }
     _initData();
   }
 

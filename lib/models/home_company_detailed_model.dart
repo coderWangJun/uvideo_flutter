@@ -6,7 +6,7 @@ part 'home_company_detailed_model.g.dart';
 
 @JsonSerializable()
 class HomeCompanyDetailedModel {
-      HomeCompanyDetailedModel();
+  HomeCompanyDetailedModel();
 
   String createdTime;
   String updatedTime;
@@ -42,6 +42,7 @@ class HomeCompanyDetailedModel {
   double distanceDouble;
   String distanceString;
   String isLiked;
+  int isCollect;
   int likes;
   int numberOfComments;
   int numberOfForwarding;
@@ -49,6 +50,7 @@ class HomeCompanyDetailedModel {
   CompanyInDetailsSubRVO companyInDetailsSubRVO;
   CompanyStaffEntity companyStaffEntity;
 
-  factory HomeCompanyDetailedModel.fromJson(Map<String,dynamic> json) => _$HomeCompanyDetailedModelFromJson(json);
+  factory HomeCompanyDetailedModel.fromJson(Map<String, dynamic> json) =>
+      _$HomeCompanyDetailedModelFromJson(json);
   Map<String, dynamic> toJson() => _$HomeCompanyDetailedModelToJson(this);
 }

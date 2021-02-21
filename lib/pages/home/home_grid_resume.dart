@@ -52,7 +52,12 @@ class _HomeGridResumeState extends State<HomeGridResume> {
     double gridHeight = _isUserPerson ? 170 : 260;
     double widthScale = gridWidth / gridHeight;
 
-    if (widget.model.modelListRes.length > 0) {
+    SearchManager _model = widget.model;
+    List<HomeCompanyModel> _modelListCom = _model.modelListCom;
+    List<HomeResumeModel> _modelListRes = _model.modelListRes;
+
+    if ((_isUserPerson && _modelListCom.length > 0) ||
+        (!_isUserPerson && _modelListRes.length > 0)) {
       return RefreshIndicator(
         child: GridView(
           controller: _scrollController,
@@ -63,9 +68,8 @@ class _HomeGridResumeState extends State<HomeGridResume> {
               crossAxisSpacing: 30.w,
               mainAxisSpacing: 30.h,
               childAspectRatio: widthScale),
-          children: widget.model.modelListRes.asMap().keys.map((index) {
-            HomeResumeModel resumeModel = widget.model.modelListRes[index];
-            print('================ ${resumeModel.isCollect}');
+          children: _modelListRes.asMap().keys.map((index) {
+            HomeResumeModel resumeModel = _modelListRes[index];
 
             return GestureDetector(
               child: Container(
@@ -129,6 +133,42 @@ class _HomeGridResumeState extends State<HomeGridResume> {
     @required double widthScale,
   }) {
     HomeResumeModel resumeModel = widget.model.modelListRes[index];
+    HomeCompanyModel companyModel = widget.model.modelListCom != null &&
+            index <= widget.model.modelListCom.length
+        ? widget.model.modelListCom[index]
+        : null;
+
+    print(resumeModel.title);
+    print(companyModel.title);
+
+    /// 个人账户登录的岗位
+    bool _isPersonalPosition = resumeModel == null &&
+        companyModel != null &&
+        widget.cur_index_type == 2;
+
+    String coverUrl;
+    String title;
+    String salaryTreatmentString;
+    String headPortraitUrl;
+    String realname;
+    String distanceString;
+
+    if (_isPersonalPosition) {
+      coverUrl = companyModel.coverUrl;
+      title = companyModel.title;
+      salaryTreatmentString = companyModel.salaryTreatmentString;
+      headPortraitUrl = companyModel.headPortraitUrl;
+      realname = companyModel.companyName;
+      distanceString = companyModel.distanceString;
+    } else {
+      coverUrl = resumeModel.coverUrl;
+      title = resumeModel.title;
+      salaryTreatmentString = resumeModel.salaryTreatmentString;
+      headPortraitUrl = resumeModel.headPortraitUrl;
+      realname = resumeModel.realname;
+      distanceString = resumeModel.distanceString;
+    }
+
     return Column(children: <Widget>[
       Expanded(
         child: Stack(alignment: Alignment.center, children: <Widget>[
@@ -137,13 +177,13 @@ class _HomeGridResumeState extends State<HomeGridResume> {
                 topLeft: Radius.circular(6),
                 topRight: Radius.circular(6),
               ),
-              child: resumeModel.coverUrl == null
+              child: coverUrl == null
                   ? SizedBox()
                   : CachedNetworkImage(
                       width: gridWidth,
                       height: gridHeight - 70,
                       fit: BoxFit.cover,
-                      imageUrl: resumeModel.coverUrl ?? "",
+                      imageUrl: coverUrl ?? "",
                     )),
           Image.asset(join(AssetsUtil.assetsDirectoryCommon, 'video_play.png'),
               width: 80.w, height: 80.h)
@@ -164,7 +204,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    resumeModel.title,
+                    title,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Color.fromRGBO(0, 0, 0, 0.6),
@@ -180,7 +220,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
                   padding: EdgeInsets.only(
                     left: 10,
                   ),
-                  child: Text(resumeModel.salaryTreatmentString ?? '--',
+                  child: Text(salaryTreatmentString ?? '--',
                       maxLines: 1,
                       textAlign: TextAlign.right,
                       style: TextStyle(
@@ -194,8 +234,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
               children: <Widget>[
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: resumeModel.headPortraitUrl == null ||
-                          resumeModel.headPortraitUrl.isEmpty
+                  child: headPortraitUrl == null || headPortraitUrl.isEmpty
                       ? Container(
                           width: 24,
                           height: 24,
@@ -207,7 +246,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
                       : CachedNetworkImage(
                           width: 24,
                           height: 24,
-                          imageUrl: resumeModel.headPortraitUrl,
+                          imageUrl: headPortraitUrl,
                           placeholder: (BuildContext context, String url) {
                             return Image.asset(
                                 join(AssetsUtil.assetsDirectoryCommon,
@@ -222,7 +261,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
                     left: 5,
                   ),
                   child: Text(
-                    resumeModel.realname ?? '',
+                    realname ?? '',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 12,
@@ -233,7 +272,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
                 Expanded(
                   child: Container(
                     child: Text(
-                      resumeModel.distanceString ?? '暂无',
+                      distanceString ?? '暂无',
                       textAlign: TextAlign.right,
                       style: TextStyle(
                         fontSize: 24.w,
@@ -367,7 +406,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
                             ),
                     ),
                     SizedBox(width: 5),
-                    Text(resumeModel.realname ?? "李春玲",
+                    Text(resumeModel.realname ?? "",
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: TextStyle(

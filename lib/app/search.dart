@@ -41,17 +41,19 @@ class SearchManager extends ChangeNotifier {
 
   init() {
     g_eventBus.on(GlobalEvent.accountInitialized, (arg) {
-      initReu();
+      print('_cur_data_type 777========== $_cur_data_type');
       initCom();
+      initReu();
     });
     if (g_accountManager.currentUser != null) {
-      initReu();
       initCom();
+      initReu();
     }
   }
 
   getRefresh(int _cur_data_type) {
     this._cur_data_type = _cur_data_type;
+    print(this._cur_data_type);
     if (isLoadingFree) {
       isHasNextPage = true;
       nowPage = 1;
@@ -136,7 +138,6 @@ class SearchManager extends ChangeNotifier {
         } else {
           modelListRes = [];
         }
-        print("完成");
         notifyListeners();
       }
     });

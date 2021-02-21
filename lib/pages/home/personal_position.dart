@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:youpinapp/app/account.dart';
 import 'package:youpinapp/app/app.dart';
 import 'package:youpinapp/app/storage.dart';
+import 'package:youpinapp/global/color_constants.dart';
 import 'package:youpinapp/pages/common/app_bar_white.dart';
 import 'package:youpinapp/models/home_resume_model.dart';
 import 'package:youpinapp/pages/player/player_state_provider.dart';
@@ -39,13 +40,14 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
   HomeCompanyDetailedModel homeCompanyDetailedModel =
       HomeCompanyDetailedModel();
 
+  bool _isCollect = false; // 是否收藏
+
   @override
   void initState() {
     homeCompanyDetailedModel.companyInDetailsSubRVO = CompanyInDetailsSubRVO();
     homeCompanyDetailedModel.companyStaffEntity = CompanyStaffEntity();
     super.initState();
     _netWorkCompanyDetail();
-    _initFn();
   }
 
   void _netWorkCompanyDetail() async {
@@ -66,36 +68,33 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
             homeCompanyDetailedModel.companyStaffEntity = CompanyStaffEntity();
           }
         });
+        _initFn();
       }
     });
   }
 
-  bool _isCollect = false; // 是否收藏
-
   void _initFn() {
     setState(() {
       // 1-收藏 2-取消收藏
-      _isCollect = widget.currentResumeModel.isCollect == 1;
+      _isCollect = homeCompanyDetailedModel.isCollect == 2;
     });
   }
 
   void _changeCollectStatusFn() async {
-    HomeResumeModel _currentResumeModel = widget.currentResumeModel;
-
     DioUtil.request(
       "/user/setCollect",
       parameters: {
-        "companyMediaResumeId": "${_currentResumeModel.id}",
-        "type": _currentResumeModel.isCollect,
+        "companyMediaResumeId": "${homeCompanyDetailedModel.id}",
+
+        /// type 类型 1 收藏 2取消收藏 [如果已经收藏了就取消收藏，取消收藏了就收藏]
+        "type": _isCollect ? 1 : 2,
       },
     ).then((value) {
       if (DioUtil.checkRequestResult(value, showToast: true)) {
-        // BotToast.showText(
-        //   text: _isCollect ? '已取消收藏' : '已成功收藏',
-        //   align: Alignment.topCenter,
-        // );
+        BotToast.showText(
+          text: _isCollect ? '已取消收藏' : '已成功收藏',
+        );
         setState(() {
-          _currentResumeModel.isCollect = _isCollect ? 2 : 1;
           _isCollect = !_isCollect;
         });
       }
@@ -123,7 +122,9 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     child: Icon(
                       _isCollect ? Icons.star : Icons.star_border,
-                      color: Color.fromRGBO(0, 0, 0, 0.5),
+                      color: _isCollect
+                          ? ColorConstants.themeColorBlue
+                          : Color.fromRGBO(0, 0, 0, 0.5),
                     ),
                     onPressed: _changeCollectStatusFn,
                   ),

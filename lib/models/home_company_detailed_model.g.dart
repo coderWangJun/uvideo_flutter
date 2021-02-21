@@ -42,6 +42,7 @@ HomeCompanyDetailedModel _$HomeCompanyDetailedModelFromJson(
     ..status = json['status'] as int
     ..distanceDouble = (json['distanceDouble'] as num)?.toDouble()
     ..distanceString = json['distanceString'] as String
+    ..isCollect = json['isCollect'] as int
     ..isLiked = json['isLiked'] as String
     ..likes = json['likes'] as int
     ..numberOfComments = json['numberOfComments'] as int
@@ -93,6 +94,7 @@ Map<String, dynamic> _$HomeCompanyDetailedModelToJson(
       'status': instance.status,
       'distanceDouble': instance.distanceDouble,
       'distanceString': instance.distanceString,
+      'isCollect': instance.isCollect,
       'isLiked': instance.isLiked,
       'likes': instance.likes,
       'numberOfComments': instance.numberOfComments,
