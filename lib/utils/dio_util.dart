@@ -134,6 +134,7 @@ class DioUtil {
       }
     } catch (e) {
       print(e);
+      BotToast.showText(text: '$e');
     }
     print(result);
     return result != null ? result : null;
