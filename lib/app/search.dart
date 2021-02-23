@@ -28,6 +28,7 @@ class SearchManager extends ChangeNotifier {
 
   String nowCity = "全部";
   num nowCityId;
+  bool isInit = false; // 是否是初始化操作
 
   //清空条件值
   clear() {
@@ -40,8 +41,8 @@ class SearchManager extends ChangeNotifier {
   }
 
   init() {
+    this.isInit = true;
     g_eventBus.on(GlobalEvent.accountInitialized, (arg) {
-      print('_cur_data_type 777========== $_cur_data_type');
       initCom();
       initReu();
     });
@@ -53,7 +54,6 @@ class SearchManager extends ChangeNotifier {
 
   getRefresh(int _cur_data_type) {
     this._cur_data_type = _cur_data_type;
-    print(this._cur_data_type);
     if (isLoadingFree) {
       isHasNextPage = true;
       nowPage = 1;
@@ -153,6 +153,14 @@ class SearchManager extends ChangeNotifier {
           modelListCom = dataList.map((json) {
             return HomeCompanyModel.fromJson(json);
           }).toList();
+
+          /// 临时解决初次加载数据 数据紊乱
+          if (this.isInit) {
+            this.isInit = false;
+            modelListRes = dataList.map((json) {
+              return HomeResumeModel.fromJson(json);
+            }).toList();
+          }
         } else {
           modelListCom = [];
         }

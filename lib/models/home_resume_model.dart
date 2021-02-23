@@ -29,6 +29,7 @@ class HomeResumeModel {
   String positionName;
   int cityNo;
   String cityName;
+  String companyName;
   double longitude;
   double latitude;
   double distanceDouble;

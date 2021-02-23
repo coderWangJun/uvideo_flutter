@@ -16,6 +16,7 @@ HomeResumeModel _$HomeResumeModelFromJson(Map<String, dynamic> json) {
     ..userid = json['userid'] as String
     ..ossName = json['ossName'] as String
     ..worksName = json['worksName'] as String
+    ..companyName = json['companyName'] as String
     ..worksUrl = json['worksUrl'] as String
     ..ossCoverName = json['ossCoverName'] as String
     ..coverName = json['coverName'] as String
@@ -60,6 +61,7 @@ Map<String, dynamic> _$HomeResumeModelToJson(HomeResumeModel instance) =>
       'userid': instance.userid,
       'ossName': instance.ossName,
       'worksName': instance.worksName,
+      'companyName': instance.companyName,
       'worksUrl': instance.worksUrl,
       'ossCoverName': instance.ossCoverName,
       'coverName': instance.coverName,

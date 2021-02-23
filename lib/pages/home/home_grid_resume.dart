@@ -56,8 +56,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
     List<HomeCompanyModel> _modelListCom = _model.modelListCom;
     List<HomeResumeModel> _modelListRes = _model.modelListRes;
 
-    if ((_isUserPerson && _modelListCom.length > 0) ||
-        (!_isUserPerson && _modelListRes.length > 0)) {
+    if (_modelListCom.length > 0 || _modelListRes.length > 0) {
       return RefreshIndicator(
         child: GridView(
           controller: _scrollController,
@@ -133,40 +132,19 @@ class _HomeGridResumeState extends State<HomeGridResume> {
     @required double widthScale,
   }) {
     HomeResumeModel resumeModel = widget.model.modelListRes[index];
-    HomeCompanyModel companyModel = widget.model.modelListCom != null &&
-            index <= widget.model.modelListCom.length
-        ? widget.model.modelListCom[index]
-        : null;
-
-    print(resumeModel.title);
-    print(companyModel.title);
 
     /// 个人账户登录的岗位
-    bool _isPersonalPosition = resumeModel == null &&
-        companyModel != null &&
-        widget.cur_index_type == 2;
+    bool _isPersonalPosition = widget.cur_index_type == 2;
 
-    String coverUrl;
-    String title;
-    String salaryTreatmentString;
-    String headPortraitUrl;
-    String realname;
-    String distanceString;
+    String coverUrl = resumeModel.coverUrl;
+    String title = resumeModel.title;
+    String salaryTreatmentString = resumeModel.salaryTreatmentString;
+    String headPortraitUrl = resumeModel.headPortraitUrl;
+    String realname = resumeModel.realname;
+    String distanceString = resumeModel.distanceString;
 
     if (_isPersonalPosition) {
-      coverUrl = companyModel.coverUrl;
-      title = companyModel.title;
-      salaryTreatmentString = companyModel.salaryTreatmentString;
-      headPortraitUrl = companyModel.headPortraitUrl;
-      realname = companyModel.companyName;
-      distanceString = companyModel.distanceString;
-    } else {
-      coverUrl = resumeModel.coverUrl;
-      title = resumeModel.title;
-      salaryTreatmentString = resumeModel.salaryTreatmentString;
-      headPortraitUrl = resumeModel.headPortraitUrl;
-      realname = resumeModel.realname;
-      distanceString = resumeModel.distanceString;
+      realname = resumeModel.companyName;
     }
 
     return Column(children: <Widget>[
