@@ -29,6 +29,7 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
   TabController _tabController;
   TabController _navTabController;
   int _curListType = 0; // 0 作品 1 简历 2岗位 3 企宣
+  int _initialIndex = 1;
 
   List<dynamic> _categoryList = [
     {'index': -1, 'name': '全部'}
@@ -56,11 +57,17 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
         _loadJobCategory();
       }
       _navTabController = TabController(
-          initialIndex: 1, length: _tabbarTitles.length, vsync: this);
+        initialIndex: _initialIndex,
+        length: _tabbarTitles.length,
+        vsync: this,
+      );
 
       g_eventBus.on(GlobalEvent.accountInitialized, (arg) {
         _initData();
       });
+      // SearchManager().init();
+      // SearchManager().isInit = true;
+      // SearchManager().getRefresh(_curListType);
       isLoading = false;
       setState(() {});
     });
@@ -350,7 +357,6 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
   // 列表
   Widget _buildGridView(SearchManager model) {
     //绘制当前列表 根据tab和用户身份
-    print('_curListType============= $_curListType');
     if (_curListType == 0) {
       return Expanded(
 //          child: HomeGridCompany(_currentCategoryMap)

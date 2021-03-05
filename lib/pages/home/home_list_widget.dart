@@ -22,7 +22,7 @@ class HomeListWidget extends StatefulWidget {
   _HomeListWidgetState createState() => _HomeListWidgetState();
 }
 
-class _HomeListWidgetState extends State<HomeListWidget> with SingleTickerProviderStateMixin {
+class _HomeListWidgetState extends State<HomeListWidget> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   int _currentIndex = 0;
   TabController _tabController;
   List<String> _bottomTitles = ['首页', '集市', '', '消息', '我的'];
@@ -41,12 +41,16 @@ class _HomeListWidgetState extends State<HomeListWidget> with SingleTickerProvid
     _tabController = TabController(vsync: this, length: _bottomTitles.length);
 
     g_eventBus.on(EventBus.mainTabBarChange, (index) {
+      print('index========== $index');
       _currentIndex = index;
       _tabController.animateTo(index);
       setState(() { });
     });
 
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void didChangeDependencies() {

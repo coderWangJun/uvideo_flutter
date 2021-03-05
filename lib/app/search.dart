@@ -54,14 +54,18 @@ class SearchManager extends ChangeNotifier {
 
   getRefresh(int _cur_data_type) {
     this._cur_data_type = _cur_data_type;
+    print('isLoadingFree========= $isLoadingFree');
+    print('_cur_data_type========= $_cur_data_type');
     if (isLoadingFree) {
       isHasNextPage = true;
       nowPage = 1;
-      if (_cur_data_type != 3) {
-        modelListRes.clear();
-      } else {
-        modelListCom.clear();
-      }
+      modelListRes.clear();
+      modelListCom.clear();
+      // if (_cur_data_type != 3) {
+      //   modelListRes.clear();
+      // } else {
+      //   modelListCom.clear();
+      // }
       getMorePage();
     }
   }
@@ -98,9 +102,25 @@ class SearchManager extends ChangeNotifier {
           if (value['data'] != null) {
             List<dynamic> dataList = value['data'];
             if (flag) {
-              modelListRes.addAll(dataList.map((json) {
-                return HomeResumeModel.fromJson(json);
-              }).toList());
+              if (this.isInit) {
+                this.isInit = false;
+                modelListRes = dataList.map((json) {
+                  return HomeResumeModel.fromJson(json);
+                }).toList();
+                modelListCom = dataList.map((json) {
+                  return HomeCompanyModel.fromJson(json);
+                }).toList();
+              } else {
+                modelListRes.addAll(dataList.map((json) {
+                  return HomeResumeModel.fromJson(json);
+                }).toList());
+              }
+
+              /// 临时解决初次加载数据 数据紊乱
+              print('modelListCom================= $modelListCom');
+              print('modelListRes================= $modelListRes');
+              print('dataList================= $dataList');
+
               notifyListeners();
             } else {
               modelListCom.addAll(dataList.map((json) {
@@ -145,6 +165,7 @@ class SearchManager extends ChangeNotifier {
 
   //提供初始化方法
   initCom() {
+    /// 岗位
     DioUtil.request("/company/getMediaResume").then((value) {
 //      DioUtil.request("/company/getMediaResume").then((value){
       if (DioUtil.checkRequestResult(value, showToast: false)) {
@@ -156,6 +177,7 @@ class SearchManager extends ChangeNotifier {
 
           /// 临时解决初次加载数据 数据紊乱
           if (this.isInit) {
+            modelListRes.clear();
             this.isInit = false;
             modelListRes = dataList.map((json) {
               return HomeResumeModel.fromJson(json);

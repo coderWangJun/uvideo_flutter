@@ -39,6 +39,7 @@ class TencentKit {
           debugPrint("------------------------------yes");
           String sig = responseData["data"] as String;
           String userId = g_accountManager.currentUser.tXIMUser.txUserid;
+          print('************userId=***$userId========sig=***$sig========sig=***$sig');
           await TencentImPlugin.initStorage(identifier: userId);
           await TencentImPlugin.login(identifier: userId, userSig: sig);
         }else{

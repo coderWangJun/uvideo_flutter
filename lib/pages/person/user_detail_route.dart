@@ -549,6 +549,7 @@ class _HomeVideoPersonal extends State<UserDetailRoute>
     var params = {"userid": _currentUserId};
     DioUtil.request("/user/getHomePageUser", parameters: params)
         .then((response) {
+      print('response================= %%%%% $response');
       bool success = DioUtil.checkRequestResult(response, showToast: false);
       if (success) {
         setState(() {

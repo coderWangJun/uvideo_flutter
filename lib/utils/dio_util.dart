@@ -130,7 +130,8 @@ class DioUtil {
 
       print("responese==== result ===== $result");
       print("responese==== statusCode ===== ${response.statusCode}");
-      if (result != null && result['code'].toString() == '0') { // || response.statusCode != 200
+      print("$url\n${dio.options.headers}\n$parameters");
+      if (result != null && (result['code'].toString() == '-1' || result['code'].toString() == '0')) { // || response.statusCode != 200
         BotToast.showText(
           text: '${result['msg']}',
           duration: const Duration(seconds: 8),

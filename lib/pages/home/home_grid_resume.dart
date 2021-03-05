@@ -29,13 +29,12 @@ class _HomeGridResumeState extends State<HomeGridResume> {
   ScrollController _scrollController;
 
   /// 判断是否是个人还是企业账户，1=个人，2=企业
-  bool _isUserPerson = false;
+  bool _isUserPerson = g_accountManager.currentUser != null &&
+      g_accountManager.currentUser.typeId == 1;
 
   @override
   void initState() {
     super.initState();
-    _isUserPerson = g_accountManager.currentUser != null &&
-        g_accountManager.currentUser.typeId == 1;
     _scrollController = new ScrollController();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -47,6 +46,8 @@ class _HomeGridResumeState extends State<HomeGridResume> {
 
   @override
   Widget build(BuildContext context) {
+    print('_isUserPerson========== $_isUserPerson');
+    
     // 调试时模拟器的宽度是178
     double gridWidth = (ScreenUtil.mediaQueryData.size.width - 55) / 2;
     double gridHeight = _isUserPerson ? 170 : 260;
@@ -146,6 +147,8 @@ class _HomeGridResumeState extends State<HomeGridResume> {
     if (_isPersonalPosition) {
       realname = resumeModel.companyName;
     }
+
+    print('title========== $title');
 
     return Column(children: <Widget>[
       Expanded(
