@@ -1423,6 +1423,11 @@ class _ChatDomeImp extends State<ChatRoute>
         // 顶部换电话 + 发简历 + 发作品区域开始
         // 顶部换电话 + 发简历 + 发作品区域结束
 
+
+
+
+
+
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
