@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
@@ -22,6 +23,8 @@ import 'package:tencent_im_plugin/entity/session_entity.dart';
 import 'package:tencent_im_plugin/enums/image_type.dart';
 import 'package:tencent_im_plugin/enums/message_node_type.dart';
 import 'package:tencent_im_plugin/message_node/custom_message_node.dart';
+import 'package:tencent_im_plugin/message_node/entity/video_info_entity.dart';
+import 'package:tencent_im_plugin/message_node/entity/video_snapshot_info_entity.dart';
 import 'package:tencent_im_plugin/message_node/image_message_node.dart';
 import 'package:tencent_im_plugin/message_node/sound_message_node.dart';
 import 'package:tencent_im_plugin/message_node/text_message_node.dart';
@@ -40,6 +43,7 @@ import 'package:youpinapp/utils/assets_util.dart';
 import 'package:youpinapp/utils/chooseScrollFragment.dart';
 import 'package:youpinapp/utils/dio_util.dart';
 import 'package:youpinapp/utils/event_bus.dart';
+import 'package:youpinapp/global/color_constants.dart';
 import 'package:youpinapp/utils/uiUtil.dart';
 
 ///聊天页---> ChatDome(String a,Map b)
@@ -77,6 +81,10 @@ class ChatDomeProvider with ChangeNotifier {
   //保存待发送的文本信息或者一个路径
   String text = "";
 
+  // 发送视频的数据
+  VideoSnapshotInfo videoSnapshotInfo;
+  VideoInfo videoInfo;
+
   //录制的语音路径-->时长
   String soundPath = "";
   String longTime = "";
@@ -113,12 +121,7 @@ class ChatDomeProvider with ChangeNotifier {
   String toSessionId = "";
 
   //先不搞这个东西
-  List<Map> topList = [
-    {"icon": Icon(Icons.phone_android), "title": "换电话", "function": ""},
-    {"icon": "", "title": "换微信", "function": ""},
-    {"icon": "", "title": "发简历", "function": ""},
-    {"icon": "", "title": "发作品", "function": ""},
-  ];
+  List<Map> topList = [];
 
   Map userDate = {};
 
@@ -132,6 +135,71 @@ class ChatDomeProvider with ChangeNotifier {
 
   //处理第三方包的BUG--保存最后一条消息由谁发出
   String sessionLast = "";
+
+  /// 简历数据
+  List homeResumeList = [];
+
+  // 查简历
+  void loadResumeVideoList(
+      BuildContext context, Map item, ChatDomeProvider model) {
+    model.homeResumeList.clear();
+    BotToast.showLoading();
+    var params = {
+      "queryType": 1,
+    };
+    DioUtil.request("/resume/getMediaResume", parameters: params)
+        .then((response) {
+      bool success = DioUtil.checkRequestResult(response);
+      if (success) {
+        List dataList = response['data'];
+
+        if (dataList != null && dataList.length > 0) {
+          model.homeResumeList = dataList.map((json) {
+            return {...json, 'ischeck': false};
+          }).toList();
+        }
+      }
+      model.showSendResume(context, item, model);
+      BotToast.cleanAll();
+      notifyListeners();
+    }).catchError((_) {
+      BotToast.cleanAll();
+    });
+  }
+
+  /// 作品数据
+  List homeworkList = [];
+
+  /// 查作品
+  void loadNearbyVideos(
+      BuildContext context, Map item, ChatDomeProvider model) {
+    model.homeworkList.clear();
+    BotToast.showLoading();
+    var params = {
+      "queryType": 1,
+      // "longitude": 106.582128,
+      // "latitude": 29.667359
+    };
+    DioUtil.request("/user/getMediaWorks", parameters: params)
+        .then((responseData) {
+      bool success = DioUtil.checkRequestResult(responseData);
+      if (success) {
+        List dataList = responseData["data"];
+
+        if (dataList != null && dataList.length > 0) {
+          model.homeworkList = dataList.map((json) {
+            return {...json, 'ischeck': false};
+          }).toList();
+        }
+      }
+
+      model.showSendWork(context, item, model);
+      BotToast.cleanAll();
+      notifyListeners();
+    }).catchError((_) {
+      BotToast.cleanAll();
+    });
+  }
 
   Map staSound = {};
   Map _unSound = {
@@ -201,9 +269,38 @@ class ChatDomeProvider with ChangeNotifier {
 
   init(ScrollController scrolls, String session) {
     if (g_accountManager.currentUser.typeId == 1) {
+      topList = [
+        {
+          "icon": Icons.phone_android,
+          "iconCOlor": Color(0xff36A3FF),
+          "title": "换电话",
+          "typeTap": "change-phone"
+        },
+        // {"icon": "", "title": "换微信", "function": ""},
+        {
+          "icon": Icons.description,
+          "iconCOlor": Color(0xffCD9019),
+          "title": "发简历",
+          "typeTap": "send-resume"
+        },
+        {
+          "icon": Icons.healing,
+          "iconCOlor": Color(0xffE1432E),
+          "title": "发作品",
+          "typeTap": "send-work"
+        },
+      ];
       myHeadImg = g_accountManager.currentUser.userData.headPortraitUrl ??=
           "http://mingyankeji.oss-cn-chengdu.aliyuncs.com/default-head-portrait/%E4%BC%98%E8%A7%86APP%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.png1597053811548?Expires=3173853811&OSSAccessKeyId=LTAI4GDRbwvuszWXHCNebT2j&Signature=tIsYLrlR9C01liBA1UtmSriROUI%3D";
     } else if (g_accountManager.currentUser.typeId == 2) {
+      topList = [
+        {
+          "icon": Icons.phone_android,
+          "iconCOlor": Color(0xff36A3FF),
+          "title": "换电话",
+          "typeTap": "change-phone"
+        }
+      ];
       myHeadImg = g_accountManager.currentUser.companyData.logoUrl ??=
           "http://mingyankeji.oss-cn-chengdu.aliyuncs.com/default-head-portrait/%E4%BC%98%E8%A7%86APP%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.png1597053811548?Expires=3173853811&OSSAccessKeyId=LTAI4GDRbwvuszWXHCNebT2j&Signature=tIsYLrlR9C01liBA1UtmSriROUI%3D";
     } else {
@@ -373,7 +470,8 @@ class ChatDomeProvider with ChangeNotifier {
   }
 
   sendMessage(MessageNodeType type) {
-    print("send:$text----sessionId:$toSessionId");
+    print(
+        "send:$text----sessionId:$toSessionId------ videoSnapshotInfo: ${videoSnapshotInfo}");
 
     var node;
     //根据消息类型封装消息体
@@ -386,7 +484,8 @@ class ChatDomeProvider with ChangeNotifier {
     } else if (type == MessageNodeType.Sound) {
       node = SoundMessageNode(path: soundPath, duration: timeLen);
     } else if (type == MessageNodeType.Video) {
-      node = VideoMessageNode(videoSnapshotInfo: null, videoInfo: null);
+      node = VideoMessageNode(
+          videoSnapshotInfo: videoSnapshotInfo, videoInfo: videoInfo);
     } else if (type == MessageNodeType.Custom) {
       node = CustomMessageNode(data: text);
     } //自定义消息--->音视频邀请信息
@@ -406,6 +505,12 @@ class ChatDomeProvider with ChangeNotifier {
         });
       }
       print("发送完成。。。。。。");
+    }).catchError((err) {
+      BotToast.showText(
+        text: '$err',
+        duration: Duration(seconds: 5),
+      );
+      print('发送完成捕获到的错误=========== $err');
     });
 
     if (type != MessageNodeType.Sound) {
@@ -417,6 +522,279 @@ class ChatDomeProvider with ChangeNotifier {
 //        scroll.jumpTo(scroll.position.maxScrollExtent);
       });
     }
+  }
+
+  Future<void> showSendResume(
+    BuildContext context,
+    Map item,
+    ChatDomeProvider model,
+  ) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) => WillPopScope(
+        //  屏蔽安卓的手机返回键
+        onWillPop: () async {
+          return Future.value(false);
+        },
+        child: AlertDialog(
+          title: Text(
+            '请选择要发送的简历',
+            style: TextStyle(
+              color: Color(0xff444444),
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                '取消',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+            ),
+            // FlatButton(
+            //   child: Text('确定'),
+            //   onPressed: () {
+            //     Navigator.pop(context, true);
+            //   },
+            // ),
+          ],
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 10,
+          ),
+          content: Container(
+            constraints: BoxConstraints(maxHeight: 200),
+            child: SingleChildScrollView(
+              child: model.homeResumeList == null ||
+                      model.homeResumeList.isEmpty
+                  ? Center(
+                      child: Text('暂无数据'),
+                    )
+                  : Column(
+                      children: List.generate(
+                        model.homeResumeList.length,
+                        (int index) {
+                          var _item = model.homeResumeList[index];
+
+                          return InkWell(
+                            onTap: () {
+                              model.text =
+                                  '我的简历链接是：\n${_item['worksUrl']}，\n请复制链接在浏览器打开预览。';
+                              model.sendMessage(MessageNodeType.Text);
+                              // model.videoSnapshotInfo =
+                              //     VideoSnapshotInfo.fromJson(
+                              //         json.decode(json.encode({
+                              //   "width": 400,
+                              //   "height": 400,
+                              //   // "path": _item['worksUrl'],
+                              //   "path": _item['coverUrl'],
+                              // })));
+                              // model.videoInfo =
+                              //     VideoInfo.fromJson(json.decode(json.encode({
+                              //   // "uuid": '${Random()}',
+                              //   // "size": 500000,
+                              //   "duration": 50000000000,
+                              //   "type": '${MessageNodeType.Video}',
+                              //   "path": _item['worksUrl']
+                              // })));
+                              // model.sendMessage(MessageNodeType.Video);
+                              print('_item============= $_item');
+                              print(
+                                  'coverUrl============ ${_item['coverUrl']}');
+                              print(
+                                  'worksUrl============ ${_item['worksUrl']}');
+                              Navigator.pop(context, true);
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 10,
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  // Container(
+                                  //   child: _item['ischeck'] != null &&
+                                  //           _item['ischeck']
+                                  //       ? Icon(
+                                  //           Icons.check,
+                                  //           color:
+                                  //               ColorConstants.themeColorBlue,
+                                  //         )
+                                  //       : Container(),
+                                  // ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                      left: 10,
+                                    ),
+                                    child:
+                                        Text('${_item['title'] ?? '暂无简历名称'}'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> showSendWork(
+    BuildContext context,
+    Map item,
+    ChatDomeProvider model,
+  ) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) => StatefulBuilder(
+        builder: (BuildContext context, StateSetter state) => WillPopScope(
+          //  屏蔽安卓的手机返回键
+          onWillPop: () async {
+            return Future.value(false);
+          },
+          child: AlertDialog(
+            title: Text(
+              '请选择要发送的作品',
+              style: TextStyle(
+                color: Color(0xff444444),
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  '取消',
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
+                ),
+                onPressed: () {
+                  for (var i = 0; i < model.homeworkList.length; i++) {
+                    model.homeworkList[i]['ischeck'] = false;
+                  }
+                  state(() {});
+                  notifyListeners();
+                  Navigator.pop(context, false);
+                },
+              ),
+              FlatButton(
+                child: Text('确定'),
+                onPressed: () {
+                  String _worksUrl = '';
+                  for (var i = 0; i < model.homeworkList.length; i++) {
+                    var _mtem = model.homeworkList[i];
+                    if (_mtem['ischeck']) {
+                      _worksUrl += '\n${_mtem['worksUrl']}';
+                      // model.videoSnapshotInfo =
+                      //     VideoSnapshotInfo.fromJson(json.decode(json.encode({
+                      //   "width": 400,
+                      //   "height": 400,
+                      //   // "path": _mtem['worksUrl'],
+                      //   "path": _mtem['coverUrl'],
+                      // })));
+                      // model.videoInfo =
+                      //     VideoInfo.fromJson(json.decode(json.encode({
+                      //   // "uuid": '${Random()}',
+                      //   "size": 500000,
+                      //   "duration": 50000000000,
+                      //   "type": '${MessageNodeType.Video}',
+                      //   "path": _mtem['worksUrl']
+                      // })));
+                      // print('coverUrl============ ${_mtem['coverUrl']}');
+                      // print('worksUrl============ ${_mtem['worksUrl']}');
+                      // model.sendMessage(MessageNodeType.Video);
+                    }
+                  }
+                  if (_worksUrl.isNotEmpty) {
+                    model.text = '我的作品链接是：$_worksUrl，\n请复制链接在浏览器打开预览。';
+                    model.sendMessage(MessageNodeType.Text);
+                  }
+                  for (var i = 0; i < model.homeworkList.length; i++) {
+                    model.homeworkList[i]['ischeck'] = false;
+                  }
+                  state(() {});
+                  notifyListeners();
+                  Navigator.pop(context, true);
+                },
+              ),
+            ],
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 10,
+            ),
+            content: Container(
+              constraints: BoxConstraints(maxHeight: 200),
+              child: SingleChildScrollView(
+                child: model.homeworkList == null || model.homeworkList.isEmpty
+                    ? Center(
+                        child: Text('暂无数据'),
+                      )
+                    : Column(
+                        children: List.generate(model.homeworkList.length,
+                            (int index) {
+                          var _item = model.homeworkList[index];
+
+                          return InkWell(
+                            onTap: () {
+                              for (var i = 0;
+                                  i < model.homeworkList.length;
+                                  i++) {
+                                if (i == index) {
+                                  model.homeworkList[i]['ischeck'] =
+                                      !model.homeworkList[i]['ischeck'];
+                                  state(() {});
+                                  notifyListeners();
+                                  break;
+                                }
+                              }
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 10,
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    child: _item['ischeck'] != null &&
+                                            _item['ischeck']
+                                        ? Icon(
+                                            Icons.check,
+                                            color:
+                                                ColorConstants.themeColorBlue,
+                                          )
+                                        : Container(),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                      left: 10,
+                                    ),
+                                    child:
+                                        Text('${_item['title'] ?? '暂无作品名称'}'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   refreshUiIsSend(MessageNodeType type, MessageEntity node) {
@@ -1420,14 +1798,6 @@ class _ChatDomeImp extends State<ChatRoute>
   Widget _getBody(BuildContext context, ChatDomeProvider model) {
     return Stack(
       children: <Widget>[
-        // 顶部换电话 + 发简历 + 发作品区域开始
-        // 顶部换电话 + 发简历 + 发作品区域结束
-
-
-
-
-
-
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -1443,6 +1813,10 @@ class _ChatDomeImp extends State<ChatRoute>
 //                  ],
 //                ),
 //              )
+
+            // 顶部换电话 + 发简历 + 发作品区域开始
+            _headerGroupBtn(model, context),
+            // 顶部换电话 + 发简历 + 发作品区域结束
 
             //提示框
             Visibility(
@@ -1595,6 +1969,91 @@ class _ChatDomeImp extends State<ChatRoute>
           ],
         )
       ],
+    );
+  }
+
+  Widget _headerGroupBtn(ChatDomeProvider model, BuildContext context) {
+    return Container(
+      color: Colors.white,
+      margin: EdgeInsets.only(
+        bottom: 10,
+      ),
+      child: Row(
+        children: model.topList
+            .map((item) => _groupBtnItem(item, model, context))
+            .toList(),
+      ),
+    );
+  }
+
+  void _headerBtnActionFn(
+      Map item, ChatDomeProvider model, BuildContext context) {
+    final int _typeId = g_accountManager.currentUser.typeId;
+    if (_typeId == 1 || _typeId == 2) {
+      switch (item['typeTap']) {
+        case 'change-phone':
+          // model.text =
+          //     '我想要和您交换联系方式，\n${widget.hisUserInfo["name"] ?? '我'}的手机号：${g_accountManager.currentUser.phonenumber}';
+          // model.sendMessage(MessageNodeType.Text);
+          model.text = "getPhone";
+          model.sendMessage(MessageNodeType.Custom);
+          break;
+        case 'send-resume':
+          // print('发简历');
+          if (model.homeResumeList == null || model.homeResumeList.isEmpty) {
+            model.loadResumeVideoList(context, item, model);
+          } else {
+            model.showSendResume(context, item, model);
+          }
+          break;
+        case 'send-work':
+          // print('发作品');
+          if (model.homeworkList == null || model.homeworkList.isEmpty) {
+            model.loadNearbyVideos(context, item, model);
+          } else {
+            model.showSendWork(context, item, model);
+          }
+          break;
+      }
+    } else {
+      print('其它未知角色');
+    }
+  }
+
+  Widget _groupBtnItem(Map item, ChatDomeProvider model, BuildContext context) {
+    return Expanded(
+      child: InkWell(
+        onTap: () => _headerBtnActionFn(item, model, context),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            vertical: 20,
+          ),
+          child: Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(
+                  bottom: 10,
+                ),
+                child: Icon(
+                  item['icon'],
+                  size: 24,
+                  color: item['iconCOlor'],
+                ),
+              ),
+              Container(
+                child: Text(
+                  item['title'],
+                  style: TextStyle(
+                    color: Color(0xff666666),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
