@@ -20,41 +20,46 @@ import 'package:youpinapp/utils/event_bus.dart';
 void main() {
   // App初始化，加载缓存数据，初始化第三方SDK
   App.instance.initApp();
-  runApp(
-      MultiProvider(
-        providers: [
-          //创建时进行初始化操作，添加监听器
-          ChangeNotifierProvider(create: (_){
-            ImProvider provider = ImProvider();
-            provider.initImProvider();
-            return provider;
-            //关闭懒加载，app启动直接初始化聊天消息监听
-          },lazy: false,),
-          ChangeNotifierProvider(create: (_) => AppProvider()),
-          ChangeNotifierProvider(create: (_) => AccountManager()),
+  runApp(MultiProvider(
+    providers: [
+      //创建时进行初始化操作，添加监听器
+      ChangeNotifierProvider(
+        create: (_) {
+          ImProvider provider = ImProvider();
+          provider.initImProvider();
+          return provider;
+          //关闭懒加载，app启动直接初始化聊天消息监听
+        },
+        lazy: false,
+      ),
+      ChangeNotifierProvider(create: (_) => AppProvider()),
+      ChangeNotifierProvider(create: (_) => AccountManager()),
 //          ChangeNotifierProvider(create: (_) {
 //            AccountManager acc = AccountManager();
 //            acc.refreshRemoteUser();
 //            return acc;
 //          }),
-          ChangeNotifierProvider(create: (_) {
-            SearchManager sea = SearchManager();
-            sea.init();
-            return sea;
-          }),
-          ChangeNotifierProvider(create: (_){
-            WebSocketProvide socketProvide = WebSocketProvide();
-            g_eventBus.on(GlobalEvent.accountInitialized, (arg) {
-              if(g_accountManager.ringSwitch){
-                  socketProvide.init();
-                }
-            });
-            return socketProvide;
-          },lazy: false,)
-        ],
-        child: YouPinApp(),
+      ChangeNotifierProvider(create: (_) {
+        SearchManager sea = SearchManager();
+        // sea.getRefresh();
+        sea.init();
+        return sea;
+      }),
+      ChangeNotifierProvider(
+        create: (_) {
+          WebSocketProvide socketProvide = WebSocketProvide();
+          g_eventBus.on(GlobalEvent.accountInitialized, (arg) {
+            if (g_accountManager.ringSwitch) {
+              socketProvide.init();
+            }
+          });
+          return socketProvide;
+        },
+        lazy: false,
       )
-  );
+    ],
+    child: YouPinApp(),
+  ));
 }
 
 class YouPinApp extends StatefulWidget {
@@ -96,8 +101,6 @@ class YouPinAppState extends State<YouPinApp> {
     } else if (Platform.isAndroid) {
       BMFMapSDK.setCoordType(BMF_COORD_TYPE.BD09LL);
     }
-
-
   }
 
   @override
@@ -122,30 +125,31 @@ class YouPinAppState extends State<YouPinApp> {
       theme: themeData,
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
-      home: AnnotatedRegion<SystemUiOverlayStyle> (
+      home: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,
               systemNavigationBarColor: Colors.black,
               statusBarIconBrightness: Brightness.light,
-              systemNavigationBarIconBrightness: Brightness.dark
-          ),
+              systemNavigationBarIconBrightness: Brightness.dark),
           //child: WillPopScope(child:HomeRoute(),onWillPop: () async{
-          child: WillPopScope(child:AgreementRoute(),onWillPop: () async{
-            if(now == null){
-              now = DateTime.now();
-              BotToast.showText(text: '再次操作确认退出');
-              return false;
-            }else{
-              if(DateTime.now().difference(now).inMilliseconds<1000){
-                return true;
-              }else{
+          child: WillPopScope(
+            child: AgreementRoute(),
+            onWillPop: () async {
+              if (now == null) {
                 now = DateTime.now();
                 BotToast.showText(text: '再次操作确认退出');
                 return false;
+              } else {
+                if (DateTime.now().difference(now).inMilliseconds < 1000) {
+                  return true;
+                } else {
+                  now = DateTime.now();
+                  BotToast.showText(text: '再次操作确认退出');
+                  return false;
+                }
               }
-            }
-          },)
-      ),
+            },
+          )),
     );
   }
 }

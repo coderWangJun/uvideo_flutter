@@ -47,7 +47,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
   @override
   Widget build(BuildContext context) {
     print('_isUserPerson========== $_isUserPerson');
-    
+
     // 调试时模拟器的宽度是178
     double gridWidth = (ScreenUtil.mediaQueryData.size.width - 55) / 2;
     double gridHeight = _isUserPerson ? 170 : 260;
@@ -415,7 +415,7 @@ class _HomeGridResumeState extends State<HomeGridResume> {
                   ),
                 ),
                 Expanded(
-                  child: Text(resumeModel.salaryTreatmentString ?? "4-8k",
+                  child: Text(resumeModel.salaryTreatmentString ?? "--k",
                       maxLines: 1,
                       textAlign: TextAlign.right,
                       style: TextStyle(

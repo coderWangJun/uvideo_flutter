@@ -139,6 +139,7 @@ class _AddMarketState extends State<AddMarket> {
                 InkWell(
                   onTap: () {
                     print('我是修改');
+                    print(_userController.text);
                   },
                   child: Text(
                     "修改",

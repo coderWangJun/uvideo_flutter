@@ -1,5 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tencent_im_plugin/tencent_im_plugin.dart';
+import 'package:youpinapp/app/account.dart';
+import 'package:youpinapp/pages/home/home_grid.dart';
+import 'package:youpinapp/pages/login/login_route.dart';
+import 'package:youpinapp/pages/setting/feedback.dart';
+import 'package:youpinapp/pages/setting/fraud_prevention_guidelines.dart';
 import 'package:youpinapp/utils/uiUtil.dart';
 import 'package:get/get.dart';
 import 'package:youpinapp/utils/assets_util.dart';
@@ -19,29 +25,32 @@ class _UserHelpState extends State<UserHelp> {
     {
       'index': 0,
       'title': '举报中心',
+      'forwardWidget': FeedBack(title: '举报中心'),
     },
+    // {
+    //   'index': 1,
+    //   'title': '我的认证',
+    // },
     {
       'index': 1,
-      'title': '我的认证',
+      'title': '意见反馈',
+      'forwardWidget': FeedBack(title: '意见反馈'),
     },
     {
       'index': 2,
-      'title': '意见反馈',
-    },
-    {
-      'index': 3,
       'title': '隐私政策',
       'forwardWidget': AgreementDetailRoute(
         "隐私政策",
-        index: 3,
+        index: 2,
       ),
     },
     {
-      'index': 4,
+      'index': 3,
       'title': '防骗指南',
+      'forwardWidget': FraudPreventionGuidelines(),
     },
     {
-      'index': 5,
+      'index': 4,
       'title': '注销账号',
     },
   ];
@@ -66,7 +75,7 @@ class _UserHelpState extends State<UserHelp> {
         child: Column(
           children: <Widget>[
             _buildSearch(),
-            _buildContainer(),
+            _buildContainer(context),
             _buildStaffService(),
           ],
         ),
@@ -112,7 +121,7 @@ class _UserHelpState extends State<UserHelp> {
     );
   }
 
-  Widget _buildContainer() {
+  Widget _buildContainer(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: _helpFeedbackDatas
@@ -120,6 +129,7 @@ class _UserHelpState extends State<UserHelp> {
               (item) => _buildRowItem(
                 index: item['index'],
                 title: item['title'],
+                parentContext: context,
                 forwardWidget: item['forwardWidget'],
               ),
             )
@@ -131,8 +141,10 @@ class _UserHelpState extends State<UserHelp> {
   Widget _buildRowItem({
     @required int index,
     @required String title,
+    @required BuildContext parentContext,
     String value = '',
     Widget forwardWidget,
+    Function onTap,
   }) {
     return Container(
       padding: EdgeInsets.symmetric(
@@ -173,6 +185,34 @@ class _UserHelpState extends State<UserHelp> {
         onTap: () async {
           if (forwardWidget != null) {
             await Get.to(forwardWidget);
+          }
+          if (index == 4) {
+            showDialog(
+                context: parentContext,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("温馨提示"),
+                    content: Text("确定要注销账号吗？"),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text("取消"),
+                        onPressed: () => Navigator.of(parentContext).pop(),
+                      ),
+                      FlatButton(
+                        child: Text("确定"),
+                        onPressed: () {
+                          g_accountManager.clearLocalUser();
+                          TencentImPlugin.logout().then((value) {
+                            Get.offAll(LoginRoute());
+                          }).catchError((e) {
+                            Get.offAll(LoginRoute());
+                          });
+                        },
+                      )
+                    ],
+                  );
+                });
           }
         },
       ),

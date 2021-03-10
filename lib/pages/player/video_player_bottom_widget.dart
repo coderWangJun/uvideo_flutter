@@ -139,16 +139,24 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
           ),
         ),
         onPressed: () {
+          print('***************点赞');
+          print(widget.dataModel);
+          print(widget.dataModel is ShortVideoModel);
+          var shortVideoModel;
           if (widget.dataModel is ShortVideoModel) {
             // 短视频
-            var shortVideoModel = widget.dataModel as ShortVideoModel;
-            if (shortVideoModel.isLiked == 1) {
-              // 已赞
-              _addOrRemovePraiseRequest(2);
-            } else {
-              // 未赞
-              _addOrRemovePraiseRequest(1);
-            }
+            shortVideoModel = widget.dataModel as ShortVideoModel;
+          }
+          if (widget.dataModel is HomeResumeModel) {
+            // 短视频
+            shortVideoModel = widget.dataModel as HomeResumeModel;
+          }
+          if (shortVideoModel.isLiked == 1) {
+            // 已赞
+            _addOrRemovePraiseRequest(2, shortVideoModel);
+          } else {
+            // 未赞
+            _addOrRemovePraiseRequest(1, shortVideoModel);
           }
         },
       ),
@@ -185,9 +193,8 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
             ),
           ),
           onPressed: () {
-            if (_videoModel != null) {
-              VideoCommentDialog.show(parentContext, _videoModel);
-            }
+            VideoCommentDialog.show(
+                parentContext, _videoModel ?? widget.dataModel);
           },
         ),
       ),
@@ -409,26 +416,42 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
   }
 
   // operFlag 1 点赞；2 取消点赞
-  void _addOrRemovePraiseRequest(int operFlag) {
-    if (widget.dataModel is ShortVideoModel) {
-      var shortVideoModel = widget.dataModel as ShortVideoModel;
-      var params = {"id": shortVideoModel.id, "flag": operFlag};
-      DioUtil.request("/user/updateLikes", parameters: params).then((response) {
-        bool success = DioUtil.checkRequestResult(response);
-        if (success) {
-          if (shortVideoModel.isLiked == 1) {
-            // 已赞
-            shortVideoModel.isLiked = 0;
-            shortVideoModel.likes--;
-          } else {
-            // 未赞
-            shortVideoModel.isLiked = 1;
-            shortVideoModel.likes++;
-          }
+  void _addOrRemovePraiseRequest(int operFlag, dataModel) {
+    var params = {"id": dataModel.id, "flag": operFlag};
+    DioUtil.request("/user/updateLikes", parameters: params).then((response) {
+      bool success = DioUtil.checkRequestResult(response);
+      if (success) {
+        if (dataModel.isLiked == 1) {
+          // 已赞
+          dataModel.isLiked = 0;
+          dataModel.likes--;
+        } else {
+          // 未赞
+          dataModel.isLiked = 1;
+          dataModel.likes++;
         }
+      }
 
-        setState(() {});
-      });
-    }
+      setState(() {});
+    });
+    // if (widget.dataModel is ShortVideoModel) {
+    //   var shortVideoModel = widget.dataModel as ShortVideoModel;
+    //   var params = {"id": shortVideoModel.id, "flag": operFlag};
+    //   DioUtil.request("/user/updateLikes", parameters: params).then((response) {
+    //     bool success = DioUtil.checkRequestResult(response);
+    //     if (success) {
+    //       if (shortVideoModel.isLiked == 1) {
+    //         // 已赞
+    //         shortVideoModel.isLiked = 0;
+    //         shortVideoModel.likes--;
+    //       } else {
+    //         // 未赞
+    //         shortVideoModel.isLiked = 1;
+    //         shortVideoModel.likes++;
+    //       }
+    //     }
+
+    //     setState(() {});
+    //   });
   }
 }
