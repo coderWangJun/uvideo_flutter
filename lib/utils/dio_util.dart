@@ -68,9 +68,8 @@ class DioUtil {
   }
 
   // 校验服务器返回结果，统一处理
-  static bool checkRequestResult(responseData, {showToast = false}) {
+  static bool checkRequestResult(responseData, {bool showToast = false}) {
     if (responseData == null) {
-      print("responseData==null");
       if (showToast) {
         BotToast.showText(text: "请求失败");
       }
@@ -79,8 +78,10 @@ class DioUtil {
       String respCode = responseData['code'];
       String msg = responseData['msg'];
 
-      // 请求成功
       if (respCode == HTTP_RESP_CODE_SUCCESS) {
+        if (msg != null && showToast) {
+          BotToast.showText(text: msg);
+        }
         return true;
       } else {
         if (msg != null) {
@@ -107,6 +108,12 @@ class DioUtil {
     try {
       Dio dio = getInstance();
       print("$url\n${dio.options.headers}\n$parameters");
+
+      /// 如果是企宣列表或企宣详情页面 token传空字符串
+      if (url == '/company/getPromo' || url == '/company/getPromoDetail') {
+        dio.options.headers['token'] = '';
+      }
+
       Response response;
       if (callback != null) {
         response = await dio.request(url,
@@ -131,7 +138,10 @@ class DioUtil {
       print("responese==== result ===== $result");
       print("responese==== statusCode ===== ${response.statusCode}");
       print("$url\n${dio.options.headers}\n$parameters");
-      if (result != null && (result['code'].toString() == '-1' || result['code'].toString() == '0')) { // || response.statusCode != 200
+      if (result != null &&
+          (result['code'].toString() == '-1' ||
+              result['code'].toString() == '0')) {
+        // || response.statusCode != 200
         BotToast.showText(
           text: '${result['msg']}',
           duration: const Duration(seconds: 8),

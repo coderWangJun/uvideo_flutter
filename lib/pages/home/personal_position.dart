@@ -9,6 +9,7 @@ import 'package:youpinapp/app/account.dart';
 import 'package:youpinapp/app/app.dart';
 import 'package:youpinapp/app/storage.dart';
 import 'package:youpinapp/global/color_constants.dart';
+import 'package:youpinapp/pages/chat/chat_index.dart';
 import 'package:youpinapp/pages/common/app_bar_white.dart';
 import 'package:youpinapp/models/home_resume_model.dart';
 import 'package:youpinapp/pages/player/player_state_provider.dart';
@@ -53,7 +54,7 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
   void _netWorkCompanyDetail() async {
     /// 职位详情
     DioUtil.request(
-      "/company/getMediaResumeDetails",
+      "/resume/getMediaResumeDetails",
       parameters: {"id": "${widget.currentResumeModel.id}"},
     ).then((value) {
       if (DioUtil.checkRequestResult(value, showToast: false)) {
@@ -72,6 +73,29 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
       }
     });
   }
+
+  // void _netWorkCompanyDetail() async {
+  //   /// 职位详情
+  //   DioUtil.request(
+  //     "/company/getMediaResumeDetails",
+  //     parameters: {"id": "${widget.currentResumeModel.id}"},
+  //   ).then((value) {
+  //     if (DioUtil.checkRequestResult(value, showToast: false)) {
+  //       setState(() {
+  //         homeCompanyDetailedModel =
+  //             HomeCompanyDetailedModel.fromJson(value["data"]);
+  //         if (homeCompanyDetailedModel.companyInDetailsSubRVO == null) {
+  //           homeCompanyDetailedModel.companyInDetailsSubRVO =
+  //               CompanyInDetailsSubRVO();
+  //         }
+  //         if (homeCompanyDetailedModel.companyStaffEntity == null) {
+  //           homeCompanyDetailedModel.companyStaffEntity = CompanyStaffEntity();
+  //         }
+  //       });
+  //       _initFn();
+  //     }
+  //   });
+  // }
 
   void _initFn() {
     setState(() {
@@ -182,7 +206,7 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
                   // 公司详情
                   _companyInfo(),
                   // 立即沟通
-                  _immediatelyCommunicate(),
+                  // _immediatelyCommunicate(),
                 ],
               ),
             ),
@@ -621,7 +645,9 @@ class _PersonalPositionPageState extends State<PersonalPositionPage>
         vertical: 30,
       ),
       child: FlatButton(
-        onPressed: () {},
+        onPressed: () {
+          // Get.to(ChatIndex());
+        },
         color: Colors.blue,
         padding: EdgeInsets.symmetric(
           vertical: 15,

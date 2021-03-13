@@ -115,11 +115,9 @@ class _HomeGridCompanyStateImpl extends State<HomeGridCompanyNew> {
                   }));
                 } else {
                   /// 企业 === 作品名称
-                  HomeResumeModel resumeModel =
-                      widget.model.modelListRes[index];
                   Get.to(VideoPlayerHoriResume(
-                    VideoPlayType.resumeVideo,
-                    currentResumeModel: resumeModel,
+                    VideoPlayType.shortVideo,
+                    currentCompanyModel: widget.model.modelListCom[index],
                     isProduction: true, // 是否是作品
                   ));
                 }

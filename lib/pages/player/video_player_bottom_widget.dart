@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -139,9 +140,6 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
           ),
         ),
         onPressed: () {
-          print('***************点赞');
-          print(widget.dataModel);
-          print(widget.dataModel is ShortVideoModel);
           var shortVideoModel;
           if (widget.dataModel is ShortVideoModel) {
             // 短视频
@@ -296,9 +294,6 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
       workingYears = videoModel.workingYears != null
           ? videoModel.workingYears.toString()
           : '';
-      print(
-          'videoModel.salaryTreatmentString9999========= ${widget.dataModel.salaryTreatmentString}');
-      print('%%%%%%%%salaryTreatmentString==== $salaryTreatmentString');
     }
 
     return Container(
@@ -419,9 +414,15 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
   void _addOrRemovePraiseRequest(int operFlag, dataModel) {
     var params = {"id": dataModel.id, "flag": operFlag};
     DioUtil.request("/user/updateLikes", parameters: params).then((response) {
-      bool success = DioUtil.checkRequestResult(response);
+      bool success = DioUtil.checkRequestResult(
+        response,
+        showToast: true,
+      );
       if (success) {
-        if (dataModel.isLiked == 1) {
+        if (dataModel.likes == null) {
+          dataModel.likes = -1;
+        }
+        if (dataModel.isLiked != null && dataModel.isLiked == 1) {
           // 已赞
           dataModel.isLiked = 0;
           dataModel.likes--;
@@ -431,6 +432,8 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
           dataModel.likes++;
         }
       }
+      print('response=============11');
+      print('response=============22');
 
       setState(() {});
     });

@@ -18,10 +18,12 @@ class VideoPlayerVertContainer extends StatefulWidget {
   VideoPlayerVertContainer({this.queryType});
 
   @override
-  _VideoPlayerVertContainerState createState() => _VideoPlayerVertContainerState();
+  _VideoPlayerVertContainerState createState() =>
+      _VideoPlayerVertContainerState();
 }
 
-class _VideoPlayerVertContainerState extends State<VideoPlayerVertContainer> with AutomaticKeepAliveClientMixin<VideoPlayerVertContainer> {
+class _VideoPlayerVertContainerState extends State<VideoPlayerVertContainer>
+    with AutomaticKeepAliveClientMixin<VideoPlayerVertContainer> {
   int _currentPage = 1;
   int _pageSize = 10;
   int _prevVideoType = 1; // 默认为推荐视频
@@ -61,27 +63,31 @@ class _VideoPlayerVertContainerState extends State<VideoPlayerVertContainer> wit
   Widget build(BuildContext context) {
     context.watch<PlayerStateProvider>().currentVideoType;
 
-    return _videoList.length == 0 ? EmptyWidget(showTitle: "") : PageView.builder(
-      itemCount: _videoList.length,
-      controller: _pageController,
-      scrollDirection: Axis.vertical,
-      itemBuilder: (BuildContext context, int index) {
-        return VideoPlayerWidget(_videoList[index]);
-      },
-      onPageChanged: (pageIndex) {
-        ShortVideoModel videoModel = _videoList[pageIndex];
-        context.read<PlayerStateProvider>().currentVideoModel = videoModel;
+    return _videoList.length == 0
+        ? EmptyWidget(showTitle: "")
+        : PageView.builder(
+            itemCount: _videoList.length,
+            controller: _pageController,
+            scrollDirection: Axis.vertical,
+            itemBuilder: (BuildContext context, int index) {
+              return VideoPlayerWidget(_videoList[index]);
+            },
+            onPageChanged: (pageIndex) {
+              ShortVideoModel videoModel = _videoList[pageIndex];
+              context.read<PlayerStateProvider>().currentVideoModel =
+                  videoModel;
 
-        if (pageIndex == (_videoList.length - 1)) {
-          _loadData();
-        }
-      },
-    );
+              if (pageIndex == (_videoList.length - 1)) {
+                _loadData();
+              }
+            },
+          );
   }
 
   void _loadData() {
     if (context != null) {
-      int currentVideoType = context.read<PlayerStateProvider>().currentVideoType;
+      int currentVideoType =
+          context.read<PlayerStateProvider>().currentVideoType;
       if (currentVideoType != _prevVideoType) {
         _videoList.clear();
       }
@@ -98,10 +104,7 @@ class _VideoPlayerVertContainerState extends State<VideoPlayerVertContainer> wit
 
   void _loadShortVideoList() {
     int videoType = context.read<PlayerStateProvider>().currentVideoType;
-    var params = {
-      "current": _currentPage,
-      "size": _pageSize
-    };
+    var params = {"current": _currentPage, "size": _pageSize};
     if (videoType == 0) {
       params["queryType"] = 2;
     }
@@ -127,17 +130,24 @@ class _VideoPlayerVertContainerState extends State<VideoPlayerVertContainer> wit
         context.read<PlayerStateProvider>().currentVideoModel = _videoList[0];
       }
 
-      setState(() { });
+      setState(() {});
     }).whenComplete(() => BotToast.closeAllLoading());
   }
 
   void _loadResumeVideoList() {
+    // DioUtil.request(
+    //   "/resume/getMediaResumeDetails",
+    //   method: 'POST',
+    //   parameters: {
+    //     'id':
+    //   },
+    // ).then((response) {
     DioUtil.request("/resume/getMediaResume").then((response) {
       bool success = DioUtil.checkRequestResult(response);
-      if(success){
+      if (success) {
         List<dynamic> dataList = response['data'];
 
-        if(dataList != null && dataList.length > 0){
+        if (dataList != null && dataList.length > 0) {
           List<HomeResumeModel> modelList = dataList.map((json) {
             return HomeResumeModel.fromJson(json);
           }).toList();
@@ -146,7 +156,7 @@ class _VideoPlayerVertContainerState extends State<VideoPlayerVertContainer> wit
         }
       }
 
-      setState(() { });
+      setState(() {});
     });
   }
 

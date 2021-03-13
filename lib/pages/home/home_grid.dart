@@ -51,6 +51,7 @@ class _HomeGridState extends State<HomeGrid> with TickerProviderStateMixin {
           _loadIndustryCategory();
         }
       } else {
+        _initialIndex = 0;
         _tabbarTitles = ['作品', '企宣', '附近'];
         _curListType = 3;
         // // 企业

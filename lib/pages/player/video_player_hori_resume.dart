@@ -10,6 +10,7 @@ import 'package:youpinapp/app/app.dart';
 import 'package:youpinapp/app/search.dart';
 import 'package:youpinapp/app/storage.dart';
 import 'package:youpinapp/models/home_resume_model.dart';
+import 'package:youpinapp/models/home_company_model.dart';
 import 'package:youpinapp/pages/common/custom_notification.dart';
 import 'package:youpinapp/pages/common/floating_button.dart';
 import 'package:youpinapp/pages/home/search/tap_icon_search.dart';
@@ -48,12 +49,14 @@ const SystemUiOverlayStyle dark = SystemUiOverlayStyle(
 class VideoPlayerHoriResume extends StatefulWidget {
   final VideoPlayType playType;
   final HomeResumeModel currentResumeModel;
+  final HomeCompanyModel currentCompanyModel;
   final int _showType = 0;
   final bool isProduction;
 
   VideoPlayerHoriResume(
     this.playType, {
     this.currentResumeModel,
+    this.currentCompanyModel,
     this.isProduction,
   });
 
@@ -81,7 +84,11 @@ class _VideoPlayerHoriResumeState extends State<VideoPlayerHoriResume>
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
     _playerStateProvider.playType = widget.playType;
-    _playerStateProvider.currentResumeModel = widget.currentResumeModel;
+    if (widget.currentCompanyModel != null) {
+      _playerStateProvider.companyModel = widget.currentCompanyModel;
+    } else {
+      _playerStateProvider.currentResumeModel = widget.currentResumeModel;
+    }
 
     _pageController = new PageController(keepPage: false);
     _topTabController = TabController(length: 3, initialIndex: 1, vsync: this);
@@ -126,7 +133,8 @@ class _VideoPlayerHoriResumeState extends State<VideoPlayerHoriResume>
         value: _playerStateProvider,
         child: PageView(
           controller: _pageController,
-          children: widget.currentResumeModel == null
+          children: widget.currentResumeModel == null ||
+                  widget.currentCompanyModel == null
               ? <Widget>[
                   _buildPlayerPage(context),
                 ]
@@ -308,6 +316,10 @@ class _VideoPlayerHoriResumeState extends State<VideoPlayerHoriResume>
     String userId;
     if (widget.playType == VideoPlayType.resumeVideo) {
       HomeResumeModel videoModel = widget.currentResumeModel;
+      userId = videoModel.userid;
+      print("传过来的用户ID传过来的用户ID:$videoModel");
+    } else {
+      HomeCompanyModel videoModel = widget.currentCompanyModel;
       userId = videoModel.userid;
       print("传过来的用户ID传过来的用户ID:$videoModel");
     }

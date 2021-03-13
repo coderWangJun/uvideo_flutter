@@ -47,8 +47,7 @@ class VideoPlayerHoriContainer extends StatefulWidget {
   final HomeResumeModel currentResumeModel;
   final int _showType = 0;
 
-  VideoPlayerHoriContainer(this.playType,
-      {this.currentResumeModel});
+  VideoPlayerHoriContainer(this.playType, {this.currentResumeModel});
 
   @override
   _VideoPlayerHoriContainerState createState() =>

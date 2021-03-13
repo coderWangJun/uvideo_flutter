@@ -76,10 +76,15 @@ class SearchManager extends ChangeNotifier {
       bool flag = _cur_data_type != 3;
       if (_cur_data_type == 0) {
         requestUrl = "/user/getMediaWorks"; //作品
-      } else if (_cur_data_type == 1) {
-        requestUrl = "/resume/getMediaResume"; //简历
-      } else if (_cur_data_type == 2) {
-        requestUrl = "/company/getMediaResume"; //岗位
+      } else if (_cur_data_type == 1 || _cur_data_type == 2) {
+        if (g_accountManager.currentUser != null &&
+            g_accountManager.currentUser.typeId == 1) {
+          requestUrl = "/resume/getMediaResume"; //简历
+        } else {
+          requestUrl = "/company/getMediaResume"; //岗位
+        }
+        // } else if (_cur_data_type == 2) {
+        //   requestUrl = "/company/getMediaResume"; //岗位
       } else {
         requestUrl = "/company/getPromo"; //企宣
       }

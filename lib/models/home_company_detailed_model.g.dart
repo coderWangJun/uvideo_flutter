@@ -43,7 +43,7 @@ HomeCompanyDetailedModel _$HomeCompanyDetailedModelFromJson(
     ..distanceDouble = (json['distanceDouble'] as num)?.toDouble()
     ..distanceString = json['distanceString'] as String
     ..isCollect = json['isCollect'] as int
-    ..isLiked = json['isLiked'] as String
+    ..isLiked = json['isLiked'] as int
     ..likes = json['likes'] as int
     ..numberOfComments = json['numberOfComments'] as int
     ..numberOfForwarding = json['numberOfForwarding'] as int

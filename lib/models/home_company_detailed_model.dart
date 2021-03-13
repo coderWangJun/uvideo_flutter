@@ -41,7 +41,7 @@ class HomeCompanyDetailedModel {
   int status;
   double distanceDouble;
   String distanceString;
-  String isLiked;
+  int isLiked;
   int isCollect;
   int likes;
   int numberOfComments;
