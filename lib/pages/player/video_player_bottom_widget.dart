@@ -2,10 +2,12 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:youpinapp/global/color_constants.dart';
 import 'package:youpinapp/models/index.dart';
+import 'package:youpinapp/pages/person/user_detail_route.dart';
 import 'package:youpinapp/pages/player/player_state_provider.dart';
 import 'package:youpinapp/pages/player/video_comment_dialog.dart';
 import 'package:youpinapp/utils/assets_util.dart';
@@ -101,6 +103,13 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
           )),
       onTap: () {
         g_eventBus.emit(GlobalEvent.videoPageEvent, 1);
+        print('999999============== ${widget.dataModel.id}');
+        Get.to(UserDetailRoute(
+          userId: '${widget.dataModel.id}',
+        ));
+        // Get.to(UserDetailRoute(
+        //   userId: index != 2 ? e['targetUserid'] : e['userid'],
+        // ));
       },
     );
   }
@@ -134,7 +143,7 @@ class _VideoPlayerBottomWidgetState extends State<VideoPlayerBottomWidget> {
                   isPraise == 1
                       ? "home_praise_red.png"
                       : "home_praise_gray.png")),
-              Text("${praiseCount}k",
+              Text("$praiseCount",
                   style: TextStyle(color: Colors.white, fontSize: 22.sp))
             ],
           ),

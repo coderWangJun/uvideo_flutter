@@ -148,8 +148,6 @@ class _HomeGridResumeState extends State<HomeGridResume> {
       realname = resumeModel.companyName;
     }
 
-    print('title========== $title');
-
     return Column(children: <Widget>[
       Expanded(
         child: Stack(alignment: Alignment.center, children: <Widget>[
