@@ -106,8 +106,8 @@ class _HomeVideoPersonal extends State<UserDetailRoute>
       'count':
           "${_currentUserModel.countMap != null ? _currentUserModel.countMap.fansCount : 0}"
     });
-//    _countArray.add({'title': '诚信分', 'count': "${_currentUserModel.countMap != null ? _currentUserModel.countMap.honestyScore : 0}"});
-//    _countArray.add({'title': '影响力', 'count': "${_currentUserModel.countMap != null ? _currentUserModel.countMap.effectScore : 0}"});
+   _countArray.add({'title': '集圈', 'count': "${_currentUserModel.countMap != null ? _currentUserModel.countMap.effectScore : 0}"});
+   _countArray.add({'title': '诚信分', 'count': "${_currentUserModel.countMap != null ? _currentUserModel.countMap.honestyScore : 0}"});
 
     return Theme(
       data: ThemeData(
